@@ -127,11 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Shuriken.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Shuriken.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ninjaCharm.png" />
+    <Image Include="ninjaCharmander.png" />
+    <Image Include="shuriken.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
