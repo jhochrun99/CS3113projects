@@ -11,6 +11,8 @@ Player::Player() {
 void Player::Update(float deltaTime) {
     position += movement * speed * deltaTime;
 
+    //need to check if player is going to hit the top/bottom of screen here
+
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
 }
