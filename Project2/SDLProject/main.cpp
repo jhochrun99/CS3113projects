@@ -100,7 +100,6 @@ void ProcessInput() {
     state.charmander->movement = glm::vec3(0);
     state.squirtle->movement = glm::vec3(0);
 
-
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {

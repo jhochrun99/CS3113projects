@@ -10,11 +10,17 @@ Player::Player() {
 
 void Player::Update(float deltaTime) {
     position += movement * speed * deltaTime;
-
-    //need to check if player is going to hit the top/bottom of screen here
-
-    modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, position);
+    
+    bool movingUp = position.y > 0;
+    float top = 3.75;
+    float bottom = -3.75;
+    if (movingUp && position.y < top) { //won't let Player move past top of window
+        modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, position);
+    } else if (!movingUp && position.y > bottom) { //won't let Player move past bottom of window
+        modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, position);
+    }
 }
 
 void Player::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index) {
