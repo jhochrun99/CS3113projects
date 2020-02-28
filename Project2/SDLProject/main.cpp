@@ -86,13 +86,13 @@ void Initialize() {
     state.charmander = new Player();
     state.charmander->position = glm::vec3(-4.5, 0, 0);
     state.charmander->movement = glm::vec3(0);
-    state.charmander->speed = 1.0f;
+    state.charmander->speed = 2.0f;
     state.charmander->textureID = LoadTexture("ninjaCharm.png");
 
     state.squirtle = new Player();
     state.squirtle->position = glm::vec3(4.5, 0, 0);
     state.squirtle->movement = glm::vec3(0);
-    state.squirtle->speed = 1.0f;
+    state.squirtle->speed = 2.0f;
     state.squirtle->textureID = LoadTexture("ninjaCharm.png");
 }
 

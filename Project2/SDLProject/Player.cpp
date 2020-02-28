@@ -2,6 +2,7 @@
 
 Player::Player() {
     position = glm::vec3(0);
+    previousPosition = position;
     speed = 0;
 
     modelMatrix = glm::mat4(1.0f);
@@ -9,6 +10,7 @@ Player::Player() {
 }
 
 void Player::Update(float deltaTime) {
+    previousPosition = position;
     position += movement * speed * deltaTime;
     
     bool movingUp = position.y > 0;
@@ -17,9 +19,14 @@ void Player::Update(float deltaTime) {
     if (movingUp && position.y < top) { //won't let Player move past top of window
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
-    } else if (!movingUp && position.y > bottom) { //won't let Player move past bottom of window
+    } 
+    else if (!movingUp && position.y > bottom) { //won't let Player move past bottom of window
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
+    } 
+    else { 
+    //prevents Player from lagging if they run into the edge of the window for a while before changing direction
+        position = previousPosition; 
     }
 }
 

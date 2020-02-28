@@ -15,6 +15,7 @@
 class Player {
 public:
     glm::vec3 position;
+    glm::vec3 previousPosition;
     glm::vec3 movement;
     float speed;
 
