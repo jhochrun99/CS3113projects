@@ -4,6 +4,8 @@ Player::Player() {
     position = glm::vec3(0);
     previousPosition = position;
     speed = 0;
+    height = 1.2f; //both based off visible part of sprite
+    width = 1.0f;
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
@@ -16,11 +18,11 @@ void Player::Update(float deltaTime) {
     bool movingUp = position.y > 0;
     float top = 3.75;
     float bottom = -3.75;
-    if (movingUp && position.y < top) { //won't let Player move past top of window
+    if (movingUp && (position.y + height/4)< top) { //won't let Player move past top of window
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
     } 
-    else if (!movingUp && position.y > bottom) { //won't let Player move past bottom of window
+    else if (!movingUp && (position.y - height/4) > bottom) { //won't let Player move past bottom of window
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
     } 

@@ -18,6 +18,8 @@ public:
     glm::vec3 previousPosition;
     glm::vec3 movement;
     float speed;
+    float height;
+    float width; 
 
     GLuint textureID;
 

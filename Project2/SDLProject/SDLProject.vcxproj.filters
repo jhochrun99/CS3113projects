@@ -37,5 +37,8 @@
     <Image Include="ninjaCharm.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ninjaCharmTRp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
