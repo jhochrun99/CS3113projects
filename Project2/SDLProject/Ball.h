@@ -30,4 +30,6 @@ public:
     void Update(float deltaTime);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
+
+    void startGame();
 };

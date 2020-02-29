@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player() {
-    position = glm::vec3(0);
+    //position = glm::vec3(0);
     previousPosition = position;
     speed = 0;
     height = 0.6f; //both based off visible part of sprite

@@ -84,7 +84,7 @@ void Initialize() {
     state.pokeball = new Ball();
     state.pokeball->position = glm::vec3(0);
     state.pokeball->movement = glm::vec3(0);
-    state.pokeball->speed = 3.0f;
+    state.pokeball->speed = 2.0f;
     state.pokeball->textureID = LoadTexture("pokeballTRp.png");
 
     // Initialize Players
@@ -105,8 +105,6 @@ void ProcessInput() {
     state.charmander->movement = glm::vec3(0);
     state.squirtle->movement = glm::vec3(0);
 
-    state.pokeball->movement = glm::vec3(0);
-
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -115,13 +113,13 @@ void ProcessInput() {
             gameIsRunning = false;
             break;
 
-        //case SDL_KEYDOWN:
-        //    switch (event.key.keysym.sym) {
-        //    case SDLK_SPACE:
-        //        // start ball moving
-        //        break;
-        //    }
-        //    break; // SDL_KEYDOWN
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym) {
+            case SDLK_SPACE:
+                state.pokeball->startGame();
+                break;
+            }
+            break; // SDL_KEYDOWN
         }
     }
 
@@ -155,9 +153,9 @@ void ProcessInput() {
         state.pokeball->movement.x = 1.0f;
     }
 
-   /* if (glm::length(state.charmander->movement) > 1.0f) {
-        state.charmander->movement = glm::normalize(state.charmander->movement);
-    }*/
+    if (glm::length(state.pokeball->movement) > 1.0f) {
+        state.pokeball->movement = glm::normalize(state.pokeball->movement);
+    }
 }
 
 void checkCollision() {
