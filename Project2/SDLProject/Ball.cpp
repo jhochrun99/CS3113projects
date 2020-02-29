@@ -1,38 +1,48 @@
-#include "Player.h"
+#include "Ball.h"
 
-Player::Player() {
+Ball::Ball() {
     position = glm::vec3(0);
-    previousPosition = position;
     speed = 0;
-    height = 0.6f; //both based off visible part of sprite
-    width = 0.5f; 
+    size = 0.42f; //both based off visible part of sprite
     yBoundary = 3.75f;
+    xBoundary = 5.0f;
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
 }
 
-void Player::Update(float deltaTime) {
-    previousPosition = position;
+void Ball::Update(float deltaTime) {
     position += movement * speed * deltaTime;
-    bool movingUp = position.y > 0;
 
-    if(movingUp && (position.y + height/2) < yBoundary) { //won't let Player move past top of window
+    bool movingUp = position.y > 0;
+    bool movingRight = position.x > 0;
+
+    //won't let Ball move past top of window
+    //if (movingUp && (position.y + size / 2) < yBoundary) {
+    //    modelMatrix = glm::mat4(1.0f);
+    //    modelMatrix = glm::translate(modelMatrix, position);
+    //} //won't let Ball move past bottom of window
+    //else if (!movingUp && (position.y - size / 2) > -yBoundary) {
+    //    modelMatrix = glm::mat4(1.0f);
+    //    modelMatrix = glm::translate(modelMatrix, position);
+    //}
+    /*else {
+        position.y = -position.y;
+    }*/
+    
+    ////won't let Ball move past right of window
+    if (movingRight && (position.x + size / 2) < xBoundary) { 
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
-    } 
-    else if(!movingUp && (position.y - height/2) > -yBoundary) { //won't let Player move past bottom of window
+    } //won't let Ball move past left of window
+    else if (!movingRight && (position.x - size / 2) > -xBoundary) {
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
-    } 
-    else { 
-    //prevents Player from lagging if they run into the edge of the window for a while before changing direction
-        position = previousPosition; 
     }
 }
 
-void Player::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index) {
-    float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+void Ball::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index) {
+    float vertices[] = { -0.25, -0.25, 0.25, -0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, -0.25, 0.25 };
 
     glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -46,10 +56,10 @@ void Player::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-void Player::Render(ShaderProgram* program) {
+void Ball::Render(ShaderProgram* program) {
     program->SetModelMatrix(modelMatrix);
 
-    float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+    float vertices[] = { -0.25, -0.25, 0.25, -0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, -0.25, 0.25 };
     float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
 
     glBindTexture(GL_TEXTURE_2D, textureID);

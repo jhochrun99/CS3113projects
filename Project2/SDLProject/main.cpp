@@ -14,6 +14,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Player.h"
+#include "Ball.h"
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -24,7 +25,7 @@ glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 struct GameState {
     Player* charmander;
     Player* squirtle;
-    //if i define another type for the circle, add here
+    Ball* pokeball;
 };
 
 GameState state;
@@ -74,13 +75,17 @@ void Initialize() {
     glUseProgram(program.programID);
 
     //shows background color and allows transparency
-    glClearColor(0.6f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.15f, 0.04f, 0.21f, 1.0f); //dark purple color; RGB code / 255
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     // Initialize Game Objects
-    // put circle or pokeball here
+    state.pokeball = new Ball();
+    state.pokeball->position = glm::vec3(0);
+    state.pokeball->movement = glm::vec3(0);
+    state.pokeball->speed = 3.0f;
+    state.pokeball->textureID = LoadTexture("pokeballTRp.png");
 
     // Initialize Players
     state.charmander = new Player();
@@ -99,6 +104,8 @@ void Initialize() {
 void ProcessInput() {
     state.charmander->movement = glm::vec3(0);
     state.squirtle->movement = glm::vec3(0);
+
+    state.pokeball->movement = glm::vec3(0);
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -134,9 +141,28 @@ void ProcessInput() {
         state.squirtle->movement.y = -1.0f;
     }
 
+
+    if (keys[SDL_SCANCODE_T]) {
+        state.pokeball->movement.y = 1.0f;
+    }
+    else if (keys[SDL_SCANCODE_V]) {
+        state.pokeball->movement.y = -1.0f;
+    }
+    else if (keys[SDL_SCANCODE_F]) {
+        state.pokeball->movement.x = -1.0f;
+    }
+    else if (keys[SDL_SCANCODE_G]) {
+        state.pokeball->movement.x = 1.0f;
+    }
+
    /* if (glm::length(state.charmander->movement) > 1.0f) {
         state.charmander->movement = glm::normalize(state.charmander->movement);
     }*/
+}
+
+void checkCollision() {
+
+
 }
 
 float lastTicks = 0.0f;
@@ -148,6 +174,7 @@ void Update() {
 
     state.charmander->Update(deltaTime);
     state.squirtle->Update(deltaTime);
+    state.pokeball->Update(deltaTime);
 }
 
 void Render() {
@@ -155,6 +182,7 @@ void Render() {
 
     state.charmander->Render(&program);
     state.squirtle->Render(&program);
+    state.pokeball->Render(&program);
 
     SDL_GL_SwapWindow(displayWindow);
 }

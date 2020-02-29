@@ -12,21 +12,20 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
-class Player {
+class Ball {
 public:
     glm::vec3 position;
-    glm::vec3 previousPosition;
     glm::vec3 movement;
     float speed;
-    float height;
-    float width; 
+    float size; //square, doesn't need height/width
     float yBoundary;
+    float xBoundary;
 
     GLuint textureID;
 
     glm::mat4 modelMatrix;
 
-    Player();
+    Ball();
 
     void Update(float deltaTime);
     void Render(ShaderProgram* program);
