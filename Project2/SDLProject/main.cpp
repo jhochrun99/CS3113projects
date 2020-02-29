@@ -84,7 +84,7 @@ void Initialize() {
     state.pokeball = new Ball();
     state.pokeball->position = glm::vec3(0);
     state.pokeball->movement = glm::vec3(0);
-    state.pokeball->speed = 2.0f;
+    state.pokeball->speed = 2.5f;
     state.pokeball->textureID = LoadTexture("pokeballTRp.png");
 
     // Initialize Players
@@ -98,7 +98,7 @@ void Initialize() {
     state.squirtle->position = glm::vec3(4.5, 0, 0);
     state.squirtle->movement = glm::vec3(0);
     state.squirtle->speed = 2.0f;
-    state.squirtle->textureID = LoadTexture("ninjaCharmTRp.png");
+    state.squirtle->textureID = LoadTexture("squirtleTRp.png");
 }
 
 void ProcessInput() {
@@ -115,7 +115,7 @@ void ProcessInput() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_SPACE:
+            case SDLK_SPACE: //start game with spacebar
                 state.pokeball->startGame();
                 break;
             }
@@ -125,42 +125,29 @@ void ProcessInput() {
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-    if (keys[SDL_SCANCODE_W]) {
+    if (keys[SDL_SCANCODE_W]) { //move charmander with w and s keys
         state.charmander->movement.y = 1.0f;
     }
     else if (keys[SDL_SCANCODE_S]) {
         state.charmander->movement.y = -1.0f;
     }
 
-    if (keys[SDL_SCANCODE_UP]) {
+    if (keys[SDL_SCANCODE_UP]) { //move squirtle with up and down arrows
         state.squirtle->movement.y = 1.0f;
     }
     else if (keys[SDL_SCANCODE_DOWN]) {
         state.squirtle->movement.y = -1.0f;
     }
 
-
-    if (keys[SDL_SCANCODE_T]) {
-        state.pokeball->movement.y = 1.0f;
-    }
-    else if (keys[SDL_SCANCODE_V]) {
-        state.pokeball->movement.y = -1.0f;
-    }
-    else if (keys[SDL_SCANCODE_F]) {
-        state.pokeball->movement.x = -1.0f;
-    }
-    else if (keys[SDL_SCANCODE_G]) {
-        state.pokeball->movement.x = 1.0f;
-    }
-
-    if (glm::length(state.pokeball->movement) > 1.0f) {
+    if (glm::length(state.pokeball->movement) > 1.0f) { //keep ball speed constant
         state.pokeball->movement = glm::normalize(state.pokeball->movement);
     }
 }
 
-void checkCollision() {
+bool checkCollision() { //check if ball hits either player
 
 
+    return true;
 }
 
 float lastTicks = 0.0f;

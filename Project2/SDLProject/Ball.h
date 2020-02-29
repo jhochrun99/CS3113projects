@@ -15,6 +15,7 @@
 class Ball {
 public:
     glm::vec3 position;
+    glm::vec3 previousPosition;
     glm::vec3 movement;
     float speed;
     float size; //square, doesn't need height/width

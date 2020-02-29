@@ -6,7 +6,7 @@
 Ball::Ball() {
     //position = glm::vec3(0);
     speed = 0;
-    size = 0.42f; //both based off visible part of sprite
+    size = 0.42f; //size based off visible part of sprite
     yBoundary = 3.75f;
     xBoundary = 5.0f;
 
@@ -15,6 +15,7 @@ Ball::Ball() {
 }
 
 void Ball::Update(float deltaTime) {
+    previousPosition = position;
     position += movement * speed * deltaTime;
 
     bool movingUp = position.y > 0;
@@ -27,10 +28,16 @@ void Ball::Update(float deltaTime) {
     bool yDirectionClear = (movingUp && (position.y + size / 2) < yBoundary)
         || (!movingUp && (position.y - size / 2) > -yBoundary);
     
-    if (xDirectionClear && yDirectionClear) {
-        modelMatrix = glm::mat4(1.0f);
-        modelMatrix = glm::translate(modelMatrix, position);
+    if (!xDirectionClear) { //hit side of window, stop ball - game over
+        position = previousPosition;
     }
+    else if (!yDirectionClear) { //hit top or bottom of window
+        movement.y = -movement.y;
+        position.y = previousPosition.y + movement.y * speed * deltaTime;
+    }
+
+    modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
 }
 
 void Ball::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index) {
@@ -82,4 +89,3 @@ void Ball::startGame() {
         }
     }
 }
-

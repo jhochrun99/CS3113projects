@@ -49,5 +49,8 @@
     <Image Include="pokeballTRp.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="squirtleTRp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
