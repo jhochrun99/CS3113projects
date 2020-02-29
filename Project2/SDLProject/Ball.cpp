@@ -20,22 +20,14 @@ void Ball::Update(float deltaTime) {
     bool movingUp = position.y > 0;
     bool movingRight = position.x > 0;
 
-    //won't let Ball move past top of window
-    //if (movingUp && (position.y + size / 2) < yBoundary) {
-    //    modelMatrix = glm::mat4(1.0f);
-    //    modelMatrix = glm::translate(modelMatrix, position);
-    //} //won't let Ball move past bottom of window
-    //else if (!movingUp && (position.y - size / 2) > -yBoundary) {
-    //    modelMatrix = glm::mat4(1.0f);
-    //    modelMatrix = glm::translate(modelMatrix, position);
-    //}
+    //if true, there is no collision in x-axis
+    bool xDirectionClear = (movingRight && (position.x + size / 2) < xBoundary)
+        || (!movingRight && (position.x - size / 2) > -xBoundary);
+    //if true, there is no collision in y-axis
+    bool yDirectionClear = (movingUp && (position.y + size / 2) < yBoundary)
+        || (!movingUp && (position.y - size / 2) > -yBoundary);
     
-    ////won't let Ball move past right of window
-    if (movingRight && (position.x + size / 2) < xBoundary) { 
-        modelMatrix = glm::mat4(1.0f);
-        modelMatrix = glm::translate(modelMatrix, position);
-    } //won't let Ball move past left of window
-    else if (!movingRight && (position.x - size / 2) > -xBoundary) {
+    if (xDirectionClear && yDirectionClear) {
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
     }
@@ -90,3 +82,4 @@ void Ball::startGame() {
         }
     }
 }
+
