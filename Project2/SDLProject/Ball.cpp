@@ -85,4 +85,7 @@ void Ball::startGame() {
             movement.y = 1 + (rand() % 10);
         }
     }
+    
+    //speed needs to be reset for game to be played more than once
+    speed = 2.5f; 
 }

@@ -84,7 +84,6 @@ void Initialize() {
     state.pokeball = new Ball();
     state.pokeball->position = glm::vec3(0);
     state.pokeball->movement = glm::vec3(0);
-    state.pokeball->speed = 2.5f;
     state.pokeball->textureID = LoadTexture("pokeballTRp.png");
 
     // Initialize Players ("paddles")
@@ -118,6 +117,8 @@ void ProcessInput() {
             case SDLK_SPACE: //start game with spacebar
                 state.pokeball->startGame();
                 break;
+            case SDLK_q: //press q to speed up ball
+                state.pokeball->speed += 0.5f;
             }
             break; // SDL_KEYDOWN
         }
@@ -148,10 +149,10 @@ void ProcessInput() {
 Player* activePlayer; //will hold whichever player ball is closer to
 float xDist, yDist;
 void checkCollision() { //check if ball hits either player
-    if (state.pokeball->position.x >= 0) { //on right side
+    if (state.pokeball->position.x >= 0) { //on right side, player is squirtle
         activePlayer = state.squirtle;
     }
-    else { //on left side
+    else { //on left side, player is charmander
         activePlayer = state.charmander;
     }
 
@@ -162,7 +163,11 @@ void checkCollision() { //check if ball hits either player
         - (activePlayer->height + state.pokeball->size) / 2;
 
     if (xDist < 0 && yDist < 0) { //if both distances are < 0, there's a collision
-        state.pokeball->movement.x = -state.pokeball->movement.x;
+        if (xDist > -0.05) { 
+            //to prevent ball from being hit from the top/bottom of the Player
+            //if the ball is past this x distance and didn't hit yet, the Player missed it
+            state.pokeball->movement.x = -state.pokeball->movement.x;
+        }
     }
 }
 
