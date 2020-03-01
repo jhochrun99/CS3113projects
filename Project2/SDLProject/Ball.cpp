@@ -4,14 +4,10 @@
 #include <stdio.h>
 
 Ball::Ball() {
-    //position = glm::vec3(0);
     speed = 0;
     size = 0.42f; //size based off visible part of sprite
     yBoundary = 3.75f;
     xBoundary = 5.0f;
-
-    /*modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, position);*/
 }
 
 void Ball::Update(float deltaTime) {
@@ -30,6 +26,7 @@ void Ball::Update(float deltaTime) {
     
     if (!xDirectionClear) { //hit side of window, stop ball - game over
         position = previousPosition;
+        speed = 0; //stops game from continuing if Player goes over ball after game has ended
     }
     else if (!yDirectionClear) { //hit top or bottom of window
         movement.y = -movement.y;

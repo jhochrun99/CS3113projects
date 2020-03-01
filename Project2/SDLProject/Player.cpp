@@ -1,7 +1,6 @@
 #include "Player.h"
 
 Player::Player() {
-    //position = glm::vec3(0);
     previousPosition = position;
     speed = 0;
     height = 0.6f; //both based off visible part of sprite
@@ -17,16 +16,18 @@ void Player::Update(float deltaTime) {
     position += movement * speed * deltaTime;
     bool movingUp = position.y > 0;
 
-    if(movingUp && (position.y + height/2) < yBoundary) { //won't let Player move past top of window
+    //won't let Player move past top of window
+    if(movingUp && (position.y + height/2) < yBoundary) { 
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
-    } 
-    else if(!movingUp && (position.y - height/2) > -yBoundary) { //won't let Player move past bottom of window
+    } //won't let Player move past bottom of window
+    else if(!movingUp && (position.y - height/2) > -yBoundary) { 
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
     } 
     else { 
-    //prevents Player from lagging if they run into the edge of the window for a while before changing direction
+        //prevents Player from lagging if they run into the edge of the 
+        //window for a while before changing direction
         position = previousPosition; 
     }
 }

@@ -80,14 +80,14 @@ void Initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-    // Initialize Game Objects
+    // Initialize Ball
     state.pokeball = new Ball();
     state.pokeball->position = glm::vec3(0);
     state.pokeball->movement = glm::vec3(0);
     state.pokeball->speed = 2.5f;
     state.pokeball->textureID = LoadTexture("pokeballTRp.png");
 
-    // Initialize Players
+    // Initialize Players ("paddles")
     state.charmander = new Player();
     state.charmander->position = glm::vec3(-4.5, 0, 0);
     state.charmander->movement = glm::vec3(0);
@@ -144,10 +144,26 @@ void ProcessInput() {
     }
 }
 
-bool checkCollision() { //check if ball hits either player
+//function for checking if the ball collides with either Player
+Player* activePlayer; //will hold whichever player ball is closer to
+float xDist, yDist;
+void checkCollision() { //check if ball hits either player
+    if (state.pokeball->position.x >= 0) { //on right side
+        activePlayer = state.squirtle;
+    }
+    else { //on left side
+        activePlayer = state.charmander;
+    }
 
+    //calculating the distance between the ball and player for both x and y axes
+    xDist = (fabs(activePlayer->position.x - state.pokeball->position.x))
+        - (activePlayer->width + state.pokeball->size)/2;
+    yDist = (fabs(activePlayer->position.y - state.pokeball->position.y))
+        - (activePlayer->height + state.pokeball->size) / 2;
 
-    return true;
+    if (xDist < 0 && yDist < 0) { //if both distances are < 0, there's a collision
+        state.pokeball->movement.x = -state.pokeball->movement.x;
+    }
 }
 
 float lastTicks = 0.0f;
@@ -159,6 +175,7 @@ void Update() {
 
     state.charmander->Update(deltaTime);
     state.squirtle->Update(deltaTime);
+    checkCollision();
     state.pokeball->Update(deltaTime);
 }
 
