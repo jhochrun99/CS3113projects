@@ -12,8 +12,12 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
+enum EntityType { PLAYER, PLATFORM, GOAL };
+
 class Entity {
 public:
+    EntityType entityType;
+
     glm::vec3 position;
     glm::vec3 velocity;
     glm::vec3 acceleration;
@@ -24,6 +28,7 @@ public:
     float height = 1;
 
     bool isActive = true;
+    bool canMove = true;
 
     bool collidedTop = false;
     bool collidedBottom = false;
@@ -49,6 +54,9 @@ public:
     Entity();
 
     bool CheckCollision(Entity* other);
+    void CheckCollisionY(Entity* objects, int objectCount);
+    void CheckCollisionX(Entity* objects, int objectCount);
+
     void Update(float deltaTime);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);

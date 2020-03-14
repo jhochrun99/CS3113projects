@@ -1,7 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity()
-{
+Entity::Entity() {
     position = glm::vec3(0);
     velocity = glm::vec3(0);
     acceleration = glm::vec3(0);
@@ -12,9 +11,10 @@ Entity::Entity()
 }
 
 bool Entity::CheckCollision(Entity* other) {
+    if (!isActive || !other->isActive) { return false; }
+
     float xDist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
     float yDist = fabs(position.y - other->position.y) - ((height + other->height) / 2.0f);
-
 
     if (xDist < 0 && yDist < 0) {
         return true;
@@ -23,9 +23,53 @@ bool Entity::CheckCollision(Entity* other) {
     return false;
 }
 
+void Entity::CheckCollisionY(Entity* objects, int objectCount) {
+    for (int i = 0; i < objectCount; i++) {
+        Entity* object = &objects[i];
+
+        if (CheckCollision(object)) {
+            float yDist = fabs(position.y - object->position.y);
+            float yOverlap = fabs((height + object->height) / 2.0f);
+            if (velocity.y > 0) {
+                position.y -= yOverlap;
+                velocity.y = 0;
+                collidedTop = true;
+            }
+            else if (velocity.y < 0) {
+                position.y += yOverlap;
+                velocity.y = 0;
+                collidedBottom = true;
+            }
+        }
+    }
+}
+
+void Entity::CheckCollisionX(Entity* objects, int objectCount) {
+    for (int i = 0; i < objectCount; i++) {
+        Entity* object = &objects[i];
+
+        if (CheckCollision(object)) {
+            float xDist = fabs(position.x - object->position.x);
+            float xOverlap = fabs((width + object->width) / 2.0f);
+
+            if (velocity.x > 0) {
+                position.x -= xOverlap;
+                velocity.x = 0;
+                collidedRight = true;
+            }
+            else if (velocity.x < 0) {
+                position.x += xOverlap;
+                velocity.x = 0;
+                collidedLeft = true;
+            }
+        }
+    }
+}
+
 void Entity::Update(float deltaTime)
 {
     if (!isActive) { return; } //don't do anything if not active
+    if (!canMove) { return; } //can't move, doesn't need to be updated
 
     collidedTop = false;
     collidedBottom = false;
@@ -53,7 +97,11 @@ void Entity::Update(float deltaTime)
 
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
-    position += velocity * deltaTime;
+    
+    position.y += velocity.y * deltaTime;
+    //CheckCollisionY(platforms, platformCount);
+    position.x += velocity.x * deltaTime;
+    //CheckCollisionX(platforms, platformCount);
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);

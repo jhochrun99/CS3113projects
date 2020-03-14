@@ -16,11 +16,13 @@
 
 #include "Entity.h"
 
-#define PLATFORM_COUNT 3 //determine how many platforms to make
+#define PLATFORM_COUNT 10 //determine how many platforms to make
+#define WALL_COUNT 12 //determines how tall walls are; should be even value
 
 struct GameState {
     Entity* player;
     Entity* platforms;
+    Entity* walls;
 };
 
 GameState state;
@@ -81,8 +83,37 @@ void Initialize() {
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
     // Initialize Game Objects
+    state.platforms = new Entity[PLATFORM_COUNT];
+    GLuint platformTextureID = LoadTexture("platformIndustrial_grey.png");
+    float locationPlatform = -4.5f;
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].entityType = PLATFORM;
+        state.platforms[i].textureID = platformTextureID;
+        state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
+        locationPlatform++;
+        state.platforms[i].Update(0); //update platforms once to get them to move to set position
+        state.platforms[i].canMove = false; //in position, will never move again
+    }
+
+    state.walls = new Entity[WALL_COUNT];
+    GLuint wallTextureID = LoadTexture("platformIndustrial_dark.png");
+    float locationWall = -2.5f;
+    for (int i = 0; i < WALL_COUNT; i+=2) {
+        //draws 2 wall blocks each loop, one on left and one on right
+        state.walls[i].entityType = PLATFORM;
+        state.walls[i].textureID = wallTextureID;
+        state.walls[i].position = glm::vec3(-4.5f, locationWall, 0);
+        state.walls[i].Update(0); //update platforms once to get them to move to set position
+        state.walls[i].canMove = false; //in position, will never move again
+
+        state.walls[i+1].entityType = PLATFORM;
+        state.walls[i+1].textureID = wallTextureID;
+        state.walls[i+1].position = glm::vec3(4.5f, locationWall, 0);
+        state.walls[i+1].Update(0); //update platforms once to get them to move to set position
+        state.walls[i+1].canMove = false; //in position, will never move again
+        locationWall++;
+    }
 
     // Initialize Player
     state.player = new Entity();
@@ -103,27 +134,9 @@ void Initialize() {
     state.player->animTime = 0;
     state.player->animCols = 4;
     state.player->animRows = 4;
-
-    state.platforms = new Entity[PLATFORM_COUNT];
-    GLuint platformTextureID = LoadTexture("platformPack_tile001.png");
-
-    state.platforms[0].textureID = platformTextureID;
-    state.platforms[0].position = glm::vec3(-1, -3.5f, 0);
-
-    state.platforms[1].textureID = platformTextureID;
-    state.platforms[1].position = glm::vec3(0, -3.5f, 0);
-
-    state.platforms[2].textureID = platformTextureID;
-    state.platforms[2].position = glm::vec3(1, -3.5f, 0);
-
-    //update platforms once to get them to move to set position
-    for (int i = 0; i < PLATFORM_COUNT; i++) {
-        state.platforms[i].Update(0); 
-    }
 }
 
 void ProcessInput() {
-
     state.player->movement = glm::vec3(0);
 
     SDL_Event event;
@@ -199,6 +212,10 @@ void Render() {
 
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].Render(&program);
+    }
+
+    for (int i = 0; i < WALL_COUNT; i++) {
+        state.walls[i].Render(&program);
     }
 
     state.player->Render(&program);
