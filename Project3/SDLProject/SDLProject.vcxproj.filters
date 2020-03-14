@@ -40,13 +40,19 @@
     <Image Include="george_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="platformPack_tile001.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="platformIndustrial_grey.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="platformIndustrial_dark.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="platformIndustrial_101.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="platformIndustrial_102.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="platformIndustrial_103.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

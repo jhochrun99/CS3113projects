@@ -24,8 +24,8 @@ public:
     glm::vec3 movement;
     float speed;
 
-    float width = 1;
-    float height = 1;
+    float width = 1.0f;
+    float height = 1.0f;
 
     bool isActive = true;
     bool canMove = true;
@@ -57,7 +57,7 @@ public:
     void CheckCollisionY(Entity* objects, int objectCount);
     void CheckCollisionX(Entity* objects, int objectCount);
 
-    void Update(float deltaTime);
+    void Update(float deltaTime, Entity* platform, int platformCount);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 };

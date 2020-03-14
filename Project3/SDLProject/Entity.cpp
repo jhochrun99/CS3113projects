@@ -28,8 +28,8 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            float yDist = fabs(position.y - object->position.y);
-            float yOverlap = fabs((height + object->height) / 2.0f);
+            //float yDist = fabs(position.y - object->position.y);
+            float yOverlap = fabs(fabs(position.y - object->position.y) - (height / 2.0f) - (object->height / 2.0f));
             if (velocity.y > 0) {
                 position.y -= yOverlap;
                 velocity.y = 0;
@@ -49,8 +49,8 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            float xDist = fabs(position.x - object->position.x);
-            float xOverlap = fabs((width + object->width) / 2.0f);
+            //float xDist = fabs(position.x - object->position.x);
+            float xOverlap = fabs(fabs(position.x - object->position.x) - (width / 2.0f) - (object->width / 2.0f));
 
             if (velocity.x > 0) {
                 position.x -= xOverlap;
@@ -66,7 +66,7 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
     }
 }
 
-void Entity::Update(float deltaTime)
+void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
 {
     if (!isActive) { return; } //don't do anything if not active
     if (!canMove) { return; } //can't move, doesn't need to be updated
@@ -95,13 +95,17 @@ void Entity::Update(float deltaTime)
         }
     }
 
+    //for (int i = 0; i < platformCount; i++) {
+    //    if (CheckCollision(&platforms[i])) { return;  }
+    //}
+
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;
-    //CheckCollisionY(platforms, platformCount);
+    CheckCollisionY(platforms, platformCount);
     position.x += velocity.x * deltaTime;
-    //CheckCollisionX(platforms, platformCount);
+    CheckCollisionX(platforms, platformCount);
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);

@@ -18,11 +18,13 @@
 
 #define PLATFORM_COUNT 10 //determine how many platforms to make
 #define WALL_COUNT 12 //determines how tall walls are; should be even value
+#define GOAL_SIZE 2
 
 struct GameState {
     Entity* player;
     Entity* platforms;
     Entity* walls;
+    Entity* goal;
 };
 
 GameState state;
@@ -92,7 +94,7 @@ void Initialize() {
         state.platforms[i].textureID = platformTextureID;
         state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
         locationPlatform++;
-        state.platforms[i].Update(0); //update platforms once to get them to move to set position
+        state.platforms[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.platforms[i].canMove = false; //in position, will never move again
     }
 
@@ -104,24 +106,39 @@ void Initialize() {
         state.walls[i].entityType = PLATFORM;
         state.walls[i].textureID = wallTextureID;
         state.walls[i].position = glm::vec3(-4.5f, locationWall, 0);
-        state.walls[i].Update(0); //update platforms once to get them to move to set position
+        state.walls[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.walls[i].canMove = false; //in position, will never move again
 
         state.walls[i+1].entityType = PLATFORM;
         state.walls[i+1].textureID = wallTextureID;
         state.walls[i+1].position = glm::vec3(4.5f, locationWall, 0);
-        state.walls[i+1].Update(0); //update platforms once to get them to move to set position
+        state.walls[i+1].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.walls[i+1].canMove = false; //in position, will never move again
         locationWall++;
     }
 
+    state.goal = new Entity[GOAL_SIZE];
+    GLuint goalTexture1 = LoadTexture("platformIndustrial_101.png");
+    GLuint goalTexture2 = LoadTexture("platformIndustrial_103.png");
+    float goalPosition = 2.0f;
+    for (int i = 0; i < GOAL_SIZE; i++) {
+        state.goal[i].entityType = GOAL;
+        state.goal[i].position = glm::vec3(goalPosition, -2.5f, 0);
+        state.goal[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.goal[i].canMove = false; //in position, will never move again
+        goalPosition++;
+    }
+    state.goal[0].textureID = goalTexture1;
+    state.goal[1].textureID = goalTexture2;
+
     // Initialize Player
     state.player = new Entity();
-    state.player->position = glm::vec3(0);
+    state.player->position = glm::vec3(-3.5f, 4.0f, 0);
     state.player->acceleration = glm::vec3(0, -1.81f, 0);
     state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
+    state.player->height = 0.8f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -198,7 +215,7 @@ void Update() {
     }
 
     while (deltaTime >= FIXED_TIMESTEP) {
-        state.player->Update(FIXED_TIMESTEP);
+        state.player->Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
 
         deltaTime -= FIXED_TIMESTEP;
     }
@@ -216,6 +233,10 @@ void Render() {
 
     for (int i = 0; i < WALL_COUNT; i++) {
         state.walls[i].Render(&program);
+    }
+
+    for (int i = 0; i < GOAL_SIZE; i++) {
+        state.goal[i].Render(&program);
     }
 
     state.player->Render(&program);
