@@ -20,6 +20,8 @@
 #define WALL_COUNT 12 //determines how tall walls are; should be even value
 #define GOAL_SIZE 2
 
+enum GameMode { START, PLAY, END };
+
 struct GameState {
     Entity* player;
     Entity* platforms;
@@ -28,6 +30,7 @@ struct GameState {
 };
 
 GameState state;
+GameMode mode; 
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -84,6 +87,8 @@ void Initialize() {
     glEnable(GL_BLEND);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    mode = START; //set initial game mode 
 
     // Initialize Game Objects
     state.platforms = new Entity[PLATFORM_COUNT];
@@ -153,9 +158,8 @@ void Initialize() {
     state.player->animRows = 4;
 }
 
-void ProcessInput() {
-    state.player->movement = glm::vec3(0);
-
+//all of the code for processing input
+void ProcessInputStart() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -166,19 +170,25 @@ void ProcessInput() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_LEFT:
-                // Move the player left
-                break;
-
-            case SDLK_RIGHT:
-                // Move the player right
-                break;
-
             case SDLK_SPACE:
-                // Some sort of action
+                mode = PLAY;
                 break;
             }
             break; // SDL_KEYDOWN
+        }
+    }
+}
+
+void ProcessInputPlay() {
+    state.player->movement = glm::vec3(0);
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+        case SDL_QUIT:
+        case SDL_WINDOWEVENT_CLOSE:
+            gameIsRunning = false;
+            break;
         }
     }
 
@@ -196,18 +206,36 @@ void ProcessInput() {
     if (glm::length(state.player->movement) > 1.0f) {
         state.player->movement = glm::normalize(state.player->movement);
     }
-
 }
 
+void ProcessInputEnd() {
+    //can press space to restart
+}
+
+void ProcessInput() {
+    switch (mode) { //current modes: START, PLAY, END
+        case START:
+            ProcessInputStart();
+            break;
+        case PLAY:
+            ProcessInputPlay();
+            break;
+        case END:
+            ProcessInputEnd();
+            break;
+    }
+}
+
+//all of the code for updating
 #define FIXED_TIMESTEP 0.0166666f
 float lastTicks = 0.0f;
 float accumulator = 0.0f;
 
-void Update() {
-    float ticks = (float)SDL_GetTicks() / 1000.0f;
-    float deltaTime = ticks - lastTicks;
-    lastTicks = ticks;
+void UpdateStart(float deltaTime) {
 
+}
+
+void UpdatePlay(float deltaTime) {
     deltaTime += accumulator;
     if (deltaTime < FIXED_TIMESTEP) {
         accumulator = deltaTime;
@@ -216,17 +244,50 @@ void Update() {
 
     while (deltaTime >= FIXED_TIMESTEP) {
         state.player->Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
-
         deltaTime -= FIXED_TIMESTEP;
     }
 
     accumulator = deltaTime;
 }
 
+void UpdateEnd(float deltaTime) {
 
-void Render() {
-    glClear(GL_COLOR_BUFFER_BIT);
+}
 
+void Update() {
+    float ticks = (float)SDL_GetTicks() / 1000.0f;
+    float deltaTime = ticks - lastTicks;
+    lastTicks = ticks;
+
+    switch (mode) { //current modes: START, PLAY, END
+        case START:
+            UpdateStart(deltaTime);
+            break;
+        case PLAY:
+            UpdatePlay(deltaTime);
+            break;
+        case END:
+            UpdateEnd(deltaTime);
+            break;
+    }
+}
+
+//all of the code for rendering 
+void RenderStart() {
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].Render(&program);
+    }
+
+    for (int i = 0; i < WALL_COUNT; i++) {
+        state.walls[i].Render(&program);
+    }
+
+    for (int i = 0; i < GOAL_SIZE; i++) {
+        state.goal[i].Render(&program);
+    }
+}
+
+void RenderPlay() {
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].Render(&program);
     }
@@ -240,11 +301,31 @@ void Render() {
     }
 
     state.player->Render(&program);
+}
+
+void RenderEnd() {
+
+}
+
+void Render() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    switch (mode) { //current modes: START, PLAY, END
+        case START:
+            RenderStart();
+            break;
+        case PLAY:
+            RenderPlay();
+            break;
+        case END:
+            RenderEnd();
+            break;
+    }
 
     SDL_GL_SwapWindow(displayWindow);
 }
 
-
+//shutdown and main
 void Shutdown() {
     SDL_Quit();
 }
