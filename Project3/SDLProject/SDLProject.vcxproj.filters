@@ -52,5 +52,8 @@
     <Image Include="platformIndustrial_103.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="font1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

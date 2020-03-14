@@ -29,6 +29,7 @@ public:
 
     bool isActive = true;
     bool canMove = true;
+    EntityType lastCollision = PLAYER; 
 
     bool collidedTop = false;
     bool collidedBottom = false;

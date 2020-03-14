@@ -40,6 +40,7 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 velocity.y = 0;
                 collidedBottom = true;
             }
+            lastCollision = objects->entityType;
         }
     }
 }
@@ -51,7 +52,6 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
         if (CheckCollision(object)) {
             //float xDist = fabs(position.x - object->position.x);
             float xOverlap = fabs(fabs(position.x - object->position.x) - (width / 2.0f) - (object->width / 2.0f));
-
             if (velocity.x > 0) {
                 position.x -= xOverlap;
                 velocity.x = 0;
@@ -62,6 +62,7 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
                 velocity.x = 0;
                 collidedLeft = true;
             }
+            lastCollision = objects->entityType;
         }
     }
 }
@@ -94,10 +95,6 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
             animIndex = 0;
         }
     }
-
-    //for (int i = 0; i < platformCount; i++) {
-    //    if (CheckCollision(&platforms[i])) { return;  }
-    //}
 
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
