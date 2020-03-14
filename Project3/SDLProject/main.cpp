@@ -16,8 +16,11 @@
 
 #include "Entity.h"
 
+#define PLATFORM_COUNT 3 //determine how many platforms to make
+
 struct GameState {
     Entity* player;
+    Entity* platforms;
 };
 
 GameState state;
@@ -84,12 +87,43 @@ void Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->position = glm::vec3(0);
+    state.player->acceleration = glm::vec3(0, -1.81f, 0);
     state.player->movement = glm::vec3(0);
-    state.player->speed = 1.0f;
-    state.player->textureID = LoadTexture("ninjaCharmTRp.png");
+    state.player->speed = 2.0f;
+    state.player->textureID = LoadTexture("george_0.png");
+
+    state.player->animRight = new int[4]{ 3, 7, 11, 15 };
+    state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
+    state.player->animUp = new int[4]{ 2, 6, 10, 14 };
+    state.player->animDown = new int[4]{ 0, 4, 8, 12 };
+
+    state.player->animIndices = state.player->animRight;
+    state.player->animFrames = 4;
+    state.player->animIndex = 0;
+    state.player->animTime = 0;
+    state.player->animCols = 4;
+    state.player->animRows = 4;
+
+    state.platforms = new Entity[PLATFORM_COUNT];
+    GLuint platformTextureID = LoadTexture("platformPack_tile001.png");
+
+    state.platforms[0].textureID = platformTextureID;
+    state.platforms[0].position = glm::vec3(-1, -3.5f, 0);
+
+    state.platforms[1].textureID = platformTextureID;
+    state.platforms[1].position = glm::vec3(0, -3.5f, 0);
+
+    state.platforms[2].textureID = platformTextureID;
+    state.platforms[2].position = glm::vec3(1, -3.5f, 0);
+
+    //update platforms once to get them to move to set position
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].Update(0); 
+    }
 }
 
 void ProcessInput() {
+
     state.player->movement = glm::vec3(0);
 
     SDL_Event event;
@@ -102,8 +136,16 @@ void ProcessInput() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+                // Move the player left
+                break;
+
+            case SDLK_RIGHT:
+                // Move the player right
+                break;
+
             case SDLK_SPACE:
-                // start game
+                // Some sort of action
                 break;
             }
             break; // SDL_KEYDOWN
@@ -112,16 +154,14 @@ void ProcessInput() {
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-    if (keys[SDL_SCANCODE_LEFT]) { //move left
+    if (keys[SDL_SCANCODE_LEFT]) {
         state.player->movement.x = -1.0f;
+        state.player->animIndices = state.player->animLeft;
     }
-    else if (keys[SDL_SCANCODE_RIGHT]) { //move right
+    else if (keys[SDL_SCANCODE_RIGHT]) {
         state.player->movement.x = 1.0f;
+        state.player->animIndices = state.player->animRight;
     }
-    else if (keys[SDL_SCANCODE_UP]) {
-        //possibly allow players to move back up slightly?
-    }
-
 
     if (glm::length(state.player->movement) > 1.0f) {
         state.player->movement = glm::normalize(state.player->movement);
@@ -129,19 +169,37 @@ void ProcessInput() {
 
 }
 
+#define FIXED_TIMESTEP 0.0166666f
 float lastTicks = 0.0f;
+float accumulator = 0.0f;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
 
-    state.player->Update(deltaTime);
+    deltaTime += accumulator;
+    if (deltaTime < FIXED_TIMESTEP) {
+        accumulator = deltaTime;
+        return;
+    }
+
+    while (deltaTime >= FIXED_TIMESTEP) {
+        state.player->Update(FIXED_TIMESTEP);
+
+        deltaTime -= FIXED_TIMESTEP;
+    }
+
+    accumulator = deltaTime;
 }
 
 
 void Render() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].Render(&program);
+    }
 
     state.player->Render(&program);
 

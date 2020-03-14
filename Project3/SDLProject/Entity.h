@@ -15,15 +15,40 @@
 class Entity {
 public:
     glm::vec3 position;
+    glm::vec3 velocity;
+    glm::vec3 acceleration;
     glm::vec3 movement;
     float speed;
+
+    float width = 1;
+    float height = 1;
+
+    bool isActive = true;
+
+    bool collidedTop = false;
+    bool collidedBottom = false;
+    bool collidedLeft = false;
+    bool collidedRight = false;
 
     GLuint textureID;
 
     glm::mat4 modelMatrix;
 
+    int* animRight = NULL;
+    int* animLeft = NULL;
+    int* animUp = NULL;
+    int* animDown = NULL;
+
+    int* animIndices = NULL;
+    int animFrames = 0;
+    int animIndex = 0;
+    float animTime = 0;
+    int animCols = 0;
+    int animRows = 0;
+
     Entity();
 
+    bool CheckCollision(Entity* other);
     void Update(float deltaTime);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);

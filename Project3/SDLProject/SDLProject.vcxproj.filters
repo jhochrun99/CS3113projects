@@ -34,7 +34,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ninjaCharmTRp.png">
+    <Image Include="ctg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="george_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="platformPack_tile001.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
