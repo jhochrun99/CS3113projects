@@ -28,7 +28,6 @@ struct GameState {
     Entity* platforms;
     Entity* walls;
     Entity* goal;
-    Entity* explosion;
 };
 
 GameState state;
@@ -202,7 +201,7 @@ void Initialize() {
     state.player->acceleration = glm::vec3(0, -0.5f, 0);
     state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
-    state.player->textureID = LoadTexture("george_0.png");
+    state.player->textureID = LoadTexture("jirachiTRP.png");
     state.player->height = 0.8f;
     state.player->width = 0.7f;
 

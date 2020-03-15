@@ -37,12 +37,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ctg.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="george_0.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="platformIndustrial_grey.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -56,15 +50,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="font1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="tank_explosion4.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="tank_explosion2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="tank_explosion3.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="jirachiTRP.png">
