@@ -28,7 +28,6 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            //float yDist = fabs(position.y - object->position.y);
             float yOverlap = fabs(fabs(position.y - object->position.y) - (height / 2.0f) - (object->height / 2.0f));
             if (velocity.y > 0) {
                 position.y -= yOverlap;
@@ -50,7 +49,6 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            //float xDist = fabs(position.x - object->position.x);
             float xOverlap = fabs(fabs(position.x - object->position.x) - (width / 2.0f) - (object->width / 2.0f));
             if (velocity.x > 0) {
                 position.x -= xOverlap;

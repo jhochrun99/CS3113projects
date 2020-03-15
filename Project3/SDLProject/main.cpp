@@ -14,7 +14,6 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 #include "Entity.h"
 
 #define PLATFORM_COUNT 10 //determine how many platforms to make
@@ -95,7 +94,7 @@ void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
             u, v + height,
         });
 
-    } // end of for loop
+    }
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
@@ -168,13 +167,13 @@ void Initialize() {
         state.walls[i].entityType = PLATFORM;
         state.walls[i].textureID = wallTextureID;
         state.walls[i].position = glm::vec3(-4.5f, locationWall, 0);
-        state.walls[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.walls[i].Update(0, NULL, 0); //update walls once to get them to move to set position
         state.walls[i].canMove = false; //in position, will never move again
 
         state.walls[i+1].entityType = PLATFORM;
         state.walls[i+1].textureID = wallTextureID;
         state.walls[i+1].position = glm::vec3(4.5f, locationWall, 0);
-        state.walls[i+1].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.walls[i+1].Update(0, NULL, 0); //update walls once to get them to move to set position
         state.walls[i+1].canMove = false; //in position, will never move again
         locationWall++;
     }
@@ -182,13 +181,13 @@ void Initialize() {
     state.goal = new Entity[GOAL_SIZE];
     GLuint goalTexture1 = LoadTexture("platformIndustrial_101.png");
     GLuint goalTexture2 = LoadTexture("platformIndustrial_103.png");
-    float goalPosition = -2.5f;
+    float goalPosition = 2.0f;
     for (int i = 0; i < GOAL_SIZE; i++) {
         state.goal[i].entityType = GOAL;
         state.goal[i].position = glm::vec3(goalPosition, -2.5f, 0);
         state.goal[i].height = 0.15f;
         state.goal[i].width = 0.5f;
-        state.goal[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.goal[i].Update(0, NULL, 0); //update goal once to get it to move to set position
         state.goal[i].canMove = false; //in position, will never move again
         goalPosition++;
     }
@@ -202,8 +201,8 @@ void Initialize() {
     state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("jirachiTRP.png");
-    state.player->height = 0.8f;
-    state.player->width = 0.7f;
+    state.player->height = 0.65f;
+    state.player->width = 0.6f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -307,20 +306,20 @@ void ProcessInput() {
 
 //all of the code for updating
 void UpdateStart(float deltaTime) {
-    state.player->lastCollision = PLAYER;
+    state.player->lastCollision = PLAYER; //allows player to move again
 }
 
 void UpdatePlay(float deltaTime) {
     deltaTime += accumulator;
 
-    switch (state.player->lastCollision) { //PLAYER, PLATFORM, GOAL
+    switch (state.player->lastCollision) { 
         case PLATFORM:
             mode = END; //can't touch anything besides goal, end game
             break;
         case GOAL:
             mode = END; //reached goal, end game
             break;
-        case PLAYER: //hasn't hit anything, more like normal
+        case PLAYER: //hasn't hit anything, move like normal
             if (deltaTime < FIXED_TIMESTEP) {
                 accumulator = deltaTime;
                 return;
@@ -347,7 +346,7 @@ void Update() {
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
 
-    switch (mode) { //current modes: START, PLAY, END
+    switch (mode) { 
         case START:
             UpdateStart(deltaTime);
             break;
@@ -401,10 +400,14 @@ void RenderEnd() {
         case GOAL:
             DrawText(&program, fontTextureID, "Mission Successful", 0.5f, -0.25f,
                 glm::vec3(-2.0f, 0, 0));
+            DrawText(&program, fontTextureID, "(press spacebar to reset)", 0.30f, -0.15f,
+                glm::vec3(-1.76f, -0.5f, 0));
             break;
         default:
             DrawText(&program, fontTextureID, "Mission Failed.", 0.5f, -0.25f,
                 glm::vec3(-1.65f, 0, 0));
+            DrawText(&program, fontTextureID, "(press spacebar to reset)", 0.30f, -0.15f,
+                glm::vec3(-1.76f, -0.5f, 0)); 
     }
 
     for (int i = 0; i < PLATFORM_COUNT; i++) {
@@ -425,7 +428,7 @@ void RenderEnd() {
 void Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    switch (mode) { //current modes: START, PLAY, END
+    switch (mode) { 
         case START:
             RenderStart();
             break;
