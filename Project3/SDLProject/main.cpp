@@ -28,6 +28,7 @@ struct GameState {
     Entity* platforms;
     Entity* walls;
     Entity* goal;
+    Entity* explosion;
 };
 
 GameState state;
@@ -198,7 +199,7 @@ void Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->position = glm::vec3(-3.5f, 4.0f, 0);
-    state.player->acceleration = glm::vec3(0, -1.5f, 0);
+    state.player->acceleration = glm::vec3(0, -0.5f, 0);
     state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
@@ -281,10 +282,8 @@ void ProcessInputEnd() {
             switch (event.key.keysym.sym) {
             case SDLK_SPACE: //can press space to clear
                 state.player->position = glm::vec3(-3.5f, 4.0f, 0);
-                state.player->acceleration = glm::vec3(0, -1.5f, 0);
+                state.player->velocity = glm::vec3(0);
                 state.player->movement = glm::vec3(0);
-                accumulator = 0.0f;
-                lastTicks = 0.0f;
                 mode = START;
                 break;
             }
@@ -341,7 +340,7 @@ void UpdatePlay(float deltaTime) {
 }
 
 void UpdateEnd(float deltaTime) {
-
+    //nothing to put here now
 }
 
 void Update() {

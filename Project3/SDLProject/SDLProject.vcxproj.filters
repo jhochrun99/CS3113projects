@@ -32,6 +32,9 @@
     <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="ctg.png">
@@ -53,6 +56,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="font1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tank_explosion4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tank_explosion2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tank_explosion3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="jirachiTRP.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
