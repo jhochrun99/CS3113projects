@@ -39,6 +39,10 @@ bool gameIsRunning = true;
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 
+#define FIXED_TIMESTEP 0.0166666f
+float lastTicks = 0.0f;
+float accumulator = 0.0f;
+
 GLuint LoadTexture(const char* filePath) {
     int w, h, n;
     unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
@@ -194,7 +198,7 @@ void Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->position = glm::vec3(-3.5f, 4.0f, 0);
-    state.player->acceleration = glm::vec3(0, -1.81f, 0);
+    state.player->acceleration = glm::vec3(0, -1.5f, 0);
     state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
@@ -277,9 +281,10 @@ void ProcessInputEnd() {
             switch (event.key.keysym.sym) {
             case SDLK_SPACE: //can press space to clear
                 state.player->position = glm::vec3(-3.5f, 4.0f, 0);
-                state.player->acceleration = glm::vec3(0, -1.81f, 0);
+                state.player->acceleration = glm::vec3(0, -1.5f, 0);
                 state.player->movement = glm::vec3(0);
-                state.player->speed = 2.0f;
+                accumulator = 0.0f;
+                lastTicks = 0.0f;
                 mode = START;
                 break;
             }
@@ -303,10 +308,6 @@ void ProcessInput() {
 }
 
 //all of the code for updating
-#define FIXED_TIMESTEP 0.0166666f
-float lastTicks = 0.0f;
-float accumulator = 0.0f;
-
 void UpdateStart(float deltaTime) {
     state.player->lastCollision = PLAYER;
 }
