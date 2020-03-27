@@ -31,6 +31,7 @@ public:
     float width = 1.0f;
     float height = 1.0f;
     float scale = 1.0f;
+    float senseRadius = 0.0f;
 
     bool isActive = true;
     bool canMove = true;
@@ -39,6 +40,7 @@ public:
     bool collidedBottom = false;
     bool collidedLeft = false;
     bool collidedRight = false;
+    Entity* collidedWith;
 
     GLuint textureID;
 
@@ -61,7 +63,9 @@ public:
     bool CheckCollision(Entity* other);
     void CheckCollisionY(Entity* objects, int objectCount);
     void CheckCollisionX(Entity* objects, int objectCount);
+    bool CheckSense(Entity* object);
 
+    void CheckEnemyCollision(Entity* platform, int platformCount);
     void Update(float deltaTime, Entity* platform, int platformCount);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);

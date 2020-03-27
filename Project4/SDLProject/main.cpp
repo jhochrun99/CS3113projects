@@ -146,7 +146,8 @@ void Initialize() {
     state.enemies[0].textureCols = 8;
     state.enemies[0].textureRows = 3;
     state.enemies[0].animIndices = new int[1]{ 16 };
-    state.enemies[0].height = 0.9f;
+    state.enemies[0].height = 0.5f;
+    state.enemies[0].width = 0.6f;
 
     state.enemies[0].animLeft = new int[8]{ 0, 1, 2, 3, 4, 5, 6, 7 };
     state.enemies[0].animRight = new int[8]{ 8, 9, 10, 11, 12, 13, 14, 15 };
@@ -166,7 +167,8 @@ void Initialize() {
     state.enemies[1].textureCols = 6;
     state.enemies[1].textureRows = 2;
     state.enemies[1].animIndices = new int[1]{ 5 };
-    state.enemies[1].height = 0.9f;
+    state.enemies[2].height = 0.4f;
+    state.enemies[2].width = 0.3f;
 
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
     state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
@@ -178,6 +180,7 @@ void Initialize() {
 
     state.enemies[1].position = glm::vec3(-0.5, 3.2f, 0);
     state.enemies[1].movement = glm::vec3(0);
+    state.enemies[1].senseRadius = 0.5f;
 
     //fire enemy - shoots fireballs
     state.enemies[2].enemyType = FIRE;
@@ -186,7 +189,8 @@ void Initialize() {
     state.enemies[2].textureCols = 5;
     state.enemies[2].textureRows = 3;
     state.enemies[2].animIndices = new int[1]{ 5 };
-    state.enemies[2].height = 0.9f;
+    state.enemies[2].height = 0.6f;
+    state.enemies[2].width = 0.4f;
 
     state.enemies[2].animUp = new int[4]{ 3, 4, 3, 4};
     state.enemies[2].animLeft = new int[4]{ 5, 6, 7, 8 }; //left for turning off
@@ -314,12 +318,15 @@ void UpdatePlay(float deltaTime) {
 
     while (deltaTime >= FIXED_TIMESTEP) {
         state.player->Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+        
         deltaTime -= FIXED_TIMESTEP;
     }
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
     }
+
+    state.player->CheckEnemyCollision(state.enemies, ENEMY_COUNT);
 
     accumulator = deltaTime;
 }

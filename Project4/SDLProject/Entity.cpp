@@ -13,6 +13,10 @@ Entity::Entity() {
 bool Entity::CheckCollision(Entity* other) {
     if (!isActive || !other->isActive) { return false; }
 
+    if (senseRadius > 0) { //check for circle - rectangle collision
+        CheckSense(other);
+    }
+
     float xDist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
     float yDist = fabs(position.y - other->position.y) - ((height + other->height) / 2.0f);
 
@@ -34,11 +38,13 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 position.y -= yOverlap;
                 velocity.y = 0;
                 collidedTop = true;
+                collidedWith = object;
             }
             else if (velocity.y < 0) {
                 position.y += yOverlap;
                 velocity.y = 0;
                 collidedBottom = true;
+                collidedWith = object;
             }
         }
     }
@@ -56,14 +62,20 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
                 position.x -= xOverlap;
                 velocity.x = 0;
                 collidedRight = true;
+                collidedWith = object;
             }
             else if (velocity.x < 0) {
                 position.x += xOverlap;
                 velocity.x = 0;
                 collidedLeft = true;
+                collidedWith = object;
             }
         }
     }
+}
+
+bool Entity::CheckSense(Entity* other) {
+    return true;
 }
 
 
@@ -122,6 +134,29 @@ void Entity::Enemy() {
         case FIRE:
             Fire();
             break;
+    }
+}
+
+void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
+    if (!isActive) { return; } //don't do anything if not active
+    if (!canMove) { return; } //can't move, doesn't need to be updated
+
+    CheckCollisionY(enemies, enemyCount);
+    CheckCollisionX(enemies, enemyCount);
+    
+    //player dies
+    if ((collidedTop || collidedLeft || collidedRight) && collidedWith->entityType == ENEMY) {
+        movement = glm::vec3(0);
+        isActive = false;
+    } //enemy dies, unless enemy is fire
+    else if (collidedBottom && collidedWith->entityType == ENEMY) {
+        if (collidedWith->enemyType != FIRE) {
+            collidedWith->isActive = false;
+        }
+        else {
+            movement = glm::vec3(0);
+            isActive = false;
+        }
     }
 }
 
