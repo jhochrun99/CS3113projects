@@ -19,9 +19,7 @@
 #define FLOOR_COUNT 20 //determine how many floor tiles
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
 #define PLATFORM_COUNT (FLOOR_COUNT*2)+WALL_COUNT
-#define ENEMY_COUNT 2
-
-#define GOAL_SIZE 2
+#define ENEMY_COUNT 3
 
 enum GameMode { START, PLAY, END };
 
@@ -182,23 +180,23 @@ void Initialize() {
     state.enemies[1].movement = glm::vec3(0);
 
     //fire enemy - shoots fireballs
-    //state.enemies[2].enemyType = FIRE;
-    //state.enemies[2].enemyState = IDLE;
-    //state.enemies[2].textureID = LoadTexture("explosionTrp.png");
-    //state.enemies[2].textureCols = 5;
-    //state.enemies[2].textureRows = 3;
-    //state.enemies[2].animIndices = new int[1]{ 5 };
-    //state.enemies[2].height = 0.9f;
+    state.enemies[2].enemyType = FIRE;
+    state.enemies[2].enemyState = IDLE;
+    state.enemies[2].textureID = LoadTexture("explosionTrp.png");
+    state.enemies[2].textureCols = 5;
+    state.enemies[2].textureRows = 3;
+    state.enemies[2].animIndices = new int[1]{ 5 };
+    state.enemies[2].height = 0.9f;
 
-    //state.enemies[2].animUp = new int[4]{ 3, 4, 3, 4};
-    //state.enemies[2].animLeft = new int[4]{ 5, 6, 7, 8 }; //left for turning off
-    //state.enemies[2].animIndices = state.enemies[2].animUp;
-    //state.enemies[2].animFrames = 4;
-    //state.enemies[2].animIndex = 0;
-    //state.enemies[2].animTime = 0;
+    state.enemies[2].animUp = new int[4]{ 3, 4, 3, 4};
+    state.enemies[2].animLeft = new int[4]{ 5, 6, 7, 8 }; //left for turning off
+    state.enemies[2].animIndices = state.enemies[2].animUp;
+    state.enemies[2].animFrames = 4;
+    state.enemies[2].animIndex = 0;
+    state.enemies[2].animTime = 0;
 
-    //state.enemies[2].position = glm::vec3(0, 0, 0);
-    //state.enemies[2].movement = glm::vec3(0);
+    state.enemies[2].position = glm::vec3(0, 0, 0);
+    state.enemies[2].movement = glm::vec3(0);
 
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
@@ -209,7 +207,7 @@ void Initialize() {
 
     // Initialize Player
     state.player = new Entity();
-    state.player->position = glm::vec3(-3.5f, 4.0f, 0);
+    state.player->position = glm::vec3(-3.5f, 2.0f, 0);
     state.player->acceleration = glm::vec3(0, -1.81f, 0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");

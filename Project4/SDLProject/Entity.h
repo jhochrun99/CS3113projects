@@ -69,5 +69,5 @@ public:
     void Enemy();
     void Slime();
     void Bat();
-    //void Fire();
+    void Fire();
 };

@@ -97,19 +97,19 @@ void Entity::Bat() {
     }
 }
 
-//void Entity::Fire() {
-//    switch (enemyState) {
-//        case IDLE:
-//            //shoots randomly when idle
-//            break;
-//        case ATTACKING:
-//            //aims at player when attacking
-//            break;
-//        case DEAD:
-//            //changes appearance
-//            break;
-//    }
-//}
+void Entity::Fire() {
+    switch (enemyState) {
+        case IDLE:
+            //shoots randomly when idle
+            break;
+        case ATTACKING:
+            //aims at player when attacking
+            break;
+        case DEAD:
+            //changes appearance
+            break;
+    }
+}
 
 void Entity::Enemy() {
     switch (enemyType) {
@@ -119,9 +119,9 @@ void Entity::Enemy() {
         case BAT:
             Bat();
             break;
-        //case FIRE:
-        //    Fire();
-        //    break;
+        case FIRE:
+            Fire();
+            break;
     }
 }
 
