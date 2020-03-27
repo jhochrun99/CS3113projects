@@ -16,8 +16,8 @@
 
 #include "Entity.h"
 
-#define PLATFORM_COUNT 10 //determine how many platforms to make
-#define WALL_COUNT 12 //determines how tall walls are; should be even value
+#define PLATFORM_COUNT 20 //determine how many platforms to make
+#define WALL_COUNT (14*2) //determines how tall walls are; should be even value
 #define GOAL_SIZE 2
 
 enum GameMode { START, PLAY, END };
@@ -91,35 +91,50 @@ void Initialize() {
     mode = START; //set initial game mode 
 
     // Initialize Game Objects
+    float terrainScale = 0.5f;
+
     state.platforms = new Entity[PLATFORM_COUNT];
-    GLuint platformTextureID = LoadTexture("platformIndustrial_grey.png");
-    float locationPlatform = -4.5f;
+    GLuint platformTextureID = LoadTexture("Tileset.png");
+    float locationPlatform = -4.75f;
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].entityType = PLATFORM;
         state.platforms[i].textureID = platformTextureID;
+
+        state.platforms[i].leftLoc = 0.2f;
+        state.platforms[i].rightLoc = 0.5f;
+
+        state.platforms[i].scale = terrainScale;
+        state.platforms[i].height *= terrainScale;
+        state.platforms[i].width *= terrainScale;
         state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
-        locationPlatform++;
         state.platforms[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.platforms[i].canMove = false; //in position, will never move again
+        locationPlatform += terrainScale;
     }
 
     state.walls = new Entity[WALL_COUNT];
     GLuint wallTextureID = LoadTexture("platformIndustrial_dark.png");
-    float locationWall = -2.5f;
-    for (int i = 0; i < WALL_COUNT; i+=2) {
+    float locationWall = -3.0f;
+    for (int i = 0; i < WALL_COUNT; i += 2) {
         //draws 2 wall blocks each loop, one on left and one on right
         state.walls[i].entityType = PLATFORM;
         state.walls[i].textureID = wallTextureID;
-        state.walls[i].position = glm::vec3(-4.5f, locationWall, 0);
+        state.walls[i].scale = terrainScale;
+        state.walls[i].height *= terrainScale;
+        state.walls[i].width *= terrainScale;
+        state.walls[i].position = glm::vec3(-4.75f, locationWall, 0);
         state.walls[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.walls[i].canMove = false; //in position, will never move again
 
-        state.walls[i+1].entityType = PLATFORM;
-        state.walls[i+1].textureID = wallTextureID;
-        state.walls[i+1].position = glm::vec3(4.5f, locationWall, 0);
-        state.walls[i+1].Update(0, NULL, 0); //update platforms once to get them to move to set position
-        state.walls[i+1].canMove = false; //in position, will never move again
-        locationWall++;
+        state.walls[i + 1].entityType = PLATFORM;
+        state.walls[i + 1].textureID = wallTextureID;
+        state.walls[i + 1].scale = terrainScale;
+        state.walls[i + 1].height *= terrainScale;
+        state.walls[i + 1].width *= terrainScale;
+        state.walls[i + 1].position = glm::vec3(4.75f, locationWall, 0);
+        state.walls[i + 1].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.walls[i + 1].canMove = false; //in position, will never move again
+        locationWall+=terrainScale;
     }
 
     state.goal = new Entity[GOAL_SIZE];
@@ -128,10 +143,13 @@ void Initialize() {
     float goalPosition = 2.0f;
     for (int i = 0; i < GOAL_SIZE; i++) {
         state.goal[i].entityType = GOAL;
+        state.goal[i].scale = terrainScale;
+        state.goal[i].height = terrainScale;
+        state.goal[i].width = terrainScale;
         state.goal[i].position = glm::vec3(goalPosition, -2.5f, 0);
         state.goal[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.goal[i].canMove = false; //in position, will never move again
-        goalPosition++;
+        goalPosition+=terrainScale;
     }
     state.goal[0].textureID = goalTexture1;
     state.goal[1].textureID = goalTexture2;

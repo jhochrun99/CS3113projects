@@ -95,10 +95,6 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
         }
     }
 
-    //for (int i = 0; i < platformCount; i++) {
-    //    if (CheckCollision(&platforms[i])) { return;  }
-    //}
-
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
     
@@ -124,8 +120,12 @@ void Entity::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID
     float texCoords[] = { u, v + height, u + width, v + height, u + width, v,
         u, v + height, u + width, v, u, v };
 
-    float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+    //default size is 0.5
+    float sizeNeg = -0.5 * scale;
+    float sizePos = 0.5 * scale;
 
+    float vertices[] = { sizeNeg, sizeNeg, sizePos, sizeNeg, sizePos, sizePos,
+        sizeNeg, sizeNeg, sizePos, sizePos, sizeNeg, sizePos };
     glBindTexture(GL_TEXTURE_2D, textureID);
 
     glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
@@ -148,8 +148,17 @@ void Entity::Render(ShaderProgram* program) {
         return;
     }
 
-    float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
-    float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
+    //default size is 0.5
+    float sizeNeg = -0.5 * scale;
+    float sizePos = 0.5 * scale;
+
+    //float leftLoc = 0.0f;
+    //float rightLoc = 1.0f;
+
+    float vertices[] = { sizeNeg, sizeNeg, sizePos, sizeNeg, sizePos, sizePos, 
+        sizeNeg, sizeNeg, sizePos, sizePos, sizeNeg, sizePos };
+    float texCoords[] = { leftLoc, rightLoc, rightLoc, rightLoc, rightLoc, leftLoc, leftLoc,
+            rightLoc, rightLoc, leftLoc, leftLoc, leftLoc };
 
     glBindTexture(GL_TEXTURE_2D, textureID);
 
