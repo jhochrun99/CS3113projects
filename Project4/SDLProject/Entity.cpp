@@ -111,11 +111,11 @@ void Entity::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID
 {
     if (!isActive) { return; } //don't do anything if not active
 
-    float u = (float)(index % animCols) / (float)animCols;
-    float v = (float)(index / animCols) / (float)animRows;
+    float u = (float)(index % textureCols) / (float)textureCols;
+    float v = (float)(index / textureCols) / (float)textureRows;
 
-    float width = 1.0f / (float)animCols;
-    float height = 1.0f / (float)animRows;
+    float width = 1.0f / (float)textureCols;
+    float height = 1.0f / (float)textureRows;
 
     float texCoords[] = { u, v + height, u + width, v + height, u + width, v,
         u, v + height, u + width, v, u, v };
@@ -152,13 +152,10 @@ void Entity::Render(ShaderProgram* program) {
     float sizeNeg = -0.5 * scale;
     float sizePos = 0.5 * scale;
 
-    //float leftLoc = 0.0f;
-    //float rightLoc = 1.0f;
-
     float vertices[] = { sizeNeg, sizeNeg, sizePos, sizeNeg, sizePos, sizePos, 
         sizeNeg, sizeNeg, sizePos, sizePos, sizeNeg, sizePos };
-    float texCoords[] = { leftLoc, rightLoc, rightLoc, rightLoc, rightLoc, leftLoc, leftLoc,
-            rightLoc, rightLoc, leftLoc, leftLoc, leftLoc };
+    float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 
+        1.0, 0.0, 0.0, 0.0 };
 
     glBindTexture(GL_TEXTURE_2D, textureID);
 

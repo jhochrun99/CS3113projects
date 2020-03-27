@@ -16,8 +16,10 @@
 
 #include "Entity.h"
 
-#define PLATFORM_COUNT 20 //determine how many platforms to make
+#define FLOOR_COUNT 20 //determine how many floor tiles
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
+#define PLATFORM_COUNT FLOOR_COUNT+WALL_COUNT
+
 #define GOAL_SIZE 2
 
 enum GameMode { START, PLAY, END };
@@ -25,7 +27,7 @@ enum GameMode { START, PLAY, END };
 struct GameState {
     Entity* player;
     Entity* platforms;
-    Entity* walls;
+    //Entity* walls;
     Entity* goal;
 };
 
@@ -93,48 +95,39 @@ void Initialize() {
     // Initialize Game Objects
     float terrainScale = 0.5f;
 
-    state.platforms = new Entity[PLATFORM_COUNT];
+    state.platforms = new Entity[FLOOR_COUNT + WALL_COUNT];
     GLuint platformTextureID = LoadTexture("Tileset.png");
     float locationPlatform = -4.75f;
+    float locationWall = -3.0f;
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].entityType = PLATFORM;
         state.platforms[i].textureID = platformTextureID;
-
-        state.platforms[i].leftLoc = 0.2f;
-        state.platforms[i].rightLoc = 0.5f;
+        state.platforms[i].textureCols = 10;
+        state.platforms[i].textureRows = 6;
 
         state.platforms[i].scale = terrainScale;
         state.platforms[i].height *= terrainScale;
         state.platforms[i].width *= terrainScale;
-        state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
+        state.platforms[i].animIndices = new int[2]{ 1, 4 };
+
+        if (i < FLOOR_COUNT) { //draw floors
+            state.platforms[i].animIndex = 0;
+            state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
+            locationPlatform += terrainScale;
+        }
+        else if (i < FLOOR_COUNT + WALL_COUNT/2) { //draw right walls
+            state.platforms[i].animIndex = 4;
+            state.platforms[i].position = glm::vec3(-4.75f, locationWall, 0);
+            locationWall += terrainScale;
+        }
+        else {
+            locationWall -= terrainScale;
+            state.platforms[i].animIndex = 1;
+            state.platforms[i].position = glm::vec3(4.75f, locationWall, 0);
+        }
+
         state.platforms[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
         state.platforms[i].canMove = false; //in position, will never move again
-        locationPlatform += terrainScale;
-    }
-
-    state.walls = new Entity[WALL_COUNT];
-    GLuint wallTextureID = LoadTexture("platformIndustrial_dark.png");
-    float locationWall = -3.0f;
-    for (int i = 0; i < WALL_COUNT; i += 2) {
-        //draws 2 wall blocks each loop, one on left and one on right
-        state.walls[i].entityType = PLATFORM;
-        state.walls[i].textureID = wallTextureID;
-        state.walls[i].scale = terrainScale;
-        state.walls[i].height *= terrainScale;
-        state.walls[i].width *= terrainScale;
-        state.walls[i].position = glm::vec3(-4.75f, locationWall, 0);
-        state.walls[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
-        state.walls[i].canMove = false; //in position, will never move again
-
-        state.walls[i + 1].entityType = PLATFORM;
-        state.walls[i + 1].textureID = wallTextureID;
-        state.walls[i + 1].scale = terrainScale;
-        state.walls[i + 1].height *= terrainScale;
-        state.walls[i + 1].width *= terrainScale;
-        state.walls[i + 1].position = glm::vec3(4.75f, locationWall, 0);
-        state.walls[i + 1].Update(0, NULL, 0); //update platforms once to get them to move to set position
-        state.walls[i + 1].canMove = false; //in position, will never move again
-        locationWall+=terrainScale;
     }
 
     state.goal = new Entity[GOAL_SIZE];
@@ -172,8 +165,8 @@ void Initialize() {
     state.player->animFrames = 4;
     state.player->animIndex = 0;
     state.player->animTime = 0;
-    state.player->animCols = 4;
-    state.player->animRows = 4;
+    state.player->textureCols = 4;
+    state.player->textureRows = 4;
 }
 
 //all of the code for processing input
@@ -296,10 +289,6 @@ void RenderStart() {
         state.platforms[i].Render(&program);
     }
 
-    for (int i = 0; i < WALL_COUNT; i++) {
-        state.walls[i].Render(&program);
-    }
-
     for (int i = 0; i < GOAL_SIZE; i++) {
         state.goal[i].Render(&program);
     }
@@ -308,10 +297,6 @@ void RenderStart() {
 void RenderPlay() {
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].Render(&program);
-    }
-
-    for (int i = 0; i < WALL_COUNT; i++) {
-        state.walls[i].Render(&program);
     }
 
     for (int i = 0; i < GOAL_SIZE; i++) {

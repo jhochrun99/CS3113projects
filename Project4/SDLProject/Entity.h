@@ -27,8 +27,6 @@ public:
     float width = 1.0f;
     float height = 1.0f;
     float scale = 1.0f;
-    float leftLoc = 0.0f; //to get from texture set
-    float rightLoc = 1.0f;
 
     bool isActive = true;
     bool canMove = true;
@@ -51,8 +49,8 @@ public:
     int animFrames = 0;
     int animIndex = 0;
     float animTime = 0;
-    int animCols = 0;
-    int animRows = 0;
+    int textureCols = 0;
+    int textureRows = 0;
 
     Entity();
 
