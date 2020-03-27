@@ -10,6 +10,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include <vector>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -57,6 +58,58 @@ GLuint LoadTexture(const char* filePath) {
 
     stbi_image_free(image);
     return textureID;
+}
+
+void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
+    float size, float spacing, glm::vec3 position) {
+    float width = 1.0f / 16.0f;
+    float height = 1.0f / 16.0f;
+
+    std::vector<float> vertices;
+    std::vector<float> texCoords;
+
+    for (int i = 0; i < text.size(); i++) {
+
+        int index = (int)text[i];
+        float offset = (size + spacing) * i;
+        float u = (float)(index % 16) / 16.0f;
+        float v = (float)(index / 16) / 16.0f;
+        vertices.insert(vertices.end(), {
+            offset + (-0.5f * size), 0.5f * size,
+            offset + (-0.5f * size), -0.5f * size,
+            offset + (0.5f * size), 0.5f * size,
+            offset + (0.5f * size), -0.5f * size,
+            offset + (0.5f * size), 0.5f * size,
+            offset + (-0.5f * size), -0.5f * size,
+            });
+        texCoords.insert(texCoords.end(), {
+            u, v,
+            u, v + height,
+            u + width, v,
+            u + width, v + height,
+            u + width, v,
+            u, v + height,
+            });
+
+    }
+
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
+    program->SetModelMatrix(modelMatrix);
+
+    glUseProgram(program->programID);
+
+    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
+    glEnableVertexAttribArray(program->positionAttribute);
+
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords.data());
+    glEnableVertexAttribArray(program->texCoordAttribute);
+
+    glBindTexture(GL_TEXTURE_2D, fontTextureID);
+    glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
+
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
 
@@ -147,7 +200,7 @@ void Initialize() {
     state.enemies[0].textureRows = 3;
     state.enemies[0].animIndices = new int[1]{ 16 };
     state.enemies[0].height = 0.5f;
-    state.enemies[0].width = 0.6f;
+    state.enemies[0].width = 0.9f;
 
     state.enemies[0].animLeft = new int[8]{ 0, 1, 2, 3, 4, 5, 6, 7 };
     state.enemies[0].animRight = new int[8]{ 8, 9, 10, 11, 12, 13, 14, 15 };
@@ -170,8 +223,6 @@ void Initialize() {
     state.enemies[2].height = 0.4f;
     state.enemies[2].width = 0.3f;
 
-    state.enemies[2].speed = 0.2;
-
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
     state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
     state.enemies[1].animUp = new int[2]{ 5, 6 };
@@ -182,7 +233,7 @@ void Initialize() {
 
     state.enemies[1].position = glm::vec3(-0.5, 3.1f, 0);
     state.enemies[1].movement = glm::vec3(0);
-    state.enemies[1].senseRadius = 5.0f;
+    state.enemies[1].senseRadius = 3.0f;
 
     //fire enemy - shoots fireballs
     state.enemies[2].enemyType = FIRE;
@@ -190,7 +241,6 @@ void Initialize() {
     state.enemies[2].textureID = LoadTexture("explosionTrp.png");
     state.enemies[2].textureCols = 5;
     state.enemies[2].textureRows = 3;
-    state.enemies[2].animIndices = new int[1]{ 5 };
     state.enemies[2].height = 0.6f;
     state.enemies[2].width = 0.4f;
 
@@ -203,7 +253,7 @@ void Initialize() {
 
     state.enemies[2].position = glm::vec3(0, 0, 0);
     state.enemies[2].movement = glm::vec3(0);
-
+    state.enemies[2].senseRadius = 3.0f;
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].entityType = ENEMY;
@@ -248,8 +298,9 @@ void ProcessInputStart() {
             switch (event.key.keysym.sym) {
             case SDLK_SPACE:
                 mode = PLAY;
-                //have bat start looking for player
+                //have bat and fire start looking for player
                 state.enemies[1].senseFor = state.player; 
+                state.enemies[2].senseFor = state.player;
                 break;
             }
             break; // SDL_KEYDOWN
@@ -288,6 +339,30 @@ void ProcessInputPlay() {
 
 void ProcessInputEnd() {
     //can press space to restart
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+        case SDL_QUIT:
+        case SDL_WINDOWEVENT_CLOSE:
+            gameIsRunning = false;
+            break;
+
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym) {
+            case SDLK_SPACE: //can press space to clear
+                state.player->position = glm::vec3(-3.5f, 2.0f, 0);
+                state.player->velocity = glm::vec3(0);
+                state.player->movement = glm::vec3(0);
+                mode = START;
+                state.player->isActive = true;
+                for (int i = 0; i < ENEMY_COUNT; i++) {
+                    state.enemies[i].isActive = true;
+                }
+                break;
+            }
+            break; // SDL_KEYDOWN
+        }
+    }
 }
 
 void ProcessInput() {
@@ -305,6 +380,28 @@ void ProcessInput() {
 }
 
 //all of the code for updating
+int enemiesDead = 0;
+void UpdateGameMode() {
+    if (!state.player->isActive) {
+        mode = END;
+        return;
+    }
+
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        if (!state.enemies[i].isActive) {
+            enemiesDead++;
+        }
+    }
+
+    if (enemiesDead == ENEMY_COUNT) {
+        mode = END;
+        return;
+    }
+    else {
+        enemiesDead = 0;
+    }
+}
+
 #define FIXED_TIMESTEP 0.0166666f
 float lastTicks = 0.0f;
 float accumulator = 0.0f;
@@ -333,6 +430,8 @@ void UpdatePlay(float deltaTime) {
     }
 
     state.player->CheckEnemyCollision(state.enemies, ENEMY_COUNT);
+
+    UpdateGameMode();
 
     accumulator = deltaTime;
 }
@@ -363,6 +462,10 @@ void Update() {
 
 //all of the code for rendering 
 void RenderStart() {
+    GLuint fontTextureID = LoadTexture("font1.png");
+    DrawText(&program, fontTextureID, "Press spacebar to Start!", 0.5f, -0.25f,
+        glm::vec3(-2.8f, 1.0f, 0));
+
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].Render(&program);
     }
@@ -385,7 +488,28 @@ void RenderPlay() {
 }
 
 void RenderEnd() {
+    GLuint fontTextureID = LoadTexture("font1.png");
 
+    if (state.player->isActive) {
+        DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
+            glm::vec3(-2.0f, 0, 0));
+    }
+    else {
+        DrawText(&program, fontTextureID, "Game Over.", 0.5f, -0.25f,
+            glm::vec3(-1.65f, 0, 0));
+    }
+    DrawText(&program, fontTextureID, "(press spacebar to reset)", 0.30f, -0.15f,
+        glm::vec3(-1.76f, -0.5f, 0));
+
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].Render(&program);
+    }
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        //state.enemies[i].position.z = -0.1f;
+        state.enemies[i].Render(&program);
+    }
+
+    state.player->Render(&program);
 }
 
 void Render() {

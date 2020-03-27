@@ -73,11 +73,6 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
 
 void Entity::CheckSense(Entity* senseFor) {
     if (senseFor == NULL) { return; }
-    //if senseFor is within range, move towards it
-    //float xPosition = senseFor->width / 2 + senseFor->position.x;
-    //float yPosition = senseFor->height / 2 + senseFor->position.y;
-    //glm::vec3 topLeftCorner = glm::vec3(-xPosition, yPosition, 0);
-    //glm::vec3 bottomRightCorner = -topLeftCorner;
 
     //distance between player's center and enemy's center
     float distance = sqrt(pow(senseFor->position.x - position.x, 2) + pow(senseFor->position.y - position.y, 2));
@@ -85,11 +80,12 @@ void Entity::CheckSense(Entity* senseFor) {
 
     //within sensing range
     if (distance < sumSenseRadii) {
-        //change movement to direction of player
         enemyState = ATTACKING;
     }
+    else {
+        enemyState = IDLE;
+    }
 }
-
 
 void Entity::Slime() {
     switch (enemyState) {
@@ -116,7 +112,9 @@ void Entity::Bat() {
             CheckSense(senseFor);
             break;
         case ATTACKING:
-            movement = glm::vec3(senseFor->position.x - position.x, senseFor->position.y - position.y, 0);
+            if (!senseFor->isActive) { break; }
+            movement = glm::vec3(position.x - senseFor->position.x, 
+                position.y - senseFor->position.y, 0);
             if (movement.x > 0) {
                 animIndices = animLeft;
                 animFrames = 5;
@@ -125,7 +123,6 @@ void Entity::Bat() {
                 animIndices = animRight;
                 animFrames = 5;
             }
-            
             break;
     }
 }
@@ -133,9 +130,11 @@ void Entity::Bat() {
 void Entity::Fire() {
     switch (enemyState) {
         case IDLE:
+            CheckSense(senseFor);
             //shoots randomly when idle
             break;
         case ATTACKING:
+            CheckSense(senseFor);
             //aims at player when attacking
             break;
         case DEAD:
