@@ -170,17 +170,19 @@ void Initialize() {
     state.enemies[2].height = 0.4f;
     state.enemies[2].width = 0.3f;
 
+    state.enemies[2].speed = 0.2;
+
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
     state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
     state.enemies[1].animUp = new int[2]{ 5, 6 };
     state.enemies[1].animIndices = state.enemies[1].animUp;
-    state.enemies[1].animFrames = 5;
+    state.enemies[1].animFrames = 2;
     state.enemies[1].animIndex = 0;
     state.enemies[1].animTime = 0;
 
-    state.enemies[1].position = glm::vec3(-0.5, 3.2f, 0);
+    state.enemies[1].position = glm::vec3(-0.5, 3.1f, 0);
     state.enemies[1].movement = glm::vec3(0);
-    state.enemies[1].senseRadius = 0.5f;
+    state.enemies[1].senseRadius = 5.0f;
 
     //fire enemy - shoots fireballs
     state.enemies[2].enemyType = FIRE;
@@ -216,6 +218,8 @@ void Initialize() {
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
     state.player->height = 0.8f;
+    state.player->width = 0.8f;
+    state.player->senseRadius = 0.8f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -244,6 +248,8 @@ void ProcessInputStart() {
             switch (event.key.keysym.sym) {
             case SDLK_SPACE:
                 mode = PLAY;
+                //have bat start looking for player
+                state.enemies[1].senseFor = state.player; 
                 break;
             }
             break; // SDL_KEYDOWN

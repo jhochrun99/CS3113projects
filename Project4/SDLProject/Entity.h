@@ -32,6 +32,7 @@ public:
     float height = 1.0f;
     float scale = 1.0f;
     float senseRadius = 0.0f;
+    Entity* senseFor = NULL;
 
     bool isActive = true;
     bool canMove = true;
@@ -63,7 +64,7 @@ public:
     bool CheckCollision(Entity* other);
     void CheckCollisionY(Entity* objects, int objectCount);
     void CheckCollisionX(Entity* objects, int objectCount);
-    bool CheckSense(Entity* object);
+    void CheckSense(Entity* object);
 
     void CheckEnemyCollision(Entity* platform, int platformCount);
     void Update(float deltaTime, Entity* platform, int platformCount);

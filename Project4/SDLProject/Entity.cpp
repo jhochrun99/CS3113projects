@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "math.h"
 
 Entity::Entity() {
     position = glm::vec3(0);
@@ -12,10 +13,6 @@ Entity::Entity() {
 
 bool Entity::CheckCollision(Entity* other) {
     if (!isActive || !other->isActive) { return false; }
-
-    if (senseRadius > 0) { //check for circle - rectangle collision
-        CheckSense(other);
-    }
 
     float xDist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
     float yDist = fabs(position.y - other->position.y) - ((height + other->height) / 2.0f);
@@ -74,8 +71,23 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
     }
 }
 
-bool Entity::CheckSense(Entity* other) {
-    return true;
+void Entity::CheckSense(Entity* senseFor) {
+    if (senseFor == NULL) { return; }
+    //if senseFor is within range, move towards it
+    //float xPosition = senseFor->width / 2 + senseFor->position.x;
+    //float yPosition = senseFor->height / 2 + senseFor->position.y;
+    //glm::vec3 topLeftCorner = glm::vec3(-xPosition, yPosition, 0);
+    //glm::vec3 bottomRightCorner = -topLeftCorner;
+
+    //distance between player's center and enemy's center
+    float distance = sqrt(pow(senseFor->position.x - position.x, 2) + pow(senseFor->position.y - position.y, 2));
+    float sumSenseRadii = senseRadius + senseFor->senseRadius;
+
+    //within sensing range
+    if (distance < sumSenseRadii) {
+        //change movement to direction of player
+        enemyState = ATTACKING;
+    }
 }
 
 
@@ -101,10 +113,19 @@ void Entity::Slime() {
 void Entity::Bat() {
     switch (enemyState) {
         case IDLE:
-            //checks if player is in sensing range
+            CheckSense(senseFor);
             break;
         case ATTACKING:
-            //follows player
+            movement = glm::vec3(senseFor->position.x - position.x, senseFor->position.y - position.y, 0);
+            if (movement.x > 0) {
+                animIndices = animLeft;
+                animFrames = 5;
+            } 
+            else {
+                animIndices = animRight;
+                animFrames = 5;
+            }
+            
             break;
     }
 }
@@ -124,6 +145,7 @@ void Entity::Fire() {
 }
 
 void Entity::Enemy() {
+    if (!isActive) { return; } //do nothing if not active
     switch (enemyType) {
         case SLIME:
             Slime();
