@@ -18,8 +18,8 @@
 
 #define FLOOR_COUNT 20 //determine how many floor tiles
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
-#define PLATFORM_COUNT FLOOR_COUNT+WALL_COUNT
-#define ENEMY_COUNT 1
+#define PLATFORM_COUNT (FLOOR_COUNT*2)+WALL_COUNT
+#define ENEMY_COUNT 2
 
 #define GOAL_SIZE 2
 
@@ -85,7 +85,7 @@ void Initialize() {
 
     glUseProgram(program.programID);
 
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.34f, 0.2f, 0.09f, 1.0f);
     glEnable(GL_BLEND);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,7 +95,7 @@ void Initialize() {
     // Initialize Game Objects
     float terrainScale = 0.5f;
 
-    state.platforms = new Entity[FLOOR_COUNT + WALL_COUNT];
+    state.platforms = new Entity[PLATFORM_COUNT];
     GLuint platformTextureID = LoadTexture("Tileset.png");
     float locationPlatform = -4.75f;
     float locationWall = -3.0f;
@@ -123,10 +123,15 @@ void Initialize() {
             state.platforms[i].position = glm::vec3(-4.75f, locationWall, 0);
             locationWall += terrainScale;
         }
-        else { //draw left walls
+        else if (i < FLOOR_COUNT + WALL_COUNT) { //draw left walls
             locationWall -= terrainScale;
             state.platforms[i].animIndices = rightWallIndex;
-            state.platforms[i].position = glm::vec3(4.75f, locationWall, 0);
+            state.platforms[i].position = glm::vec3(4.8f, locationWall, 0);
+        }
+        else { //draw ceiling
+            locationPlatform -= terrainScale;
+            state.platforms[i].animIndices = floorIndex;
+            state.platforms[i].position = glm::vec3(locationPlatform, 3.75, 0);
         }
 
         state.platforms[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
@@ -136,9 +141,7 @@ void Initialize() {
     //Initialize Enemies
     state.enemies = new Entity[ENEMY_COUNT];
 
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].entityType = ENEMY;
-    }
+    //slime enemy - moves back and forth
     state.enemies[0].enemyType = SLIME;
     state.enemies[0].enemyState = WALKING;
     state.enemies[0].textureID = LoadTexture("slime.png");
@@ -155,10 +158,54 @@ void Initialize() {
     state.enemies[0].animIndex = 0;
     state.enemies[0].animTime = 0;
 
-    state.enemies[0].speed = 1.0f;
     state.enemies[0].position = glm::vec3(3, -2.8f, 0);
     state.enemies[0].movement = glm::vec3(-1, 0, 0);
-    state.enemies[0].Update(0, NULL, 0);
+
+    //bat enemy - follows player
+    state.enemies[1].enemyType = BAT;
+    state.enemies[1].enemyState = IDLE;
+    state.enemies[1].textureID = LoadTexture("batTrp.png");
+    state.enemies[1].textureCols = 6;
+    state.enemies[1].textureRows = 2;
+    state.enemies[1].animIndices = new int[1]{ 5 };
+    state.enemies[1].height = 0.9f;
+
+    state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
+    state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
+    state.enemies[1].animUp = new int[2]{ 5, 6 };
+    state.enemies[1].animIndices = state.enemies[1].animUp;
+    state.enemies[1].animFrames = 5;
+    state.enemies[1].animIndex = 0;
+    state.enemies[1].animTime = 0;
+
+    state.enemies[1].position = glm::vec3(-0.5, 3.2f, 0);
+    state.enemies[1].movement = glm::vec3(0);
+
+    //fire enemy - shoots fireballs
+    //state.enemies[2].enemyType = FIRE;
+    //state.enemies[2].enemyState = IDLE;
+    //state.enemies[2].textureID = LoadTexture("explosionTrp.png");
+    //state.enemies[2].textureCols = 5;
+    //state.enemies[2].textureRows = 3;
+    //state.enemies[2].animIndices = new int[1]{ 5 };
+    //state.enemies[2].height = 0.9f;
+
+    //state.enemies[2].animUp = new int[4]{ 3, 4, 3, 4};
+    //state.enemies[2].animLeft = new int[4]{ 5, 6, 7, 8 }; //left for turning off
+    //state.enemies[2].animIndices = state.enemies[2].animUp;
+    //state.enemies[2].animFrames = 4;
+    //state.enemies[2].animIndex = 0;
+    //state.enemies[2].animTime = 0;
+
+    //state.enemies[2].position = glm::vec3(0, 0, 0);
+    //state.enemies[2].movement = glm::vec3(0);
+
+
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].entityType = ENEMY;
+        state.enemies[i].speed = 1.0f;
+        state.enemies[i].Update(0, NULL, 0);
+    }
 
     // Initialize Player
     state.player = new Entity();

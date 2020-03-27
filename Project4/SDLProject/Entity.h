@@ -13,8 +13,8 @@
 #include "ShaderProgram.h"
 
 enum EntityType { PLAYER, PLATFORM, ENEMY };
-enum EnemyType { BAT, SLIME };
-enum EnemyState { IDLE, WALKING, ATTACKING };
+enum EnemyType { BAT, SLIME, FIRE };
+enum EnemyState { IDLE, WALKING, ATTACKING, DEAD };
 
 class Entity {
 public:
@@ -61,7 +61,6 @@ public:
     bool CheckCollision(Entity* other);
     void CheckCollisionY(Entity* objects, int objectCount);
     void CheckCollisionX(Entity* objects, int objectCount);
-    void EnemyCollision();
 
     void Update(float deltaTime, Entity* platform, int platformCount);
     void Render(ShaderProgram* program);
@@ -70,4 +69,5 @@ public:
     void Enemy();
     void Slime();
     void Bat();
+    //void Fire();
 };

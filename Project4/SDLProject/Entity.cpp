@@ -73,15 +73,43 @@ void Entity::Slime() {
 
             break; //currently do nothing
         case WALKING:
-            //movement = glm::vec3(-1, 0, 0);
+            if (collidedLeft) {
+                movement.x = -movement.x;
+                animIndices = animRight;
+            }
+            else if (collidedRight) {
+                movement.x = -movement.x;
+                animIndices = animLeft;
+            }
             break;
     }
     
 }
 
 void Entity::Bat() {
-
+    switch (enemyState) {
+        case IDLE:
+            //checks if player is in sensing range
+            break;
+        case ATTACKING:
+            //follows player
+            break;
+    }
 }
+
+//void Entity::Fire() {
+//    switch (enemyState) {
+//        case IDLE:
+//            //shoots randomly when idle
+//            break;
+//        case ATTACKING:
+//            //aims at player when attacking
+//            break;
+//        case DEAD:
+//            //changes appearance
+//            break;
+//    }
+//}
 
 void Entity::Enemy() {
     switch (enemyType) {
@@ -91,20 +119,11 @@ void Entity::Enemy() {
         case BAT:
             Bat();
             break;
+        //case FIRE:
+        //    Fire();
+        //    break;
     }
 }
-
-void Entity::EnemyCollision() {
-    if (collidedLeft) {
-        movement.x = -movement.x;
-        animIndices = animRight;
-    }
-    else if (collidedRight) {
-        movement.x = -movement.x;
-        animIndices = animLeft;
-    }
-}
-
 
 void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
 {
@@ -115,8 +134,6 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     collidedBottom = false;
     collidedLeft = false;
     collidedRight = false;
-
-    if (entityType == ENEMY) { Enemy(); }
 
     if (animIndices != NULL) {
         if (glm::length(movement) != 0) {
@@ -145,9 +162,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     position.x += velocity.x * deltaTime;
     CheckCollisionX(platforms, platformCount);
 
-    if (entityType == ENEMY) {
-        EnemyCollision();
-    }
+    if (entityType == ENEMY) { Enemy(); }
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);

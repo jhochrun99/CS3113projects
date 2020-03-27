@@ -37,22 +37,16 @@
     <Image Include="george_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="platformIndustrial_grey.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="platformIndustrial_dark.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="platformIndustrial_101.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="platformIndustrial_103.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Tileset.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="slime.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="batTrp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="explosionTrp.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
