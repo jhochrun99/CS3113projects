@@ -19,6 +19,7 @@
 #define FLOOR_COUNT 20 //determine how many floor tiles
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
 #define PLATFORM_COUNT FLOOR_COUNT+WALL_COUNT
+#define ENEMY_COUNT 1
 
 #define GOAL_SIZE 2
 
@@ -27,8 +28,7 @@ enum GameMode { START, PLAY, END };
 struct GameState {
     Entity* player;
     Entity* platforms;
-    //Entity* walls;
-    Entity* goal;
+    Entity* enemies;
 };
 
 GameState state;
@@ -99,6 +99,10 @@ void Initialize() {
     GLuint platformTextureID = LoadTexture("Tileset.png");
     float locationPlatform = -4.75f;
     float locationWall = -3.0f;
+
+    int* floorIndex = new int[1]{ 1 };
+    int* leftWallIndex = new int[1]{ 12 };
+    int* rightWallIndex = new int[1]{ 10 };
     for (int i = 0; i < PLATFORM_COUNT; i++) {
         state.platforms[i].entityType = PLATFORM;
         state.platforms[i].textureID = platformTextureID;
@@ -108,21 +112,20 @@ void Initialize() {
         state.platforms[i].scale = terrainScale;
         state.platforms[i].height *= terrainScale;
         state.platforms[i].width *= terrainScale;
-        state.platforms[i].animIndices = new int[2]{ 1, 4 };
 
         if (i < FLOOR_COUNT) { //draw floors
-            state.platforms[i].animIndex = 0;
+            state.platforms[i].animIndices = floorIndex;
             state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
             locationPlatform += terrainScale;
         }
         else if (i < FLOOR_COUNT + WALL_COUNT/2) { //draw right walls
-            state.platforms[i].animIndex = 4;
+            state.platforms[i].animIndices = leftWallIndex;
             state.platforms[i].position = glm::vec3(-4.75f, locationWall, 0);
             locationWall += terrainScale;
         }
-        else {
+        else { //draw left walls
             locationWall -= terrainScale;
-            state.platforms[i].animIndex = 1;
+            state.platforms[i].animIndices = rightWallIndex;
             state.platforms[i].position = glm::vec3(4.75f, locationWall, 0);
         }
 
@@ -130,28 +133,37 @@ void Initialize() {
         state.platforms[i].canMove = false; //in position, will never move again
     }
 
-    state.goal = new Entity[GOAL_SIZE];
-    GLuint goalTexture1 = LoadTexture("platformIndustrial_101.png");
-    GLuint goalTexture2 = LoadTexture("platformIndustrial_103.png");
-    float goalPosition = 2.0f;
-    for (int i = 0; i < GOAL_SIZE; i++) {
-        state.goal[i].entityType = GOAL;
-        state.goal[i].scale = terrainScale;
-        state.goal[i].height = terrainScale;
-        state.goal[i].width = terrainScale;
-        state.goal[i].position = glm::vec3(goalPosition, -2.5f, 0);
-        state.goal[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
-        state.goal[i].canMove = false; //in position, will never move again
-        goalPosition+=terrainScale;
+    //Initialize Enemies
+    state.enemies = new Entity[ENEMY_COUNT];
+
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].entityType = ENEMY;
     }
-    state.goal[0].textureID = goalTexture1;
-    state.goal[1].textureID = goalTexture2;
+    state.enemies[0].enemyType = SLIME;
+    state.enemies[0].enemyState = WALKING;
+    state.enemies[0].textureID = LoadTexture("slime.png");
+    state.enemies[0].textureCols = 8;
+    state.enemies[0].textureRows = 3;
+    state.enemies[0].animIndices = new int[1]{ 16 };
+    state.enemies[0].height = 0.9f;
+
+    state.enemies[0].animLeft = new int[8]{ 0, 1, 2, 3, 4, 5, 6, 7 };
+    state.enemies[0].animRight = new int[8]{ 8, 9, 10, 11, 12, 13, 14, 15 };
+    state.enemies[0].animUp = new int[8]{ 16, 17, 18, 19, 20, 21, 22, 23 };
+    state.enemies[0].animIndices = state.enemies[0].animLeft;
+    state.enemies[0].animFrames = 8;
+    state.enemies[0].animIndex = 0;
+    state.enemies[0].animTime = 0;
+
+    state.enemies[0].speed = 1.0f;
+    state.enemies[0].position = glm::vec3(3, -2.8f, 0);
+    state.enemies[0].movement = glm::vec3(-1, 0, 0);
+    state.enemies[0].Update(0, NULL, 0);
 
     // Initialize Player
     state.player = new Entity();
     state.player->position = glm::vec3(-3.5f, 4.0f, 0);
     state.player->acceleration = glm::vec3(0, -1.81f, 0);
-    state.player->movement = glm::vec3(0);
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
     state.player->height = 0.8f;
@@ -243,7 +255,9 @@ float lastTicks = 0.0f;
 float accumulator = 0.0f;
 
 void UpdateStart(float deltaTime) {
-
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+    }
 }
 
 void UpdatePlay(float deltaTime) {
@@ -258,11 +272,17 @@ void UpdatePlay(float deltaTime) {
         deltaTime -= FIXED_TIMESTEP;
     }
 
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+    }
+
     accumulator = deltaTime;
 }
 
 void UpdateEnd(float deltaTime) {
-
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+    }
 }
 
 void Update() {
@@ -289,8 +309,8 @@ void RenderStart() {
         state.platforms[i].Render(&program);
     }
 
-    for (int i = 0; i < GOAL_SIZE; i++) {
-        state.goal[i].Render(&program);
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Render(&program);
     }
 }
 
@@ -299,8 +319,8 @@ void RenderPlay() {
         state.platforms[i].Render(&program);
     }
 
-    for (int i = 0; i < GOAL_SIZE; i++) {
-        state.goal[i].Render(&program);
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Render(&program);
     }
 
     state.player->Render(&program);

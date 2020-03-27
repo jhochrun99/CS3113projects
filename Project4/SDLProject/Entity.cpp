@@ -66,6 +66,46 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
     }
 }
 
+
+void Entity::Slime() {
+    switch (enemyState) {
+        case IDLE:
+
+            break; //currently do nothing
+        case WALKING:
+            //movement = glm::vec3(-1, 0, 0);
+            break;
+    }
+    
+}
+
+void Entity::Bat() {
+
+}
+
+void Entity::Enemy() {
+    switch (enemyType) {
+        case SLIME:
+            Slime();
+            break;
+        case BAT:
+            Bat();
+            break;
+    }
+}
+
+void Entity::EnemyCollision() {
+    if (collidedLeft) {
+        movement.x = -movement.x;
+        animIndices = animRight;
+    }
+    else if (collidedRight) {
+        movement.x = -movement.x;
+        animIndices = animLeft;
+    }
+}
+
+
 void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
 {
     if (!isActive) { return; } //don't do anything if not active
@@ -75,6 +115,8 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     collidedBottom = false;
     collidedLeft = false;
     collidedRight = false;
+
+    if (entityType == ENEMY) { Enemy(); }
 
     if (animIndices != NULL) {
         if (glm::length(movement) != 0) {
@@ -102,6 +144,10 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     CheckCollisionY(platforms, platformCount);
     position.x += velocity.x * deltaTime;
     CheckCollisionX(platforms, platformCount);
+
+    if (entityType == ENEMY) {
+        EnemyCollision();
+    }
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
