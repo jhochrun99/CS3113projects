@@ -274,12 +274,13 @@ void Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->position = glm::vec3(-3.5f, 2.0f, 0);
-    state.player->acceleration = glm::vec3(0, -1.81f, 0);
-    state.player->speed = 2.0f;
+    state.player->acceleration = glm::vec3(0, -9.81f, 0);
+    state.player->speed = 1.5f;
     state.player->textureID = LoadTexture("george_0.png");
     state.player->height = 0.8f;
     state.player->width = 0.8f;
     state.player->senseRadius = 0.8f;
+    state.player->jumpHeight = 5.0f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -306,7 +307,7 @@ void ProcessInputStart() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_SPACE:
+            case SDLK_LSHIFT:
                 mode = PLAY;
                 //have bat and fire start looking for player
                 state.enemies[0].enemyState = ATTACKING;
@@ -314,6 +315,8 @@ void ProcessInputStart() {
                 state.enemies[1].senseFor = state.player; 
                 state.enemies[2].senseFor = state.player;
                 state.player->isActive = true;
+                break;
+            case SDLK_SPACE:
                 break;
             }
             break; // SDL_KEYDOWN
@@ -331,6 +334,13 @@ void ProcessInputPlay() {
         case SDL_WINDOWEVENT_CLOSE:
             gameIsRunning = false;
             break;
+
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym) {
+                case SDLK_SPACE: //player jumps
+                    state.player->jump = true;
+                    break;
+                }
         }
     }
 
@@ -362,7 +372,7 @@ void ProcessInputEnd() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_SPACE: //can press space to clear
+            case SDLK_LSHIFT: //can press space to clear
                 state.player->position = glm::vec3(-3.5f, 2.0f, 0);
                 state.player->velocity = glm::vec3(0);
                 state.player->movement = glm::vec3(0);
@@ -485,7 +495,7 @@ void Update() {
 //all of the code for rendering 
 void RenderStart() {
     GLuint fontTextureID = LoadTexture("font1.png");
-    DrawText(&program, fontTextureID, "Press spacebar to Start!", 0.5f, -0.25f,
+    DrawText(&program, fontTextureID, "Press left shift to Start!", 0.5f, -0.25f,
         glm::vec3(-2.8f, 1.0f, 0));
 
     for (int i = 0; i < PLATFORM_COUNT; i++) {
@@ -520,7 +530,7 @@ void RenderEnd() {
         DrawText(&program, fontTextureID, "Game Over.", 0.5f, -0.25f,
             glm::vec3(-1.65f, 0, 0));
     }
-    DrawText(&program, fontTextureID, "(press spacebar to reset)", 0.30f, -0.15f,
+    DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
         glm::vec3(-1.76f, -0.5f, 0));
 
     for (int i = 0; i < PLATFORM_COUNT; i++) {

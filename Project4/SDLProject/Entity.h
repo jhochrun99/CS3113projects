@@ -28,6 +28,9 @@ public:
     glm::vec3 movement;
     float speed;
 
+    bool jump = false;
+    float jumpHeight = 0;
+
     float width = 1.0f;
     float height = 1.0f;
     float scale = 1.0f;

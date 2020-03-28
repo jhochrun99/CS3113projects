@@ -112,7 +112,6 @@ void Entity::Slime() {
 
             break; //currently do nothing
         case ATTACKING:
-            /*movement = glm::vec3(-1, 0, 0);*/
             if (collidedLeft) {
                 movement.x = -movement.x;
                 animIndices = animRight;
@@ -136,6 +135,7 @@ void Entity::Bat() {
 
             movement = glm::vec3(senseFor->position.x - position.x, 
                 senseFor->position.y - position.y, 0);
+            velocity.y = movement.y * speed;
 
             if (movement.x > 0) {
                 animIndices = animRight;
@@ -214,7 +214,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     collidedRight = false;
 
     if (animIndices != NULL) {
-        if (glm::length(movement) != 0 || entityType == FIRE) {
+        if (glm::length(movement) != 0 || entityType != PLAYER) {
             animTime += deltaTime;
 
             if (animTime >= 0.25f)
@@ -232,7 +232,15 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
         }
     }
 
+    if (jump) {
+        jump = false;
+        if (collidedBottom) {
+            velocity.y += jumpHeight;
+        } 
+    }
+
     velocity.x = movement.x * speed;
+    //velocity.y = movement.y * speed;
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;
