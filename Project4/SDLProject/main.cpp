@@ -390,6 +390,7 @@ void ProcessInputEnd() {
                 state.enemies[1].animFrames = 2;
                 state.enemies[1].position = glm::vec3(-0.5, 3.0f, 0);
                 state.enemies[1].movement = glm::vec3(0);
+                state.enemies[1].velocity = glm::vec3(0);
 
                 mode = START;
                 break;
