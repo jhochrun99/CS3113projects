@@ -232,21 +232,20 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
         }
     }
 
-    if (jump) {
-        jump = false;
-        if (collidedBottom) {
-            velocity.y += jumpHeight;
-        } 
-    }
-
     velocity.x = movement.x * speed;
-    //velocity.y = movement.y * speed;
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;
     CheckCollisionY(platforms, platformCount);
     position.x += velocity.x * deltaTime;
     CheckCollisionX(platforms, platformCount);
+
+    if (jump) {
+        jump = false;
+        if (collidedBottom) {
+            velocity.y += jumpHeight;
+        }
+    }
 
     if (entityType == ENEMY) { Enemy(); }
 

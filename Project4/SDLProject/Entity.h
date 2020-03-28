@@ -45,7 +45,7 @@ public:
     bool collidedBottom = false;
     bool collidedLeft = false;
     bool collidedRight = false;
-    Entity* collidedWith;
+    Entity* collidedWith = NULL;
 
     GLuint textureID;
 
