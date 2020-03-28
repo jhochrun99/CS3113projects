@@ -28,6 +28,7 @@ enum GameMode { START, PLAY, END };
 struct GameState {
     Entity* player;
     Entity* platforms;
+    Entity* button;
     Entity* enemies;
 };
 
@@ -186,10 +187,23 @@ void Initialize() {
             state.platforms[i].position = glm::vec3(locationPlatform, 3.75, 0);
         }
 
-        state.platforms[i].Update(0, NULL, 0); //update platforms once to get them to move to set position
+        state.platforms[i].Update(0, NULL, 0, NULL); //update platforms once to get them to move to set position
         state.platforms[i].canMove = false; //in position, will never move again
     }
 
+    state.button = new Entity();
+    state.button->textureID = LoadTexture("redButton.png");
+    state.button->entityType = BUTTON;
+    state.button->scale = 0.35;
+    state.button->textureCols = 2;
+    state.button->textureRows = 1;
+    state.button->animIndices = new int[1]{ 0 };
+    state.button->height = 0.2;
+    state.button->width = 0.1;
+    state.button->position = glm::vec3(4, -3.2f, 0);
+    state.button->Update(0, NULL, 0, NULL);
+    state.button->canMove = false; //will 
+    
     //Initialize Enemies
     state.enemies = new Entity[ENEMY_COUNT];
 
@@ -246,7 +260,7 @@ void Initialize() {
     state.enemies[2].animIndices = state.enemies[2].animUp;
     state.enemies[2].animFrames = 4;
 
-    state.enemies[2].position = glm::vec3(0, 0, 0);
+    state.enemies[2].position = glm::vec3(0);
     state.enemies[2].senseRadius = 3.0f;
 
     //fireballs for fire enemy
@@ -268,7 +282,7 @@ void Initialize() {
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].entityType = ENEMY;
         state.enemies[i].speed = 1.0f;
-        state.enemies[i].Update(0, NULL, 0);
+        state.enemies[i].Update(0, NULL, 0, NULL);
     }
 
     // Initialize Player
@@ -278,7 +292,7 @@ void Initialize() {
     state.player->speed = 2.0f;
     state.player->textureID = LoadTexture("george_0.png");
     state.player->height = 0.8f;
-    state.player->width = 0.8f;
+    state.player->width = 0.75f;
     state.player->senseRadius = 0.8f;
     state.player->jumpHeight = 5.0f;
 
@@ -376,7 +390,10 @@ void ProcessInputEnd() {
                 state.player->position = glm::vec3(-3.5f, 2.0f, 0);
                 state.player->velocity = glm::vec3(0);
                 state.player->movement = glm::vec3(0);
-                //state.player->isActive = true;
+
+                state.button->animIndices = new int[1]{ 0 };
+                state.button->canUse = true;
+
                 for (int i = 0; i < ENEMY_COUNT; i++) {
                     state.enemies[i].isActive = true;
                 }
@@ -443,7 +460,7 @@ float accumulator = 0.0f;
 
 void UpdateStart(float deltaTime) {
     for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT, state.button);
     }
 }
 
@@ -455,13 +472,13 @@ void UpdatePlay(float deltaTime) {
     }
 
     while (deltaTime >= FIXED_TIMESTEP) {
-        state.player->Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+        state.player->Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT, state.button);
         
         deltaTime -= FIXED_TIMESTEP;
     }
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT);
+        state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT, state.button);
     }
 
     state.player->CheckEnemyCollision(state.enemies, ENEMY_COUNT);
@@ -506,6 +523,8 @@ void RenderStart() {
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(&program);
     }
+
+    state.button->Render(&program);
 }
 
 void RenderPlay() {
@@ -517,12 +536,22 @@ void RenderPlay() {
         state.enemies[i].Render(&program);
     }
 
+    state.button->Render(&program);
     state.player->Render(&program);
 }
 
 void RenderEnd() {
-    GLuint fontTextureID = LoadTexture("font1.png");
+    for (int i = 0; i < PLATFORM_COUNT; i++) {
+        state.platforms[i].Render(&program);
+    }
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        state.enemies[i].Render(&program);
+    }
 
+    state.button->Render(&program);
+    state.player->Render(&program);
+    
+    GLuint fontTextureID = LoadTexture("font1.png");
     if (state.player->isActive) {
         DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
             glm::vec3(-2.0f, 0, 0));
@@ -533,16 +562,6 @@ void RenderEnd() {
     }
     DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
         glm::vec3(-1.76f, -0.5f, 0));
-
-    for (int i = 0; i < PLATFORM_COUNT; i++) {
-        state.platforms[i].Render(&program);
-    }
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        //state.enemies[i].position.z = -0.1f;
-        state.enemies[i].Render(&program);
-    }
-
-    state.player->Render(&program);
 }
 
 void Render() {

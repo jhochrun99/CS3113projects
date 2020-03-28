@@ -12,7 +12,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
-enum EntityType { PLAYER, PLATFORM, ENEMY };
+enum EntityType { PLAYER, PLATFORM, ENEMY, BUTTON };
 enum EnemyType { BAT, SLIME, FIRE, FIREBALL };
 enum EnemyState { IDLE, ATTACKING, DEAD };
 
@@ -37,9 +37,9 @@ public:
     float senseRadius = 0.0f;
     Entity* senseFor = NULL;
 
-    bool isActive = true;
-    bool canMove = true;
-    bool canShoot = true;
+    bool isActive = true; //is visible / alive
+    bool canMove = true; //can't move, doesn't need to be updated
+    bool canUse = true; //if fireballs can be shot, and button can be pressed
 
     bool collidedTop = false;
     bool collidedBottom = false;
@@ -66,12 +66,12 @@ public:
     Entity();
 
     bool CheckCollision(Entity* other);
-    void CheckCollisionY(Entity* objects, int objectCount);
+    void CheckCollisionY(Entity* objects, int objectCount, Entity* button);
     void CheckCollisionX(Entity* objects, int objectCount);
     void CheckSense(Entity* object);
 
     void CheckEnemyCollision(Entity* platform, int platformCount);
-    void Update(float deltaTime, Entity* platform, int platformCount);
+    void Update(float deltaTime, Entity* platform, int platformCount, Entity* button);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 

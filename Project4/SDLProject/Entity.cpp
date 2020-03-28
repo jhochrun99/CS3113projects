@@ -14,6 +14,7 @@ Entity::Entity() {
 }
 
 bool Entity::CheckCollision(Entity* other) {
+    if (other == NULL) { return false; }
     if (!isActive || !other->isActive) { return false; }
 
     float xDist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
@@ -26,12 +27,11 @@ bool Entity::CheckCollision(Entity* other) {
     return false;
 }
 
-void Entity::CheckCollisionY(Entity* objects, int objectCount) {
+void Entity::CheckCollisionY(Entity* objects, int objectCount, Entity* button) {
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            //float yDist = fabs(position.y - object->position.y);
             float yOverlap = fabs(fabs(position.y - object->position.y) - (height / 2.0f) - (object->height / 2.0f));
             if (velocity.y > 0) {
                 position.y -= yOverlap;
@@ -45,6 +45,29 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 collidedBottom = true;
                 collidedWith = object;
             }
+        }
+    }
+
+    if (button == NULL) { return; }
+    if (button->canUse && CheckCollision(button)) {
+        float yOverlap = fabs(fabs(position.y - button->position.y) - (height / 2.0f) - (button->height / 2.0f));
+        if (velocity.y > 0) {
+            position.y -= yOverlap;
+            velocity.y = 0;
+            collidedTop = true;
+            collidedWith = button;
+
+            button->animIndices = new int[1]{ 1 };
+            button->canUse = false;
+        }
+        else if (velocity.y < 0) {
+            position.y += yOverlap;
+            velocity.y = 0;
+            collidedBottom = true;
+            collidedWith = button;
+
+            button->animIndices = new int[1]{ 1 };
+            button->canUse = false;
         }
     }
 }
@@ -184,7 +207,7 @@ void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
     if (!isActive) { return; } //don't do anything if not active
     if (!canMove) { return; } //can't move, doesn't need to be updated
 
-    CheckCollisionY(enemies, enemyCount);
+    CheckCollisionY(enemies, enemyCount, NULL);
     CheckCollisionX(enemies, enemyCount);
     
     //player dies
@@ -203,7 +226,7 @@ void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
     }
 }
 
-void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
+void Entity::Update(float deltaTime, Entity* platforms, int platformCount, Entity* button)
 {
     if (!isActive) { return; } //don't do anything if not active
     if (!canMove) { return; } //can't move, doesn't need to be updated
@@ -236,7 +259,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;
-    CheckCollisionY(platforms, platformCount);
+    CheckCollisionY(platforms, platformCount, button);
     position.x += velocity.x * deltaTime;
     CheckCollisionX(platforms, platformCount);
 
