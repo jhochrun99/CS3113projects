@@ -220,8 +220,8 @@ void Initialize() {
     state.enemies[1].textureCols = 6;
     state.enemies[1].textureRows = 2;
     state.enemies[1].animIndices = new int[1]{ 5 };
-    state.enemies[2].height = 0.4f;
-    state.enemies[2].width = 0.3f;
+    state.enemies[2].height = 0.1f;
+    state.enemies[2].width = 0.1f;
 
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
     state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
@@ -231,7 +231,7 @@ void Initialize() {
     state.enemies[1].animIndex = 0;
     state.enemies[1].animTime = 0;
 
-    state.enemies[1].position = glm::vec3(-0.5, 3.1f, 0);
+    state.enemies[1].position = glm::vec3(-0.5, 3.0f, 0);
     state.enemies[1].movement = glm::vec3(0);
     state.enemies[1].senseRadius = 3.0f;
 
