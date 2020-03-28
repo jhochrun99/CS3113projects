@@ -1,5 +1,7 @@
 #include "Entity.h"
 #include "math.h"
+#include <stdlib.h>
+#include <time.h>
 
 Entity::Entity() {
     position = glm::vec3(0);
@@ -87,12 +89,30 @@ void Entity::CheckSense(Entity* senseFor) {
     }
 }
 
+glm::vec3 fireballMovement = glm::vec3(0);
+int fireballMaxCount = 5;
+glm::vec3 Entity::ShootFire() {
+    srand(time(NULL));
+    //get a random x and y value
+    for (int i = 0; i < 2; i++) {
+        if (i == 0) { //x value
+            fireballMovement.x = (1 + (rand() % 10));
+        }
+        else { //y value
+            fireballMovement.y = (1 + (rand() % 10));
+        }
+    }
+
+    return fireballMovement;
+}
+
 void Entity::Slime() {
     switch (enemyState) {
         case IDLE:
 
             break; //currently do nothing
-        case WALKING:
+        case ATTACKING:
+            /*movement = glm::vec3(-1, 0, 0);*/
             if (collidedLeft) {
                 movement.x = -movement.x;
                 animIndices = animRight;
@@ -106,10 +126,6 @@ void Entity::Slime() {
     
 }
 
-
-float xVal;
-float yVal;
-float vectorLength;
 void Entity::Bat() {
     switch (enemyState) {
         case IDLE:
@@ -117,9 +133,6 @@ void Entity::Bat() {
             break;
         case ATTACKING:
             if (!senseFor->isActive) { break; }
-            //xVal = senseFor->position.x - position.x;
-            //yVal = senseFor->position.y - position.y;
-            //vectorLength = sqrt(pow(xVal, 2) + pow(yVal, 2));
 
             movement = glm::vec3(senseFor->position.x - position.x, 
                 senseFor->position.y - position.y, 0);
@@ -138,13 +151,13 @@ void Entity::Bat() {
 
 void Entity::Fire() {
     switch (enemyState) {
-        case IDLE:
+        case IDLE: //doesn't shoot
             CheckSense(senseFor);
-            //shoots randomly when idle
+            
             break;
-        case ATTACKING:
+        case ATTACKING: //shoots randomly when player is in range
+            ShootFire();
             CheckSense(senseFor);
-            //aims at player when attacking
             break;
         case DEAD:
             //changes appearance
@@ -201,7 +214,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount)
     collidedRight = false;
 
     if (animIndices != NULL) {
-        if (glm::length(movement) != 0) {
+        if (glm::length(movement) != 0 || entityType == FIRE) {
             animTime += deltaTime;
 
             if (animTime >= 0.25f)

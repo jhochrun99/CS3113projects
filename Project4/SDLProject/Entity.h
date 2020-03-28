@@ -13,8 +13,8 @@
 #include "ShaderProgram.h"
 
 enum EntityType { PLAYER, PLATFORM, ENEMY };
-enum EnemyType { BAT, SLIME, FIRE };
-enum EnemyState { IDLE, WALKING, ATTACKING, DEAD };
+enum EnemyType { BAT, SLIME, FIRE, FIREBALL };
+enum EnemyState { IDLE, ATTACKING, DEAD };
 
 class Entity {
 public:
@@ -36,6 +36,7 @@ public:
 
     bool isActive = true;
     bool canMove = true;
+    bool canShoot = true;
 
     bool collidedTop = false;
     bool collidedBottom = false;
@@ -75,4 +76,5 @@ public:
     void Slime();
     void Bat();
     void Fire();
+    glm::vec3 ShootFire();
 };
