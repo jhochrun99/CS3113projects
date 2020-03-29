@@ -10,7 +10,38 @@ Entity::Entity() {
     movement = glm::vec3(0);
     speed = 0;
 
+    jump = false;
+    jumpHeight = 0;
+
+    width = 1.0f;
+    height = 1.0f;
+    scale = 1.0f;
+    senseRadius = 0.0f;
+    senseFor = NULL;
+
+    isActive = true; //is visible / alive
+    canMove = true; //can't move, doesn't need to be updated
+    canUse = true; //if fireballs can be shot, and button can be pressed
+
+    collidedTop = false;
+    collidedBottom = false;
+    collidedLeft = false;
+    collidedRight = false;
+    collidedWith = NULL;
+
     modelMatrix = glm::mat4(1.0f);
+
+    animRight = NULL;
+    animLeft = NULL;
+    animUp = NULL;
+    animDown = NULL;
+
+    animIndices = NULL;
+    animFrames = 0;
+    animIndex = 0;
+    animTime = 0;
+    textureCols = 0;
+    textureRows = 0;
 }
 
 bool Entity::CheckCollision(Entity* other) {
@@ -56,18 +87,17 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount, Entity* button) {
             velocity.y = 0;
             collidedTop = true;
             collidedWith = button;
-
-            button->animIndices = new int[1]{ 1 };
             button->canUse = false;
+            button->animIndices = new int[1]{ 1 };
         }
         else if (velocity.y < 0) {
             position.y += yOverlap;
             velocity.y = 0;
             collidedBottom = true;
             collidedWith = button;
-
-            button->animIndices = new int[1]{ 1 };
             button->canUse = false;
+            button->animIndices = new int[1]{ 1 };
+            
         }
     }
 }
@@ -86,7 +116,7 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
                 collidedRight = true;
                 collidedWith = object;
             }
-            else if (velocity.x < 0) {
+            else { //if (velocity.x < 0) {
                 position.x += xOverlap;
                 velocity.x = 0;
                 collidedLeft = true;
@@ -132,7 +162,6 @@ glm::vec3 Entity::ShootFire() {
 void Entity::Slime() {
     switch (enemyState) {
         case IDLE:
-
             break; //currently do nothing
         case ATTACKING:
             if (collidedLeft) {
@@ -145,7 +174,6 @@ void Entity::Slime() {
             }
             break;
     }
-    
 }
 
 void Entity::Bat() {
@@ -173,17 +201,16 @@ void Entity::Bat() {
 }
 
 void Entity::Fire() {
+    if (!senseFor->canUse) { 
+        enemyState = DEAD; 
+    }
+    std::cout << senseFor;
     switch (enemyState) {
-        case IDLE: //doesn't shoot
-            CheckSense(senseFor);
-            
-            break;
-        case ATTACKING: //shoots randomly when player is in range
+        case ATTACKING: //shoots randomly
             ShootFire();
-            CheckSense(senseFor);
             break;
-        case DEAD:
-            //changes appearance
+        case DEAD: //button pressed, appearance change
+            animIndices = animLeft;
             break;
     }
 }
@@ -228,8 +255,7 @@ void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
 
 void Entity::Update(float deltaTime, Entity* platforms, int platformCount, Entity* button)
 {
-    if (!isActive) { return; } //don't do anything if not active
-    if (!canMove) { return; } //can't move, doesn't need to be updated
+    if (!isActive || !canMove) { return; } //don't do anything if not active
 
     collidedTop = false;
     collidedBottom = false;
@@ -239,6 +265,11 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount, Entit
     if (animIndices != NULL) {
         if (glm::length(movement) != 0 || entityType != PLAYER) {
             animTime += deltaTime;
+
+            if (animIndex == 3 && animIndices == animLeft && enemyType == FIRE) {
+                isActive = false;
+                return;
+            }
 
             if (animTime >= 0.25f)
             {

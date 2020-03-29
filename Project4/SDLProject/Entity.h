@@ -28,40 +28,40 @@ public:
     glm::vec3 movement;
     float speed;
 
-    bool jump = false;
-    float jumpHeight = 0;
+    bool jump;
+    float jumpHeight;
 
-    float width = 1.0f;
-    float height = 1.0f;
-    float scale = 1.0f;
-    float senseRadius = 0.0f;
-    Entity* senseFor = NULL;
+    float width;
+    float height;
+    float scale;
+    float senseRadius;
+    Entity* senseFor;
 
-    bool isActive = true; //is visible / alive
-    bool canMove = true; //can't move, doesn't need to be updated
-    bool canUse = true; //if fireballs can be shot, and button can be pressed
+    bool isActive;
+    bool canMove;
+    bool canUse;
 
-    bool collidedTop = false;
-    bool collidedBottom = false;
-    bool collidedLeft = false;
-    bool collidedRight = false;
-    Entity* collidedWith = NULL;
+    bool collidedTop;
+    bool collidedBottom;
+    bool collidedLeft;
+    bool collidedRight;
+    Entity* collidedWith;
 
     GLuint textureID;
 
     glm::mat4 modelMatrix;
 
-    int* animRight = NULL;
-    int* animLeft = NULL;
-    int* animUp = NULL;
-    int* animDown = NULL;
+    int* animRight;
+    int* animLeft;
+    int* animUp;
+    int* animDown;
 
-    int* animIndices = NULL;
-    int animFrames = 0;
-    int animIndex = 0;
-    float animTime = 0;
-    int textureCols = 0;
-    int textureRows = 0;
+    int* animIndices;
+    int animFrames;
+    int animIndex;
+    float animTime;
+    int textureCols;
+    int textureRows;
 
     Entity();
 

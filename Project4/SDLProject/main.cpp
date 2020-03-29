@@ -19,9 +19,9 @@
 
 #define FLOOR_COUNT 20 //determine how many floor tiles
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
-#define PLATFORM_COUNT (FLOOR_COUNT*2)+WALL_COUNT
-#define ENEMY_COUNT 4
-#define FIREBALL_MAX 5
+#define PLATFORM_COUNT (FLOOR_COUNT*2)+WALL_COUNT+3
+#define ENEMY_COUNT 3
+//#define FIREBALL_MAX 5
 
 enum GameMode { START, PLAY, END };
 
@@ -152,6 +152,7 @@ void Initialize() {
     GLuint platformTextureID = LoadTexture("Tileset.png");
     float locationPlatform = -4.75f;
     float locationWall = -3.0f;
+    float locationMid = -0.5;
 
     int* floorIndex = new int[1]{ 1 };
     int* leftWallIndex = new int[1]{ 12 };
@@ -181,10 +182,15 @@ void Initialize() {
             state.platforms[i].animIndices = rightWallIndex;
             state.platforms[i].position = glm::vec3(4.8f, locationWall, 0);
         }
-        else { //draw ceiling
+        else if (i < FLOOR_COUNT*2 + WALL_COUNT) { //draw ceiling
             locationPlatform -= terrainScale;
             state.platforms[i].animIndices = floorIndex;
             state.platforms[i].position = glm::vec3(locationPlatform, 3.75, 0);
+        }
+        else { //draw in other platforms
+            state.platforms[i].animIndices = floorIndex;
+            state.platforms[i].position = glm::vec3(locationMid, -2.1f, 0);
+            locationMid += terrainScale;
         }
 
         state.platforms[i].Update(0, NULL, 0, NULL); //update platforms once to get them to move to set position
@@ -202,7 +208,8 @@ void Initialize() {
     state.button->width = 0.1;
     state.button->position = glm::vec3(4, -3.2f, 0);
     state.button->Update(0, NULL, 0, NULL);
-    state.button->canMove = false; //will 
+    //state.button->senseFor = &state.enemies[2];
+    state.button->canMove = false;
     
     //Initialize Enemies
     state.enemies = new Entity[ENEMY_COUNT];
@@ -248,7 +255,7 @@ void Initialize() {
     //fire enemy - shoots fireballs
     GLuint fireTextureID = LoadTexture("explosionTrp.png");
     state.enemies[2].enemyType = FIRE;
-    state.enemies[2].enemyState = IDLE;
+    state.enemies[2].enemyState = ATTACKING;
     state.enemies[2].textureID = fireTextureID;
     state.enemies[2].textureCols = 5;
     state.enemies[2].textureRows = 3;
@@ -261,23 +268,21 @@ void Initialize() {
     state.enemies[2].animFrames = 4;
 
     state.enemies[2].position = glm::vec3(0);
-    state.enemies[2].senseRadius = 3.0f;
+    state.enemies[2].senseFor = state.button;
 
     //fireballs for fire enemy
-    state.enemies[3].enemyType = FIREBALL;
-    state.enemies[3].textureID = fireTextureID;
-    state.enemies[3].textureCols = 5;
-    state.enemies[3].textureRows = 3;
-    state.enemies[3].height = 0.2f;
-    state.enemies[3].width = 0.2f;
-
-    state.enemies[3].animUp = new int[1]{ 0 };
-    state.enemies[3].animIndices = state.enemies[3].animUp;
-    state.enemies[3].animFrames = 1;
-
-    state.enemies[3].position = glm::vec3(0, 0, 0);
-    state.enemies[3].movement = glm::vec3(0);
-    state.enemies[3].senseRadius = 3.0f;
+    //state.enemies[3].enemyType = FIREBALL;
+    //state.enemies[3].textureID = fireTextureID;
+    //state.enemies[3].textureCols = 5;
+    //state.enemies[3].textureRows = 3;
+    //state.enemies[3].height = 0.2f;
+    //state.enemies[3].width = 0.2f;
+    //state.enemies[3].animUp = new int[1]{ 0 };
+    //state.enemies[3].animIndices = state.enemies[3].animUp;
+    //state.enemies[3].animFrames = 1;
+    //state.enemies[3].position = glm::vec3(0, 0, 0);
+    //state.enemies[3].movement = glm::vec3(0);
+    //state.enemies[3].senseRadius = 3.0f;
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].entityType = ENEMY;
@@ -294,7 +299,7 @@ void Initialize() {
     state.player->height = 0.8f;
     state.player->width = 0.75f;
     state.player->senseRadius = 0.8f;
-    state.player->jumpHeight = 5.0f;
+    state.player->jumpHeight = 5.5f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -327,7 +332,7 @@ void ProcessInputStart() {
                 state.enemies[0].enemyState = ATTACKING;
                 state.enemies[0].movement = glm::vec3(-1, 0, 0);
                 state.enemies[1].senseFor = state.player; 
-                state.enemies[2].senseFor = state.player;
+                state.enemies[2].senseFor = state.button;
                 state.player->isActive = true;
                 break;
             case SDLK_SPACE:
@@ -547,6 +552,8 @@ void RenderEnd() {
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(&program);
     }
+
+    state.enemies[2].isActive = false;
 
     state.button->Render(&program);
     state.player->Render(&program);
