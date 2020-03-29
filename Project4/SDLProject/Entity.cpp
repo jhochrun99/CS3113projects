@@ -176,6 +176,9 @@ void Entity::Slime() {
     }
 }
 
+float xPos;
+float yPos;
+float vectorLength;
 void Entity::Bat() {
     switch (enemyState) {
         case IDLE:
@@ -184,8 +187,12 @@ void Entity::Bat() {
         case ATTACKING:
             if (!senseFor->isActive) { break; }
 
+            xPos = senseFor->position.x - position.x;
+            yPos = senseFor->position.x - position.x;
+            vectorLength = sqrt(pow(xPos, 2) + pow(yPos, 2));
             movement = glm::vec3(senseFor->position.x - position.x, 
                 senseFor->position.y - position.y, 0);
+
             velocity.y = movement.y * speed;
 
             if (movement.x > 0) {

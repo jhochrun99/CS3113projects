@@ -239,8 +239,8 @@ void Initialize() {
     state.enemies[1].textureID = LoadTexture("batTrp.png");
     state.enemies[1].textureCols = 6;
     state.enemies[1].textureRows = 2;
-    state.enemies[1].height = 0.1f;
-    state.enemies[1].width = 0.1f;
+    state.enemies[1].height = 0.2f;
+    state.enemies[1].width = 0.7f;
 
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
     state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
@@ -414,6 +414,9 @@ void ProcessInputEnd() {
                 state.enemies[1].movement = glm::vec3(0);
                 state.enemies[1].velocity = glm::vec3(0);
 
+                state.enemies[2].enemyState = ATTACKING;
+                state.enemies[2].animIndices = state.enemies[2].animUp;
+
                 mode = START;
                 break;
             }
@@ -452,11 +455,9 @@ void UpdateGameMode() {
 
     if (enemiesDead == ENEMY_COUNT) {
         mode = END;
-        return;
     }
-    else {
-        enemiesDead = 0;
-    }
+
+    enemiesDead = 0;
 }
 
 #define FIXED_TIMESTEP 0.0166666f
@@ -552,8 +553,6 @@ void RenderEnd() {
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(&program);
     }
-
-    state.enemies[2].isActive = false;
 
     state.button->Render(&program);
     state.player->Render(&program);
