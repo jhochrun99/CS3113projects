@@ -29,7 +29,10 @@ public:
     float speed;
 
     bool jump;
-    float jumpHeight;
+    float maxVal; //used for jump height, and # of fireballs
+
+    int fireballCount;
+    Entity* fireballs;
 
     float width;
     float height;
@@ -79,5 +82,5 @@ public:
     void Slime();
     void Bat();
     void Fire();
-    glm::vec3 ShootFire();
+    void ShootFire();
 };

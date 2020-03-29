@@ -21,7 +21,7 @@
 #define WALL_COUNT (14*2) //determines how tall walls are; should be even value
 #define PLATFORM_COUNT (FLOOR_COUNT*2)+WALL_COUNT+3
 #define ENEMY_COUNT 3
-//#define FIREBALL_MAX 5
+#define MAX_FIREBALLS 5
 
 enum GameMode { START, PLAY, END };
 
@@ -30,6 +30,7 @@ struct GameState {
     Entity* platforms;
     Entity* button;
     Entity* enemies;
+    Entity* fireballs;
 };
 
 GameState state;
@@ -172,7 +173,7 @@ void Initialize() {
             state.platforms[i].position = glm::vec3(locationPlatform, -3.5f, 0);
             locationPlatform += terrainScale;
         }
-        else if (i < FLOOR_COUNT + WALL_COUNT/2) { //draw right walls
+        else if (i < FLOOR_COUNT + WALL_COUNT / 2) { //draw right walls
             state.platforms[i].animIndices = leftWallIndex;
             state.platforms[i].position = glm::vec3(-4.75f, locationWall, 0);
             locationWall += terrainScale;
@@ -182,7 +183,7 @@ void Initialize() {
             state.platforms[i].animIndices = rightWallIndex;
             state.platforms[i].position = glm::vec3(4.8f, locationWall, 0);
         }
-        else if (i < FLOOR_COUNT*2 + WALL_COUNT) { //draw ceiling
+        else if (i < FLOOR_COUNT * 2 + WALL_COUNT) { //draw ceiling
             locationPlatform -= terrainScale;
             state.platforms[i].animIndices = floorIndex;
             state.platforms[i].position = glm::vec3(locationPlatform, 3.75, 0);
@@ -210,10 +211,28 @@ void Initialize() {
     state.button->Update(0, NULL, 0, NULL);
     //state.button->senseFor = &state.enemies[2];
     state.button->canMove = false;
-    
+
+    GLuint fireTextureID = LoadTexture("explosionTrp.png");
+
+    //fireballs for fire enemy
+    state.fireballs = new Entity[MAX_FIREBALLS];
+    int* animFireballs = new int[2]{ 0, 10 };
+    for (int i = 0; i < MAX_FIREBALLS; i++) {
+        state.fireballs[i].entityType = ENEMY;
+        state.fireballs[i].enemyType = FIREBALL;
+        state.fireballs[i].textureID = fireTextureID;
+        state.fireballs[i].textureCols = 5;
+        state.fireballs[i].textureRows = 3;
+        state.fireballs[i].height = 0.1f;
+        state.fireballs[i].width = 0.1f;
+        state.fireballs[i].animIndices = animFireballs;
+        state.fireballs[i].animFrames = 2;
+        state.fireballs[i].speed = 0.5;
+        state.fireballs[i].isActive = false;
+    }
+
     //Initialize Enemies
     state.enemies = new Entity[ENEMY_COUNT];
-
     //slime enemy - moves back and forth
     state.enemies[0].enemyType = SLIME;
     state.enemies[0].enemyState = IDLE;
@@ -243,9 +262,9 @@ void Initialize() {
     state.enemies[1].width = 0.7f;
 
     state.enemies[1].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
-    state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11};
+    state.enemies[1].animRight = new int[5]{ 7, 8, 9, 10, 11 };
     state.enemies[1].animUp = new int[2]{ 5, 5 };
-        //i have no idea why it doesn't work with "5" in animUp only once
+    //i have no idea why it doesn't work with "5" in animUp only once
     state.enemies[1].animIndices = state.enemies[1].animUp;
     state.enemies[1].animFrames = 2;
 
@@ -253,40 +272,26 @@ void Initialize() {
     state.enemies[1].senseRadius = 3.0f;
 
     //fire enemy - shoots fireballs
-    GLuint fireTextureID = LoadTexture("explosionTrp.png");
     state.enemies[2].enemyType = FIRE;
-    state.enemies[2].enemyState = ATTACKING;
+    state.enemies[2].enemyState = IDLE;
     state.enemies[2].textureID = fireTextureID;
     state.enemies[2].textureCols = 5;
     state.enemies[2].textureRows = 3;
     state.enemies[2].height = 0.6f;
     state.enemies[2].width = 0.4f;
+    state.enemies[2].maxVal = MAX_FIREBALLS;
 
-    state.enemies[2].animUp = new int[4]{ 3, 4, 5, 4};
+    state.enemies[2].animUp = new int[4]{ 3, 4, 5, 4 };
     state.enemies[2].animLeft = new int[4]{ 5, 6, 7, 8 }; //left for turning off
     state.enemies[2].animIndices = state.enemies[2].animUp;
     state.enemies[2].animFrames = 4;
 
     state.enemies[2].position = glm::vec3(0);
     state.enemies[2].senseFor = state.button;
-
-    //fireballs for fire enemy
-    //state.enemies[3].enemyType = FIREBALL;
-    //state.enemies[3].textureID = fireTextureID;
-    //state.enemies[3].textureCols = 5;
-    //state.enemies[3].textureRows = 3;
-    //state.enemies[3].height = 0.2f;
-    //state.enemies[3].width = 0.2f;
-    //state.enemies[3].animUp = new int[1]{ 0 };
-    //state.enemies[3].animIndices = state.enemies[3].animUp;
-    //state.enemies[3].animFrames = 1;
-    //state.enemies[3].position = glm::vec3(0, 0, 0);
-    //state.enemies[3].movement = glm::vec3(0);
-    //state.enemies[3].senseRadius = 3.0f;
+    state.enemies[2].fireballs = state.fireballs;
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].entityType = ENEMY;
-        state.enemies[i].speed = 1.0f;
         state.enemies[i].Update(0, NULL, 0, NULL);
     }
 
@@ -299,7 +304,7 @@ void Initialize() {
     state.player->height = 0.8f;
     state.player->width = 0.75f;
     state.player->senseRadius = 0.8f;
-    state.player->jumpHeight = 5.5f;
+    state.player->maxVal = 5.5f;
 
     state.player->animRight = new int[4]{ 3, 7, 11, 15 };
     state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -333,6 +338,7 @@ void ProcessInputStart() {
                 state.enemies[0].movement = glm::vec3(-1, 0, 0);
                 state.enemies[1].senseFor = state.player; 
                 state.enemies[2].senseFor = state.button;
+                state.enemies[2].enemyState = ATTACKING;
                 state.player->isActive = true;
                 break;
             case SDLK_SPACE:
@@ -395,6 +401,7 @@ void ProcessInputEnd() {
                 state.player->position = glm::vec3(-3.5f, 2.0f, 0);
                 state.player->velocity = glm::vec3(0);
                 state.player->movement = glm::vec3(0);
+                state.player->isActive = false;
 
                 state.button->animIndices = new int[1]{ 0 };
                 state.button->canUse = true;
@@ -414,8 +421,16 @@ void ProcessInputEnd() {
                 state.enemies[1].movement = glm::vec3(0);
                 state.enemies[1].velocity = glm::vec3(0);
 
-                state.enemies[2].enemyState = ATTACKING;
+                state.enemies[2].enemyState = IDLE;
                 state.enemies[2].animIndices = state.enemies[2].animUp;
+                state.enemies[2].fireballCount = 0;
+
+                for (int i = 0; i < MAX_FIREBALLS; i++) {
+                    state.fireballs[i].position = glm::vec3(0);
+                    state.fireballs[i].movement = glm::vec3(0);
+                    state.fireballs[i].isActive = false;
+                    
+                }
 
                 mode = START;
                 break;
@@ -487,7 +502,12 @@ void UpdatePlay(float deltaTime) {
         state.enemies[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT, state.button);
     }
 
+    for (int i = 0; i < MAX_FIREBALLS; i++) {
+        state.fireballs[i].Update(FIXED_TIMESTEP, state.platforms, PLATFORM_COUNT, NULL);
+    }
+
     state.player->CheckEnemyCollision(state.enemies, ENEMY_COUNT);
+    state.player->CheckEnemyCollision(state.fireballs, MAX_FIREBALLS);
 
     UpdateGameMode();
 
@@ -530,6 +550,10 @@ void RenderStart() {
         state.enemies[i].Render(&program);
     }
 
+    for (int i = 0; i < MAX_FIREBALLS; i++) {
+        state.fireballs[i].Render(&program);
+    }
+
     state.button->Render(&program);
 }
 
@@ -544,6 +568,10 @@ void RenderPlay() {
 
     state.button->Render(&program);
     state.player->Render(&program);
+
+    for (int i = 0; i < MAX_FIREBALLS; i++) {
+        state.fireballs[i].Render(&program);
+    }
 }
 
 void RenderEnd() {

@@ -4,14 +4,19 @@
 #include <time.h>
 
 Entity::Entity() {
+    srand(time(NULL));
+
     position = glm::vec3(0);
     velocity = glm::vec3(0);
     acceleration = glm::vec3(0);
     movement = glm::vec3(0);
-    speed = 0;
+    speed = 1.0f;
 
     jump = false;
-    jumpHeight = 0;
+    maxVal = 0;
+
+    fireballCount = 0;
+    fireballs = NULL;
 
     width = 1.0f;
     height = 1.0f;
@@ -64,6 +69,11 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount, Entity* button) {
 
         if (CheckCollision(object)) {
             float yOverlap = fabs(fabs(position.y - object->position.y) - (height / 2.0f) - (object->height / 2.0f));
+            
+            //if (enemyType == FIREBALL && object->entityType != PLATFORM) {
+            //    return;
+            //}
+            
             if (velocity.y > 0) {
                 position.y -= yOverlap;
                 velocity.y = 0;
@@ -107,8 +117,11 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            //float xDist = fabs(position.x - object->position.x);
             float xOverlap = fabs(fabs(position.x - object->position.x) - (width / 2.0f) - (object->width / 2.0f));
+
+            //if (enemyType == FIREBALL && object->entityType != PLATFORM) {
+            //    return;
+            //}
 
             if (velocity.x > 0) {
                 position.x -= xOverlap;
@@ -143,20 +156,41 @@ void Entity::CheckSense(Entity* senseFor) {
 }
 
 glm::vec3 fireballMovement = glm::vec3(0);
-int fireballMaxCount = 5;
-glm::vec3 Entity::ShootFire() {
-    srand(time(NULL));
-    //get a random x and y value
-    for (int i = 0; i < 2; i++) {
-        if (i == 0) { //x value
-            fireballMovement.x = (1 + (rand() % 10));
-        }
-        else { //y value
-            fireballMovement.y = (1 + (rand() % 10));
+void Entity::ShootFire() {
+    for (int i = 0; i < maxVal; i++) {
+        if (fireballs[i].collidedWith != NULL) {
+            //if fireball collided with platform, reset it
+            if (fireballs[i].collidedWith->entityType == PLATFORM) {
+                fireballs[i].isActive = false;
+                fireballs[i].position = glm::vec3(0);
+                fireballs[i].movement = glm::vec3(0);
+                fireballCount--;
+            }
         }
     }
 
-    return fireballMovement;
+    if (fireballCount == maxVal) { return; }
+
+    //get a random x and y value
+    for (int i = 0; i < 2; i++) {
+        if (i == 0) { //x value
+            fireballMovement.x = (1 + (rand() % 20) - 10);
+        }
+        else { //y value
+            fireballMovement.y = (1 + (rand() % 20) - 10);
+        }
+    }
+
+    for (int i = 0; i < maxVal; i++) {
+        //find first inactive fireball and make it active
+        if (!fireballs[i].isActive) {
+            fireballs[i].movement = fireballMovement;
+            fireballs[i].velocity.y = fireballMovement.y * speed;
+            fireballs[i].isActive = true;
+            fireballCount++;
+            return;
+        }
+    }
 }
 
 void Entity::Slime() {
@@ -176,9 +210,6 @@ void Entity::Slime() {
     }
 }
 
-float xPos;
-float yPos;
-float vectorLength;
 void Entity::Bat() {
     switch (enemyState) {
         case IDLE:
@@ -187,9 +218,6 @@ void Entity::Bat() {
         case ATTACKING:
             if (!senseFor->isActive) { break; }
 
-            xPos = senseFor->position.x - position.x;
-            yPos = senseFor->position.x - position.x;
-            vectorLength = sqrt(pow(xPos, 2) + pow(yPos, 2));
             movement = glm::vec3(senseFor->position.x - position.x, 
                 senseFor->position.y - position.y, 0);
 
@@ -213,8 +241,12 @@ void Entity::Fire() {
     }
     std::cout << senseFor;
     switch (enemyState) {
+        case IDLE:
+            break; //do nothing
         case ATTACKING: //shoots randomly
-            ShootFire();
+            if (animIndex == 2) {
+                ShootFire();
+            }
             break;
         case DEAD: //button pressed, appearance change
             animIndices = animLeft;
@@ -250,7 +282,7 @@ void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
         isActive = false;
     } //enemy dies, unless enemy is fire
     else if (collidedBottom && collidedWith->entityType == ENEMY) {
-        if (collidedWith->enemyType != FIRE) {
+        if (collidedWith->enemyType != FIRE && collidedWith->enemyType != FIREBALL) {
             collidedWith->isActive = false;
         }
         else {
@@ -304,7 +336,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount, Entit
     if (jump) {
         jump = false;
         if (collidedBottom) {
-            velocity.y += jumpHeight;
+            velocity.y += maxVal;
         }
     }
 
