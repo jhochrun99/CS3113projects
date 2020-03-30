@@ -11,7 +11,7 @@ My enemy types are:
 a button and turning it "off".
 * Fireball : a subset of the "Fire" enemy. Shoots out from the fire enemy in a random direction at various speeds, 
 and is destroyed upon hitting a platform. Player dies if they touch it, but they do not have to defeat the fireballs to win 
-as fireballs are not their own enemy. 
+as fireballs are not their own enemy. Only one fireball will be on screen at any given time. 
 
 In my game, the Player is controlled with the `left` and `right` arrow keys, and the `spacebar`.
 
