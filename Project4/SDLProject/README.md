@@ -9,14 +9,11 @@ My enemy types are:
 * Bat : hangs idly until the Player gets within its sensing range, then tracks the Player. Player jumps on it to defeat it. 
 * Fire : sits in the center of the screen, unmoving. Player dies if they touch any part of the fire; it is defeated by hittig
 a button and turning it "off".
+* Fireball : a subset of the "Fire" enemy. Shoots out from the fire enemy in a random direction at various speeds, 
+and is destroyed upon hitting a platform. Player dies if they touch it, but they do not have to defeat the fireballs to win 
+as fireballs are not their own enemy. 
 
 In my game, the Player is controlled with the `left` and `right` arrow keys, and the `spacebar`.
 
 Start the game by hitting the `left shift` key. The game can be reset by pressing the `left shift` key, 
 and started again by pressing the `left shift` key a second time.
-
-Note that the Fire enemy is also supposed to shoot fireballs. The fireballs are shot in a random direction with varying speeds. 
-They disappear when they hit a platform, or end the game if they hit the Player. The Player does not need to 'defeat' the 
-fireballs, as they are not enemies on their own. 
-The fireballs are still being worked on: currently, they occasionally linger after hitting a platform, and on the first play of
-the game, they all shoot at once. Once the game is restarted, they shoot one at a time as intended. 
