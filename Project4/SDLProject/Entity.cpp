@@ -23,9 +23,9 @@ Entity::Entity() {
     senseRadius = 0.0f;
     senseFor = NULL;
 
-    isActive = true; //is visible / alive
-    canMove = true; //can't move, doesn't need to be updated
-    canUse = true; //if fireballs can be shot, and button can be pressed
+    isActive = true;
+    canMove = true;
+    canUse = true;
 
     collidedTop = false;
     collidedBottom = false;
@@ -67,11 +67,8 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount, Entity* button) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            float yOverlap = fabs(fabs(position.y - object->position.y) - (height / 2.0f) - (object->height / 2.0f));
-            
-            //if (enemyType == FIREBALL && object->entityType != PLATFORM) {
-            //    return;
-            //}
+            float yOverlap = fabs(fabs(position.y - object->position.y)
+                - (height / 2.0f) - (object->height / 2.0f));
             
             if (velocity.y > 0) {
                 position.y -= yOverlap;
@@ -90,7 +87,8 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount, Entity* button) {
 
     if (button == NULL) { return; }
     if (button->canUse && CheckCollision(button)) {
-        float yOverlap = fabs(fabs(position.y - button->position.y) - (height / 2.0f) - (button->height / 2.0f));
+        float yOverlap = fabs(fabs(position.y - button->position.y)
+            - (height / 2.0f) - (button->height / 2.0f));
         if (velocity.y > 0) {
             position.y -= yOverlap;
             velocity.y = 0;
@@ -116,11 +114,8 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
 
         if (CheckCollision(object)) {
-            float xOverlap = fabs(fabs(position.x - object->position.x) - (width / 2.0f) - (object->width / 2.0f));
-
-            //if (enemyType == FIREBALL && object->entityType != PLATFORM) {
-            //    return;
-            //}
+            float xOverlap = fabs(fabs(position.x - object->position.x)
+                - (width / 2.0f) - (object->width / 2.0f));
 
             if (velocity.x > 0) {
                 position.x -= xOverlap;
@@ -156,18 +151,6 @@ void Entity::CheckSense(Entity* senseFor) {
 
 glm::vec3 fireballMovement = glm::vec3(0);
 void Entity::ShootFire() {
-    //for (int i = 0; i < maxVal; i++) {
-    //    if (fireballs[i].collidedWith != NULL) {
-    //        //if fireball collided with platform, reset it
-    //        if (fireballs[i].collidedWith->entityType == PLATFORM) {
-    //            fireballs[i].isActive = false;
-    //            fireballs[i].position = glm::vec3(0);
-    //            fireballs[i].movement = glm::vec3(0);
-    //            fireballCount--;
-    //        }
-    //    }
-    //}
-
     //get a random x and y value
     for (int i = 0; i < 2; i++) {
         if (i == 0) { //x value
@@ -182,6 +165,7 @@ void Entity::ShootFire() {
     fireballs->velocity.y = fireballMovement.y * speed;
     fireballs->isActive = true;
 
+    //code for having multiple fireballs - scrapped
     //for (int i = 0; i < maxVal; i++) {
     //    //find first inactive fireball and make it active
     //    if (!fireballs[i].isActive) {
@@ -254,7 +238,7 @@ void Entity::Fire() {
 }
 
 void Entity::Enemy() {
-    if (!isActive) { return; } //do nothing if not active
+    if (!isActive) { return; }
     switch (enemyType) {
         case SLIME:
             Slime();
@@ -279,8 +263,8 @@ void Entity::Enemy() {
 }
 
 void Entity::CheckEnemyCollision(Entity* enemies, int enemyCount) {
-    if (!isActive) { return; } //don't do anything if not active
-    if (!canMove) { return; } //can't move, doesn't need to be updated
+    if (!isActive) { return; }
+    if (!canMove) { return; }
 
     CheckCollisionY(enemies, enemyCount, NULL);
     CheckCollisionX(enemies, enemyCount);
@@ -315,7 +299,7 @@ void Entity::Update(float deltaTime, Entity* platforms, int platformCount, Entit
             animTime += deltaTime;
 
             if (animIndex == 3 && animIndices == animLeft && enemyType == FIRE) {
-                isActive = false;
+                isActive = false; //fire 'death' animation is finished, stop updating
                 return;
             }
 

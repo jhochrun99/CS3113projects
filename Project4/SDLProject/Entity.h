@@ -29,7 +29,7 @@ public:
     float speed;
 
     bool jump;
-    float maxVal; //used for jump height, and # of fireballs
+    float maxVal; //used for jump height
 
     Entity* fireballs;
 

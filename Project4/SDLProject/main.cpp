@@ -327,12 +327,13 @@ void ProcessInputStart() {
             switch (event.key.keysym.sym) {
             case SDLK_LSHIFT:
                 mode = PLAY;
-                //have bat and fire start looking for player
+                //have bat start looking for player
                 state.enemies[0].enemyState = ATTACKING;
                 state.enemies[0].movement = glm::vec3(-1, 0, 0);
 
                 state.enemies[1].senseFor = state.player; 
 
+                //have fire keep track of button's state
                 state.enemies[2].senseFor = state.button;
                 state.enemies[2].enemyState = ATTACKING;
 
@@ -359,7 +360,7 @@ void ProcessInputPlay() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-                case SDLK_SPACE: //player jumps
+                case SDLK_SPACE: 
                     state.player->jump = true;
                     break;
                 }
@@ -383,7 +384,6 @@ void ProcessInputPlay() {
 }
 
 void ProcessInputEnd() {
-    //can press space to restart
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -394,7 +394,7 @@ void ProcessInputEnd() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_LSHIFT: //can press space to clear
+            case SDLK_LSHIFT:
                 state.player->position = glm::vec3(-3.5f, 2.0f, 0);
                 state.player->velocity = glm::vec3(0);
                 state.player->movement = glm::vec3(0);
