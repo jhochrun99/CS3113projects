@@ -15,7 +15,6 @@ Entity::Entity() {
     jump = false;
     maxVal = 0;
 
-    fireballCount = 0;
     fireballs = NULL;
 
     width = 1.0f;
@@ -157,19 +156,17 @@ void Entity::CheckSense(Entity* senseFor) {
 
 glm::vec3 fireballMovement = glm::vec3(0);
 void Entity::ShootFire() {
-    for (int i = 0; i < maxVal; i++) {
-        if (fireballs[i].collidedWith != NULL) {
-            //if fireball collided with platform, reset it
-            if (fireballs[i].collidedWith->entityType == PLATFORM) {
-                fireballs[i].isActive = false;
-                fireballs[i].position = glm::vec3(0);
-                fireballs[i].movement = glm::vec3(0);
-                fireballCount--;
-            }
-        }
-    }
-
-    if (fireballCount == maxVal) { return; }
+    //for (int i = 0; i < maxVal; i++) {
+    //    if (fireballs[i].collidedWith != NULL) {
+    //        //if fireball collided with platform, reset it
+    //        if (fireballs[i].collidedWith->entityType == PLATFORM) {
+    //            fireballs[i].isActive = false;
+    //            fireballs[i].position = glm::vec3(0);
+    //            fireballs[i].movement = glm::vec3(0);
+    //            fireballCount--;
+    //        }
+    //    }
+    //}
 
     //get a random x and y value
     for (int i = 0; i < 2; i++) {
@@ -181,16 +178,20 @@ void Entity::ShootFire() {
         }
     }
 
-    for (int i = 0; i < maxVal; i++) {
-        //find first inactive fireball and make it active
-        if (!fireballs[i].isActive) {
-            fireballs[i].movement = fireballMovement;
-            fireballs[i].velocity.y = fireballMovement.y * speed;
-            fireballs[i].isActive = true;
-            fireballCount++;
-            return;
-        }
-    }
+    fireballs->movement = fireballMovement;
+    fireballs->velocity.y = fireballMovement.y * speed;
+    fireballs->isActive = true;
+
+    //for (int i = 0; i < maxVal; i++) {
+    //    //find first inactive fireball and make it active
+    //    if (!fireballs[i].isActive) {
+    //        fireballs[i].movement = fireballMovement;
+    //        fireballs[i].velocity.y = fireballMovement.y * speed;
+    //        fireballs[i].isActive = true;
+    //        fireballCount++;
+    //        return;
+    //    }
+    //}
 }
 
 void Entity::Slime() {
@@ -244,9 +245,7 @@ void Entity::Fire() {
         case IDLE:
             break; //do nothing
         case ATTACKING: //shoots randomly
-            if (animIndex == 2) {
-                ShootFire();
-            }
+            if (!fireballs->isActive) { ShootFire(); }
             break;
         case DEAD: //button pressed, appearance change
             animIndices = animLeft;
@@ -265,6 +264,16 @@ void Entity::Enemy() {
             break;
         case FIRE:
             Fire();
+            break;
+        case FIREBALL:
+            if (collidedWith != NULL) {
+                if (collidedWith->entityType == PLATFORM) {
+                    movement = glm::vec3(0);
+                    position = glm::vec3(0);
+                    collidedWith = NULL;
+                    isActive = false;
+                }
+            }
             break;
     }
 }

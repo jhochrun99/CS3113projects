@@ -31,7 +31,6 @@ public:
     bool jump;
     float maxVal; //used for jump height, and # of fireballs
 
-    int fireballCount;
     Entity* fireballs;
 
     float width;
