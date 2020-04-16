@@ -12,11 +12,9 @@
 #include "ShaderProgram.h"
 #include <vector>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include "Entity.h"
 #include "Map.h"
+#include "Util.h"
 
 #define LEVEL1_WIDTH 14
 #define LEVEL1_HEIGHT 5
@@ -29,6 +27,8 @@ unsigned int level1_data[] = {
     1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2,
     2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2
 };
+
+GLuint fontTextureID;
 
 enum GameMode { START, PLAY, END };
 
@@ -46,80 +46,6 @@ bool gameIsRunning = true;
 
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
-
-GLuint LoadTexture(const char* filePath) {
-    int w, h, n;
-    unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
-
-    if (image == NULL) {
-        std::cout << "Unable to load image. Make sure the path is correct\n";
-        assert(false);
-    }
-
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    stbi_image_free(image);
-    return textureID;
-}
-
-void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
-    float size, float spacing, glm::vec3 position) {
-    float width = 1.0f / 16.0f;
-    float height = 1.0f / 16.0f;
-
-    std::vector<float> vertices;
-    std::vector<float> texCoords;
-
-    for (int i = 0; i < text.size(); i++) {
-
-        int index = (int)text[i];
-        float offset = (size + spacing) * i;
-        float u = (float)(index % 16) / 16.0f;
-        float v = (float)(index / 16) / 16.0f;
-        vertices.insert(vertices.end(), {
-            offset + (-0.5f * size), 0.5f * size,
-            offset + (-0.5f * size), -0.5f * size,
-            offset + (0.5f * size), 0.5f * size,
-            offset + (0.5f * size), -0.5f * size,
-            offset + (0.5f * size), 0.5f * size,
-            offset + (-0.5f * size), -0.5f * size,
-            });
-        texCoords.insert(texCoords.end(), {
-            u, v,
-            u, v + height,
-            u + width, v,
-            u + width, v + height,
-            u + width, v,
-            u, v + height,
-            });
-
-    }
-
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, position);
-    program->SetModelMatrix(modelMatrix);
-
-    glUseProgram(program->programID);
-
-    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
-    glEnableVertexAttribArray(program->positionAttribute);
-
-    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords.data());
-    glEnableVertexAttribArray(program->texCoordAttribute);
-
-    glBindTexture(GL_TEXTURE_2D, fontTextureID);
-    glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
-
-    glDisableVertexAttribArray(program->positionAttribute);
-    glDisableVertexAttribArray(program->texCoordAttribute);
-}
-
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -153,7 +79,7 @@ void Initialize() {
 
     // Initialize Game Objects
 
-    GLuint mapTextureID = LoadTexture("Tileset.png");
+    GLuint mapTextureID = Util::LoadTexture("Tileset.png");
     state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 0.75f, 10, 6);
 
     //Initialize Enemies
@@ -163,7 +89,7 @@ void Initialize() {
     state.player->position = glm::vec3(-3.5f, 2.0f, 0);
     state.player->acceleration = glm::vec3(0, -9.81f, 0);
     state.player->speed = 2.0f;
-    state.player->textureID = LoadTexture("george_0.png");
+    state.player->textureID = Util::LoadTexture("george_0.png");
     state.player->height = 0.8f;
     state.player->width = 0.75f;
     state.player->maxVal = 5.5f;
@@ -346,8 +272,8 @@ void Update() {
 
 //all of the code for rendering 
 void RenderStart() {
-    GLuint fontTextureID = LoadTexture("font1.png");
-    DrawText(&program, fontTextureID, "Press left shift to Start!", 0.5f, -0.25f,
+    GLuint fontTextureID = Util::LoadTexture("font1.png");
+    Util::DrawText(&program, fontTextureID, "Press left shift to Start!", 0.5f, -0.25f,
         glm::vec3(-2.8f, 1.0f, 0));
 
     state.map->Render(&program);
@@ -362,16 +288,16 @@ void RenderPlay() {
 void RenderEnd() {
     state.player->Render(&program);
     
-    GLuint fontTextureID = LoadTexture("font1.png");
+    GLuint fontTextureID = Util::LoadTexture("font1.png");
     if (state.player->isActive) {
-        DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
+        Util::DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
             glm::vec3(-2.0f, 0, 0));
     }
     else {
-        DrawText(&program, fontTextureID, "Game Over.", 0.5f, -0.25f,
+        Util::DrawText(&program, fontTextureID, "Game Over.", 0.5f, -0.25f,
             glm::vec3(-1.65f, 0, 0));
     }
-    DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
+    Util::DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
         glm::vec3(-1.76f, -0.5f, 0));
 
     state.map->Render(&program);
