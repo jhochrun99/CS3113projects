@@ -124,15 +124,15 @@ void ProcessInputPlay() {
 
     if (keys[SDL_SCANCODE_LEFT]) {
         currentScene->state.player->movement.x = -1.0f;
-        currentScene->state.player->animIndices = state.player->animLeft;
+        currentScene->state.player->animIndices = currentScene->state.player->animLeft;
     }
     else if (keys[SDL_SCANCODE_RIGHT]) {
         currentScene->state.player->movement.x = 1.0f;
-        currentScene->state.player->animIndices = state.player->animRight;
+        currentScene->state.player->animIndices = currentScene->state.player->animRight;
     }
 
-    if (glm::length(state.player->movement) > 1.0f) {
-        currentScene->state.player->movement = glm::normalize(state.player->movement);
+    if (glm::length(currentScene->state.player->movement) > 1.0f) {
+        currentScene->state.player->movement = glm::normalize(currentScene->state.player->movement);
     }
 }
 
