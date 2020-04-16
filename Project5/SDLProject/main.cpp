@@ -12,31 +12,20 @@
 #include "ShaderProgram.h"
 #include <vector>
 
-#include "Entity.h"
+#include "Scene.h"
+#include "Level1.h"
 #include "Map.h"
+#include "Entity.h"
 #include "Util.h"
 
-#define LEVEL1_WIDTH 14
-#define LEVEL1_HEIGHT 5
 #define ENEMY_COUNT 3
-
-unsigned int level1_data[] = {
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2
-};
 
 GLuint fontTextureID;
 
+Scene* currentScene;
+Level1* level1;
+
 enum GameMode { START, PLAY, END };
-
-struct GameState {
-    Map* map;
-
-    Entity* player;
-};
 
 GameState state;
 GameMode mode; 
@@ -46,6 +35,11 @@ bool gameIsRunning = true;
 
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
+
+void SwitchToScene(Scene* scene) {
+    currentScene = scene;
+    currentScene->Initialize();
+}
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -77,34 +71,8 @@ void Initialize() {
 
     mode = START; //set initial game mode 
 
-    // Initialize Game Objects
-
-    GLuint mapTextureID = Util::LoadTexture("Tileset.png");
-    state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 0.75f, 10, 6);
-
-    //Initialize Enemies
-
-    // Initialize Player
-    state.player = new Entity();
-    state.player->position = glm::vec3(-3.5f, 2.0f, 0);
-    state.player->acceleration = glm::vec3(0, -9.81f, 0);
-    state.player->speed = 2.0f;
-    state.player->textureID = Util::LoadTexture("george_0.png");
-    state.player->height = 0.8f;
-    state.player->width = 0.75f;
-    state.player->maxVal = 5.5f;
-
-    state.player->animRight = new int[4]{ 3, 7, 11, 15 };
-    state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
-    state.player->animUp = new int[4]{ 2, 6, 10, 14 };
-    state.player->animDown = new int[4]{ 0, 4, 8, 12 };
-
-    state.player->animIndices = state.player->animRight;
-    state.player->animFrames = 4;
-    state.player->animIndex = 0;
-    state.player->animTime = 0;
-    state.player->textureCols = 4;
-    state.player->textureRows = 4;
+    level1 = new Level1();
+    SwitchToScene(level1);
 }
 
 //all of the code for processing input
@@ -122,7 +90,7 @@ void ProcessInputStart() {
             case SDLK_LSHIFT:
                 mode = PLAY;
 
-                state.player->isActive = true;
+                currentScene->state.player->isActive = true;
                 break;
             case SDLK_SPACE:
                 break;
@@ -133,7 +101,7 @@ void ProcessInputStart() {
 }
 
 void ProcessInputPlay() {
-    state.player->movement = glm::vec3(0);
+    currentScene->state.player->movement = glm::vec3(0);
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -146,7 +114,7 @@ void ProcessInputPlay() {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
                 case SDLK_SPACE: 
-                    state.player->jump = true;
+                    currentScene->state.player->jump = true;
                     break;
                 }
         }
@@ -155,16 +123,16 @@ void ProcessInputPlay() {
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
     if (keys[SDL_SCANCODE_LEFT]) {
-        state.player->movement.x = -1.0f;
-        state.player->animIndices = state.player->animLeft;
+        currentScene->state.player->movement.x = -1.0f;
+        currentScene->state.player->animIndices = state.player->animLeft;
     }
     else if (keys[SDL_SCANCODE_RIGHT]) {
-        state.player->movement.x = 1.0f;
-        state.player->animIndices = state.player->animRight;
+        currentScene->state.player->movement.x = 1.0f;
+        currentScene->state.player->animIndices = state.player->animRight;
     }
 
     if (glm::length(state.player->movement) > 1.0f) {
-        state.player->movement = glm::normalize(state.player->movement);
+        currentScene->state.player->movement = glm::normalize(state.player->movement);
     }
 }
 
@@ -180,10 +148,10 @@ void ProcessInputEnd() {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
             case SDLK_LSHIFT:
-                state.player->position = glm::vec3(-3.5f, 2.0f, 0);
-                state.player->velocity = glm::vec3(0);
-                state.player->movement = glm::vec3(0);
-                state.player->isActive = false;
+                currentScene->state.player->position = glm::vec3(-3.5f, 2.0f, 0);
+                currentScene->state.player->velocity = glm::vec3(0);
+                currentScene->state.player->movement = glm::vec3(0);
+                currentScene->state.player->isActive = false;
 
                 mode = START;
                 break;
@@ -210,13 +178,13 @@ void ProcessInput() {
 //all of the code for updating
 int enemiesDead = 0;
 void UpdateGameMode() {
-    if (!state.player->isActive) {
+    if (!currentScene->state.player->isActive) {
         mode = END;
         return;
     }
 
     //for (int i = 0; i < ENEMY_COUNT; i++) {
-    //    if (!state.enemies[i].isActive) {
+    //    if (!currentScene->state.enemies[i].isActive) {
     //        enemiesDead++;
     //    }
     //}
@@ -240,7 +208,7 @@ void UpdatePlay(float deltaTime) {
     }
 
     while (deltaTime >= FIXED_TIMESTEP) {
-        state.player->Update(FIXED_TIMESTEP, state.map, NULL, 0);
+        currentScene->Update(FIXED_TIMESTEP);
         deltaTime -= FIXED_TIMESTEP;
     }
 
@@ -255,7 +223,13 @@ void Update() {
     lastTicks = ticks;
 
     viewMatrix = glm::mat4(1.0f);
-    viewMatrix = glm::translate(viewMatrix, glm::vec3(-state.player->position.x, 0, 0));
+    if (currentScene->state.player->position.x > 5) {
+        viewMatrix = glm::translate(viewMatrix,
+            glm::vec3(-currentScene->state.player->position.x, 3.75, 0));
+    }
+    else {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
+    }
 
     switch (mode) { //current modes: START, PLAY, END
         //case START:
@@ -276,17 +250,15 @@ void RenderStart() {
     Util::DrawText(&program, fontTextureID, "Press left shift to Start!", 0.5f, -0.25f,
         glm::vec3(-2.8f, 1.0f, 0));
 
-    state.map->Render(&program);
+    currentScene->Render(&program);
 }
 
 void RenderPlay() {
-    state.player->Render(&program);
-
-    state.map->Render(&program);
+    currentScene->Render(&program);
 }
 
 void RenderEnd() {
-    state.player->Render(&program);
+    currentScene->Render(&program);
     
     GLuint fontTextureID = Util::LoadTexture("font1.png");
     if (state.player->isActive) {
@@ -299,8 +271,6 @@ void RenderEnd() {
     }
     Util::DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
         glm::vec3(-1.76f, -0.5f, 0));
-
-    state.map->Render(&program);
 }
 
 void Render() {
