@@ -14,6 +14,8 @@
 
 #include "Scene.h"
 #include "Level1.h"
+#include "Level2.h"
+#include "Level3.h"
 #include "Map.h"
 #include "Entity.h"
 #include "Util.h"
@@ -23,7 +25,7 @@
 GLuint fontTextureID;
 
 Scene* currentScene;
-Level1* level1;
+Scene* sceneList[3];
 
 enum GameMode { START, PLAY, END };
 
@@ -71,8 +73,10 @@ void Initialize() {
 
     mode = START; //set initial game mode 
 
-    level1 = new Level1();
-    SwitchToScene(level1);
+    sceneList[0] = new Level1();
+    sceneList[1] = new Level2();
+    sceneList[2] = new Level3();
+    SwitchToScene(sceneList[1]);
 }
 
 //all of the code for processing input
@@ -261,7 +265,7 @@ void RenderEnd() {
     currentScene->Render(&program);
     
     GLuint fontTextureID = Util::LoadTexture("font1.png");
-    if (state.player->isActive) {
+    if (currentScene->state.player->isActive) {
         Util::DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
             glm::vec3(-2.0f, 0, 0));
     }
@@ -304,6 +308,11 @@ int main(int argc, char* argv[]) {
     while (gameIsRunning) {
         ProcessInput();
         Update();
+
+        if (currentScene->state.nextScene >= 0) {
+            SwitchToScene(sceneList[currentScene->state.nextScene]);
+        }
+
         Render();
     }
 

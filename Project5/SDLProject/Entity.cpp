@@ -198,13 +198,6 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, int objectCount)
         }
     }
 
-    if (jump) {
-        jump = false;
-        if (collidedBottom) {
-            velocity.y += maxVal;
-        }
-    }
-    
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
     
@@ -215,6 +208,13 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, int objectCount)
     position.x += velocity.x * deltaTime; // Move on X
     CheckCollisionsX(map);
     CheckCollisionX(objects, objectCount); // Fix if needed
+
+    if (jump) {
+        jump = false;
+        if (collidedBottom) {
+            velocity.y += maxVal;
+        }
+    }
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);

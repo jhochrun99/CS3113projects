@@ -36,6 +36,12 @@
     <ClCompile Include="Level1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Level2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderProgram.h">
@@ -56,15 +62,21 @@
     <ClInclude Include="Level1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Level2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="george_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Tileset.png">
+    <Image Include="font1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="font1.png">
+    <Image Include="tilesheet.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

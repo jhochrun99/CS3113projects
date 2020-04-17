@@ -20,6 +20,8 @@ struct GameState {
     Map* map;
     Entity* player;
     Entity* enemies;
+
+    int nextScene;
 };
 
 class Scene {

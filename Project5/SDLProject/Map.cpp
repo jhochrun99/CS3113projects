@@ -17,7 +17,7 @@ void Map::Build() {
         for (int x = 0; x < this->width; x++) {
 
             int tile = levelData[y * width + x];
-            if (tile == 0) continue;
+            if (tile == 85) continue;
 
             float u = (float)(tile % tile_count_x) / (float)tile_count_x;
             float v = (float)(tile / tile_count_x) / (float)tile_count_y;
@@ -90,7 +90,12 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     if (tile_y < 0 || tile_y >= height) return false;
 
     int tile = levelData[tile_y * width + tile_x];
-    if (tile == 0) return false;
+    //tiles that can't be hit: 85 (empty), 39, 67 (heart)
+    if (tile == 85) return false;
+    //tiles that kill the player: 5, 19 (lava), 70 (spikes), 71 (saw blade)
+
+    //tiles that advance the game: 49, 51, 53 (gemstones)
+    else if (tile == 49 || tile == 51 || tile == 53) return false;
 
     float tile_center_x = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);
