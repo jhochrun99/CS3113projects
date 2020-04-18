@@ -19,6 +19,8 @@ public:
 
     Enemy();
 
+    void Health() override;
     void Action() override;
+
     void Slime();
 };

@@ -4,6 +4,8 @@ Enemy::Enemy() {
 
 }
 
+void Enemy::Health() { }
+
 void Enemy::Action() {
     if (!isActive) { return; }
 

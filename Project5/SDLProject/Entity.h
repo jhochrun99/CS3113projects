@@ -25,6 +25,8 @@ public:
     glm::vec3 movement;
     float speed;
 
+    int health;
+
     bool jump;
     float maxVal; //used for jump height
 
@@ -67,6 +69,7 @@ public:
     void CheckCollisionsX(Map* map);
 
     virtual void Action() = 0;
+    virtual void Health() = 0;
 
     void Update(float deltaTime, Map* map, Entity* objects, int objectCount);
     void Render(ShaderProgram* program);
@@ -80,5 +83,5 @@ public:
     Player();
 
     void Action() override;
-    void Health();
+    void Health() override;
 };

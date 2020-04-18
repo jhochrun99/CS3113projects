@@ -14,6 +14,8 @@ Entity::Entity() {
     movement = glm::vec3(0);
     speed = 1.0f;
 
+    health = 1;
+
     jump = false;
     maxVal = 0;
 
@@ -73,12 +75,21 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 velocity.y = 0;
                 collidedTop = true;
                 collidedWith = object;
+
+                Health();
             }
             else if (velocity.y < 0) {
                 position.y += yOverlap;
                 velocity.y = 0;
                 collidedBottom = true;
                 collidedWith = object;
+
+                if (object->health == 1) {
+                    object->isActive = false;
+                }
+                else {
+                    object->health--;
+                }
             }
         }
     }
@@ -97,12 +108,16 @@ void Entity::CheckCollisionX(Entity* objects, int objectCount) {
                 velocity.x = 0;
                 collidedRight = true;
                 collidedWith = object;
+
+                Health();
             }
-            else { //if (velocity.x < 0) {
+            else { 
                 position.x += xOverlap;
                 velocity.x = 0;
                 collidedLeft = true;
                 collidedWith = object;
+
+                Health();
             }
         }
     }
@@ -323,5 +338,13 @@ Player::Player() {
 void Player::Action() {}
 
 void Player::Health() {
+    health -= 1;
 
+    if (health == 0) {
+        isActive = false;
+    }
+    else {
+        movement = glm::vec3(0);
+        position = glm::vec3(4.0f, 1.0f, 0);
+    }
 }

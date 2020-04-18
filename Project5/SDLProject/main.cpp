@@ -109,7 +109,7 @@ void ProcessInputStart() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_LSHIFT:
+            case SDLK_LSHIFT: //LSHIFT, RETURN
                 mode = PLAY;
                 
                 SwitchToScene(sceneList[currentScene->state.nextScene]);
@@ -229,6 +229,11 @@ void Update() {
     }
 
     accumulator = deltaTime;
+
+    if (currentScene->state.player->health == 0) {
+        currentScene->state.player->isActive = false;
+        mode = END;
+    }
 }
 
 //all of the code for rendering 
@@ -253,11 +258,11 @@ void RenderEnd() {
             glm::vec3(-2.0f, 0, 0));
     }
     else {
-        Util::DrawText(&program, fontTextureID, "Game Over.", 0.5f, -0.25f,
+        Util::DrawText(&program, fontTextureID, "You lose", 0.5f, -0.25f,
             glm::vec3(-1.65f, 0, 0));
     }
-    Util::DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
-        glm::vec3(-1.76f, -0.5f, 0));
+    //Util::DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
+    //    glm::vec3(-1.76f, -0.5f, 0));
 }
 
 void Render() {
