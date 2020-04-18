@@ -94,7 +94,6 @@ void Initialize() {
 
         bounce = Mix_LoadWAV("jump.wav");
     }
-
 }
 
 //all of the code for processing input
@@ -209,6 +208,12 @@ void Update() {
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
 
+    if (currentScene->state.player->health == 0) {
+        currentScene->state.player->isActive = false;
+        mode = END;
+        return;
+    }
+
     viewMatrix = glm::mat4(1.0f);
     if (currentScene->state.player->position.x > 5) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-currentScene->state.player->position.x, 3.75, 0));
@@ -229,11 +234,6 @@ void Update() {
     }
 
     accumulator = deltaTime;
-
-    if (currentScene->state.player->health == 0) {
-        currentScene->state.player->isActive = false;
-        mode = END;
-    }
 }
 
 //all of the code for rendering 
