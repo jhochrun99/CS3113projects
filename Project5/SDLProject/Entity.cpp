@@ -2,6 +2,8 @@
 #include "math.h"
 #include <stdlib.h>
 #include <time.h>
+#include "Util.h"
+#include "Enemy.h"
 
 Entity::Entity() {
     srand(time(NULL));
@@ -149,6 +151,11 @@ void Entity::CheckCollisionsY(Map* map) {
         velocity.y = 0;
         collidedBottom = true;
     }
+
+    if (map->lastTile == LAVA || map->lastTile == SPIKE) {
+        //life--;
+        map->lastTile = SAFE;
+    }
 }
 
 void Entity::CheckCollisionsX(Map* map) {
@@ -216,6 +223,8 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, int objectCount)
         }
     }
 
+    if (entityType == ENEMY) { Action(); }
+
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
 }
@@ -282,4 +291,36 @@ void Entity::Render(ShaderProgram* program) {
 
     glDisableVertexAttribArray(program->positionAttribute);
     glDisableVertexAttribArray(program->texCoordAttribute);
+}
+
+
+
+Player::Player() {
+    health = 3;
+
+    position = glm::vec3(4.0f, 1.0f, 0);
+    acceleration = glm::vec3(0, -9.81f, 0);
+    speed = 2.0f;
+    textureID = Util::LoadTexture("george_0.png");
+    height = 0.8f;
+    width = 0.75f;
+    maxVal = 5.5f;
+
+    animRight = new int[4]{ 3, 7, 11, 15 };
+    animLeft = new int[4]{ 1, 5, 9, 13 };
+    animUp = new int[4]{ 2, 6, 10, 14 };
+    animDown = new int[4]{ 0, 4, 8, 12 };
+
+    animIndices = animRight;
+    animFrames = 4;
+    animIndex = 0;
+    animTime = 0;
+    textureCols = 4;
+    textureRows = 4;
+}
+
+void Player::Action() {}
+
+void Player::Health() {
+
 }

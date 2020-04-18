@@ -76,7 +76,7 @@ void Initialize() {
     sceneList[0] = new Level1();
     sceneList[1] = new Level2();
     sceneList[2] = new Level3();
-    SwitchToScene(sceneList[1]);
+    SwitchToScene(sceneList[0]);
 }
 
 //all of the code for processing input
@@ -179,25 +179,8 @@ void ProcessInput() {
     }
 }
 
-//all of the code for updating
-int enemiesDead = 0;
 void UpdateGameMode() {
-    if (!currentScene->state.player->isActive) {
-        mode = END;
-        return;
-    }
 
-    //for (int i = 0; i < ENEMY_COUNT; i++) {
-    //    if (!currentScene->state.enemies[i].isActive) {
-    //        enemiesDead++;
-    //    }
-    //}
-
-    if (enemiesDead == ENEMY_COUNT) {
-        mode = END;
-    }
-
-    enemiesDead = 0;
 }
 
 #define FIXED_TIMESTEP 0.0166666f
@@ -302,6 +285,7 @@ void Shutdown() {
     SDL_Quit();
 }
 
+Scene* toScene; 
 int main(int argc, char* argv[]) {
     Initialize();
 
@@ -309,8 +293,11 @@ int main(int argc, char* argv[]) {
         ProcessInput();
         Update();
 
-        if (currentScene->state.nextScene >= 0) {
-            SwitchToScene(sceneList[currentScene->state.nextScene]);
+        
+        if (currentScene->state.map->lastTile == GEM) {
+            toScene = sceneList[currentScene->state.nextScene];
+            toScene->playerHealth = currentScene->playerHealth;
+            SwitchToScene(toScene);
         }
 
         Render();

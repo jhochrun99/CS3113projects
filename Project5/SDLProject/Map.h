@@ -14,7 +14,11 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
+enum LastTileType { SAFE, GEM, SPIKE, LAVA };
+
 class Map {
+    
+
     int width;
     int height;
     unsigned int* levelData;
@@ -29,6 +33,8 @@ class Map {
     float left_bound, right_bound, top_bound, bottom_bound;
 
 public:
+    LastTileType lastTile;
+
     Map(int width, int height, unsigned int* levelData, GLuint textureID, float tile_size, int
         tile_count_x, int tile_count_y);
     void Build();

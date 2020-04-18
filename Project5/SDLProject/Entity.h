@@ -13,7 +13,7 @@
 #include "ShaderProgram.h"
 #include "Map.h"
 
-enum EntityType { PLAYER };
+enum EntityType { PLAYER, ENEMY };
 
 class Entity {
 public:
@@ -66,7 +66,19 @@ public:
     void CheckCollisionsY(Map* map);
     void CheckCollisionsX(Map* map);
 
+    virtual void Action() = 0;
+
     void Update(float deltaTime, Map* map, Entity* objects, int objectCount);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
+};
+
+class Player : public Entity {
+public:
+    int health; 
+
+    Player();
+
+    void Action() override;
+    void Health();
 };

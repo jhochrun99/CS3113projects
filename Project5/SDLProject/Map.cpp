@@ -9,6 +9,8 @@ Map::Map(int width, int height, unsigned int* levelData, GLuint textureID, float
     this->tile_count_x = tile_count_x;
     this->tile_count_y = tile_count_y;
 
+    lastTile = SAFE;
+
     this->Build();
 }
 
@@ -92,15 +94,30 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     int tile = levelData[tile_y * width + tile_x];
     //tiles that can't be hit: 85 (empty), 39, 67 (heart)
     if (tile == 85) return false;
-    //tiles that kill the player: 5, 19 (lava), 70 (spikes), 71 (saw blade)
+    //tiles that kill the player: 4, 18 (ice), 5, 19 (lava), 70 (spikes), 71 (saw blade)
 
-    //tiles that advance the game: 49, 51, 53 (gemstones)
-    else if (tile == 49 || tile == 51 || tile == 53) return false;
+    //tiles that advance the game: 49, 51, 52 (gemstones)
+    else if (tile == 49 || tile == 51 || tile == 52) {
+        lastTile = GEM;
+        return false;
+    }
 
     float tile_center_x = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);
 
-    *penetration_x = (tile_size / 2) - fabs(position.x - tile_center_x);
-    *penetration_y = (tile_size / 2) - fabs(position.y - tile_center_y);
+    //int placeholder = -(ceil(position.y - (tile_size / 2)) /15) / tile_size;
+    if (tile == 70) {
+        //if (placeholder < 0 || placeholder>= height) return false;
+        lastTile = SPIKE;
+        *penetration_y = (tile_size / 15) - fabs(position.y - tile_center_y);
+    }
+    else if (tile == 4 || tile == 18 || tile == 5 || tile == 19) {
+        lastTile = LAVA; //lava and ice have functionally the same outcome
+    }
+    else {
+        *penetration_y = (tile_size / 2) - fabs(position.y - tile_center_y);
+        *penetration_x = (tile_size / 2) - fabs(position.x - tile_center_x);
+    }
+
     return true;
 }

@@ -15,17 +15,20 @@
 #include "Util.h"
 #include "Entity.h"
 #include "Map.h"
+#include "Enemy.h"
 
 struct GameState {
     Map* map;
-    Entity* player;
-    Entity* enemies;
+    Player* player;
+    Enemy* enemies;
 
     int nextScene;
 };
 
 class Scene {
 public:
+    int playerHealth;
+
     GameState state;
     virtual void Initialize() = 0;
     virtual void Update(float deltaTime) = 0;
