@@ -14,7 +14,7 @@ unsigned int level2_data[] = {
 };
 
 void Level2::Initialize() {
-    state.nextScene = 2;
+    state.nextScene = 3;
 
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
     state.map = new Map(LEVEL2_WIDTH, LEVEL2_HEIGHT, level2_data, mapTextureID, 1.0f, 14, 7);

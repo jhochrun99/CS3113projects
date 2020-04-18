@@ -1,10 +1,10 @@
-#include "Level1.h"
-#define LEVEL1_WIDTH 21
-#define LEVEL1_HEIGHT 8
+#include "Menu.h"
+#define MENU_WIDTH 21
+#define MENU_HEIGHT 8
 
 #define ENEMY_COUNT 3
 
-unsigned int level1_data[] = {
+unsigned int menu_data[] = {
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 51, 85, 85, 45,
@@ -15,13 +15,14 @@ unsigned int level1_data[] = {
      3,  3,  3,  3,  3,  0,  0,  0,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
 };
 
-void Level1::Initialize() {
-    state.nextScene = 2;
-
-    GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
-    state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 14, 7);
+void Menu::Initialize() {
+    state.nextScene = 1;
 
     state.player = new Player();
+    state.player->canMove = false;
+
+    GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
+    state.map = new Map(MENU_WIDTH, MENU_HEIGHT, menu_data, mapTextureID, 1.0f, 14, 7);
 
     state.enemies = new Enemy[ENEMY_COUNT];
     GLuint slimeTextureID = Util::LoadTexture("slime.png");
@@ -47,20 +48,23 @@ void Level1::Initialize() {
     state.enemies[2].position = glm::vec3(18.0f, -5.0f, 0);
 }
 
-void Level1::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.map, state.enemies, ENEMY_COUNT);
+void Menu::Update(float deltaTime) {
+    //state.player->Update(deltaTime, state.map, NULL, 0);
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Update(deltaTime, state.map, NULL, 0);
     }
 }
 
-void Level1::Render(ShaderProgram* program) {
+void Menu::Render(ShaderProgram* program) {
+    GLuint fontTextureID = Util::LoadTexture("font1.png");
+    Util::DrawText(program, fontTextureID, "Gem Dash", 1.0f, -0.5f,
+        glm::vec3(3.5f, -2.5f, 0));
+
+    //state.player->Render(program);
     state.map->Render(program);
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(program);
     }
-
-    state.player->Render(program);
 }
