@@ -235,6 +235,10 @@ void Update() {
     }
 
     accumulator = deltaTime;
+
+    if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile == SPIKE) {
+        currentScene->state.player->Player::Health();
+    }
 }
 
 //all of the code for rendering 
@@ -295,7 +299,6 @@ int main(int argc, char* argv[]) {
         
         if (currentScene->state.map->lastTile == GEM) {
             toScene = sceneList[currentScene->state.nextScene];
-            //toScene->playerHealth = currentScene->playerHealth;
             SwitchToScene(toScene);
         }
 
