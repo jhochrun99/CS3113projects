@@ -152,6 +152,7 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bat.png" />
     <Image Include="font1.png" />
     <Image Include="george_0.png" />
     <Image Include="slime.png" />

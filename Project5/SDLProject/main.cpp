@@ -90,7 +90,7 @@ void Initialize() {
     sceneList[1] = new Level1();
     sceneList[2] = new Level2();
     sceneList[3] = new Level3();
-    SwitchToScene(sceneList[0]);
+    SwitchToScene(sceneList[1]);
 
     if (mode == START) {
         music = Mix_LoadMUS("sneaky-adventure-background.mp3");
@@ -234,11 +234,11 @@ void Update() {
         deltaTime -= FIXED_TIMESTEP;
     }
 
-    accumulator = deltaTime;
-
-    if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile == SPIKE) {
+    if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile ==  SPIKE) {
         currentScene->state.player->Player::Health();
     }
+
+    accumulator = deltaTime;
 }
 
 //all of the code for rendering 

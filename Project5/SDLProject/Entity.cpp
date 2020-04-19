@@ -309,7 +309,6 @@ void Entity::Render(ShaderProgram* program) {
 }
 
 
-
 Player::Player() {
     health = 3;
     isActive = true;

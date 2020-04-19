@@ -94,6 +94,9 @@
     <Image Include="slime.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="bat.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="sneaky-adventure-background.mp3">

@@ -12,15 +12,22 @@
 #include "Entity.h"
 
 enum EnemyType { SLIME, BAT, BLADE };
+enum EnemyState { IDLE, ATTACKING };
 
 class Enemy : public Entity {
 public:
     EnemyType enemy;
+    EnemyState enemyState;
+    Entity* senseFor;
+    int senseRadius;
 
     Enemy();
 
     void Health() override;
     void Action() override;
 
+    void CheckSense(Entity* senseFor);
+
     void Slime();
+    void Bat();
 };
