@@ -311,7 +311,7 @@ void Entity::Render(ShaderProgram* program) {
 
 
 Player::Player() {
-    health = 3;
+    health = 1;
     isActive = true;
 
     position = glm::vec3(4.0f, 1.0f, 0);

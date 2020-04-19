@@ -33,4 +33,6 @@ public:
     virtual void Render(ShaderProgram* program) = 0;
 
     virtual void PlayerPass(Player* prevPlayer) = 0;
+    
+    void EndMessage(ShaderProgram* program, bool win);
 };

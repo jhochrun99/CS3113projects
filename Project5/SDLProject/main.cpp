@@ -47,12 +47,8 @@ glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 void SwitchToScene(Scene* scene) {
     previousScene = currentScene;
     currentScene = scene;
-
-    //if (previousScene != NULL && previousScene != sceneList[0]) {
-    //    currentScene->playerHealth = previousScene->playerHealth;
-    //}
-
     currentScene->Initialize();
+
     if (previousScene != NULL) {
         currentScene->PlayerPass(previousScene->state.player);
     }
@@ -179,13 +175,10 @@ void ProcessInputEnd() {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
             case SDLK_LSHIFT:
-                currentScene->state.player->position = glm::vec3(-3.5f, 2.0f, 0);
-                currentScene->state.player->velocity = glm::vec3(0);
-                currentScene->state.player->movement = glm::vec3(0);
                 currentScene->state.player->isActive = false;
 
                 mode = START;
-                currentScene = sceneList[currentScene->state.nextScene];
+                currentScene = sceneList[0];
                 break;
             }
             break; // SDL_KEYDOWN
@@ -246,10 +239,6 @@ void Update() {
 
 //all of the code for rendering 
 void RenderStart() {
-    GLuint fontTextureID = Util::LoadTexture("font1.png");
-    Util::DrawText(&program, fontTextureID, "Press left shift to Start!", 0.5f, -0.25f,
-        glm::vec3(-2.8f, 1.0f, 0));
-
     currentScene->Render(&program);
 }
 
@@ -260,17 +249,12 @@ void RenderPlay() {
 void RenderEnd() {
     currentScene->Render(&program);
     
-    GLuint fontTextureID = Util::LoadTexture("font1.png");
     if (currentScene->state.player->isActive) {
-        Util::DrawText(&program, fontTextureID, "You Win!", 0.5f, -0.25f,
-            glm::vec3(-2.0f, 0, 0));
+        currentScene->Scene::EndMessage(&program, true);
     }
     else {
-        Util::DrawText(&program, fontTextureID, "You lose", 0.5f, -0.25f,
-            glm::vec3(-1.65f, 0, 0));
+        currentScene->Scene::EndMessage(&program, false);
     }
-    //Util::DrawText(&program, fontTextureID, "(press left shift to reset)", 0.30f, -0.15f,
-    //    glm::vec3(-1.76f, -0.5f, 0));
 }
 
 void Render() {
