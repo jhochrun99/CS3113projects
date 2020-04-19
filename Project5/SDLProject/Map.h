@@ -17,8 +17,6 @@
 enum LastTileType { SAFE, GEM, SPIKE, LAVA };
 
 class Map {
-    
-
     int width;
     int height;
     unsigned int* levelData;

@@ -29,13 +29,14 @@ GLuint fontTextureID;
 Mix_Music* music;
 Mix_Chunk* bounce;
 
+Scene* previousScene;
 Scene* currentScene;
 Scene* sceneList[4];
 
 enum GameMode { START, PLAY, END };
 
 GameState state;
-GameMode mode = START; 
+GameMode mode; 
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -44,19 +45,26 @@ ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 
 void SwitchToScene(Scene* scene) {
+    previousScene = currentScene;
     currentScene = scene;
+
+    //if (previousScene != NULL && previousScene != sceneList[0]) {
+    //    currentScene->playerHealth = previousScene->playerHealth;
+    //}
+
     currentScene->Initialize();
+    if (previousScene != NULL) {
+        currentScene->PlayerPass(previousScene->state.player);
+    }
 }
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    displayWindow = SDL_CreateWindow("Project 4: Rise of the AI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Project 5: Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-    //music = Mix_LoadMUS("sneaky-adventure-background.mp3");
-    //Mix_PlayMusic(music, -1);
 
 #ifdef _WINDOWS
     glewInit();
@@ -303,7 +311,7 @@ int main(int argc, char* argv[]) {
         
         if (currentScene->state.map->lastTile == GEM) {
             toScene = sceneList[currentScene->state.nextScene];
-            toScene->playerHealth = currentScene->playerHealth;
+            //toScene->playerHealth = currentScene->playerHealth;
             SwitchToScene(toScene);
         }
 

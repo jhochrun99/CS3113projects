@@ -64,3 +64,7 @@ void Level1::Render(ShaderProgram* program) {
 
     state.player->Render(program);
 }
+
+void Level1::PlayerPass(Player* prevPlayer) {
+    //no previous player for level 1
+}

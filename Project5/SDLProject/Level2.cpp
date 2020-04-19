@@ -20,8 +20,6 @@ void Level2::Initialize() {
     state.map = new Map(LEVEL2_WIDTH, LEVEL2_HEIGHT, level2_data, mapTextureID, 1.0f, 14, 7);
 
     state.player = new Player();
-    state.player->position = glm::vec3(2.0f, 1.0f, 0);
-    state.player->health = playerHealth;
 }
 
 void Level2::Update(float deltaTime) {
@@ -31,4 +29,9 @@ void Level2::Update(float deltaTime) {
 void Level2::Render(ShaderProgram* program) {
     state.map->Render(program);
     state.player->Render(program);
+}
+
+void Level2::PlayerPass(Player* prevPlayer) {
+    state.player = prevPlayer;
+    state.player->position = glm::vec3(2.0f, 1.0f, 0);
 }

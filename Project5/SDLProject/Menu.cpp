@@ -49,8 +49,6 @@ void Menu::Initialize() {
 }
 
 void Menu::Update(float deltaTime) {
-    //state.player->Update(deltaTime, state.map, NULL, 0);
-
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Update(deltaTime, state.map, NULL, 0);
     }
@@ -61,10 +59,13 @@ void Menu::Render(ShaderProgram* program) {
     Util::DrawText(program, fontTextureID, "Gem Dash", 1.0f, -0.5f,
         glm::vec3(3.5f, -2.5f, 0));
 
-    //state.player->Render(program);
     state.map->Render(program);
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(program);
     }
+}
+
+void Menu::PlayerPass(Player* prevPlayer) {
+    //no prevPlayer for menu
 }
