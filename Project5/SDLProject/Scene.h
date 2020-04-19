@@ -28,11 +28,12 @@ struct GameState {
 class Scene {
 public:
     GameState state;
+
     virtual void Initialize() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void Render(ShaderProgram* program) = 0;
 
     virtual void PlayerPass(Player* prevPlayer) = 0;
     
-    void EndMessage(ShaderProgram* program, bool win);
+    void EndMessage(ShaderProgram* program, float endPosition[], bool win);
 };

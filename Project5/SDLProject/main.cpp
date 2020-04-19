@@ -262,15 +262,19 @@ void RenderPlay() {
     currentScene->Render(&program);
 }
 
+float endValues[2] = { 0, 0 };
 void RenderEnd() {
     currentScene->Render(&program);
     
+    endValues[0] = currentScene->state.nextScene;
+    endValues[1] = currentScene->state.player->position.x;
+
     if (currentScene->state.player->isActive) {
-        currentScene->Scene::EndMessage(&program, true);
+        currentScene->Scene::EndMessage(&program, endValues, true);
         currentScene->state.player->canMove = false;
     }
     else {
-        currentScene->Scene::EndMessage(&program, false);
+        currentScene->Scene::EndMessage(&program, endValues, false);
     }
 }
 
