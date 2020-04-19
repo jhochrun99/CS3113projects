@@ -2,7 +2,7 @@
 #define MENU_WIDTH 21
 #define MENU_HEIGHT 8
 
-#define ENEMY_COUNT 3
+#define ENEMY_COUNT 1
 
 unsigned int menu_data[] = {
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
@@ -43,9 +43,7 @@ void Menu::Initialize() {
         state.enemies[i].animFrames = 8;
         state.enemies[i].movement = glm::vec3(-1, 0, 0);
     }
-    state.enemies[0].position = glm::vec3(6.0f, -6.0f, 0);
-    state.enemies[1].position = glm::vec3(14.0f, -5.0f, 0);
-    state.enemies[2].position = glm::vec3(18.0f, -5.0f, 0);
+    state.enemies[0].position = glm::vec3(14.0f, -5.0f, 0);
 }
 
 void Menu::Update(float deltaTime) {

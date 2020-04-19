@@ -90,7 +90,7 @@ void Initialize() {
     sceneList[1] = new Level1();
     sceneList[2] = new Level2();
     sceneList[3] = new Level3();
-    SwitchToScene(sceneList[1]);
+    SwitchToScene(sceneList[0]);
 
     if (mode == START) {
         music = Mix_LoadMUS("sneaky-adventure-background.mp3");
@@ -204,6 +204,8 @@ void ProcessInput() {
 float lastTicks = 0.0f;
 float accumulator = 0.0f;
 
+int endOfScene;
+
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
     float deltaTime = ticks - lastTicks;
@@ -215,8 +217,18 @@ void Update() {
         return;
     }
 
+    if (currentScene->state.nextScene == 2) { //level 1
+        endOfScene = 15;
+    }
+    else {
+        endOfScene = 18;
+    }
+
     viewMatrix = glm::mat4(1.0f);
-    if (currentScene->state.player->position.x > 5) {
+    if (currentScene->state.player->position.x > endOfScene) {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-endOfScene, 3.75, 0));
+    }
+    else if (currentScene->state.player->position.x > 5) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-currentScene->state.player->position.x, 3.75, 0));
     }
     else {
@@ -255,6 +267,7 @@ void RenderEnd() {
     
     if (currentScene->state.player->isActive) {
         currentScene->Scene::EndMessage(&program, true);
+        currentScene->state.player->canMove = false;
     }
     else {
         currentScene->Scene::EndMessage(&program, false);
@@ -300,6 +313,9 @@ int main(int argc, char* argv[]) {
         if (currentScene->state.map->lastTile == GEM) {
             toScene = sceneList[currentScene->state.nextScene];
             SwitchToScene(toScene);
+        }
+        else if (currentScene->state.map->lastTile == GOAL && currentScene->state.player->position.x >= 21.5f) {
+            mode = END;
         }
 
         Render();

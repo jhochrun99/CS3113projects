@@ -97,8 +97,12 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     //tiles that kill the player: 4, 18 (ice), 5, 19 (lava), 70 (spikes), 71 (saw blade)
 
     //tiles that advance the game: 49, 51, 52 (gemstones)
-    else if (tile == 49 || tile == 51 || tile == 52) {
+    else if (tile == 51 || tile == 52) {
         lastTile = GEM;
+        return false;
+    }
+    else if (tile == 49) {
+        lastTile = GOAL;
         return false;
     }
 
