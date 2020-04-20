@@ -31,6 +31,10 @@ void Level3::Update(float deltaTime) {
     state.player->Update(deltaTime, state.map, state.enemy1, NULL, 1);
 
     state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
+
+    if (state.player->position.y <= -6.5f) {
+        state.player->Player::Health();
+    }
 }
 
 void Level3::Render(ShaderProgram* program) {
