@@ -23,32 +23,23 @@ void Level2::Initialize() {
 
     state.player = new Player();
 
-    state.enemies = new Enemy[ENEMY_COUNT];
-    state.enemies[0].entityType = ENEMY;
-    state.enemies[0].enemy = BAT;
-    state.enemies[0].textureID = Util::LoadTexture("bat.png");
+    GLuint batTextureId = Util::LoadTexture("bat.png");
+    state.enemy1 = new Enemy();
+    state.enemy1->DefineBat(batTextureId);
+    state.enemy1->position = glm::vec3(15.0f, -0.35f, 0);
 
-    state.enemies[0].textureCols = 6;
-    state.enemies[0].textureRows = 2;
-    state.enemies[0].height = 0.2f;
-    state.enemies[0].width = 0.7f;
-
-    state.enemies[0].animLeft = new int[5]{ 0, 1, 2, 3, 4 };
-    state.enemies[0].animRight = new int[5]{ 7, 8, 9, 10, 11 };
-    state.enemies[0].animUp = new int[2]{ 5, 5 };
-    state.enemies[0].animIndices = state.enemies[0].animUp;
-    state.enemies[0].animFrames = 2;
-
-    state.enemies[0].position = glm::vec3(8.0f, -0.35f, 0);
-    state.enemies[0].senseRadius = 4.0f;
+    GLuint slimeTextureID = Util::LoadTexture("slime.png");
+    state.enemy2 = new Enemy();
+    state.enemy2->DefineSlime(slimeTextureID);
+    state.enemy2->position = glm::vec3(10.0f, -2.0f, 0);
+    state.enemy2->movement = glm::vec3(0);
 }
 
 void Level2::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.map, state.enemies, ENEMY_COUNT);
+    state.player->Update(deltaTime, state.map, state.enemy1, state.enemy2, ENEMY_COUNT);
 
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Update(deltaTime, state.map, NULL, 0);
-    }
+    state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
+    state.enemy2->Update(deltaTime, state.map, NULL, NULL, 0);
 
     if (state.player->position.y <= -5.2f) { //player has been in lava too long
         state.player->Player::Health();
@@ -58,9 +49,8 @@ void Level2::Update(float deltaTime) {
 void Level2::Render(ShaderProgram* program) {
     state.map->Render(program);
 
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Render(program);
-    }
+    state.enemy1->Render(program);
+    state.enemy2->Render(program);
 
     state.player->Render(program);
 }
@@ -69,5 +59,5 @@ void Level2::PlayerPass(Player* prevPlayer) {
     state.player = prevPlayer;
     state.player->position = glm::vec3(2.0f, 1.0f, 0);
 
-    state.enemies[0].senseFor = state.player;
+    state.enemy1[0].senseFor = state.player;
 }

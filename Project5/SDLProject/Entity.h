@@ -71,7 +71,7 @@ public:
     virtual void Action() = 0;
     virtual void Health() = 0;
 
-    void Update(float deltaTime, Map* map, Entity* objects, int objectCount);
+    void Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, int objectCount);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 };

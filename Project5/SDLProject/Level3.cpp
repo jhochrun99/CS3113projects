@@ -23,7 +23,7 @@ void Level3::Initialize() {
 }
 
 void Level3::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.map, state.enemies, 0);
+    state.player->Update(deltaTime, state.map, state.enemy1, NULL, 0);
 }
 
 void Level3::Render(ShaderProgram* program) {

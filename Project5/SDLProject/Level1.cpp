@@ -23,44 +23,28 @@ void Level1::Initialize() {
 
     state.player = new Player();
 
-    state.enemies = new Enemy[ENEMY_COUNT];
     GLuint slimeTextureID = Util::LoadTexture("slime.png");
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].entityType = ENEMY;
-        state.enemies[i].enemy = SLIME;
-        state.enemies[i].textureID = slimeTextureID;
+    state.enemy1 = new Enemy();
+    state.enemy1->DefineSlime(slimeTextureID);
+    state.enemy1->position = glm::vec3(14.0f, -5.0f, 0);
 
-        state.enemies[i].textureCols = 8;
-        state.enemies[i].textureRows = 3;
-        state.enemies[i].height = 0.5f;
-        state.enemies[i].width = 0.9f;
-
-        state.enemies[i].animLeft = new int[8]{ 0, 1, 2, 3, 4, 5, 6, 7 };
-        state.enemies[i].animRight = new int[8]{ 8, 9, 10, 11, 12, 13, 14, 15 };
-        state.enemies[i].animUp = new int[8]{ 16, 17, 18, 19, 20, 21, 22, 23 };
-        state.enemies[i].animIndices = state.enemies[i].animLeft;
-        state.enemies[i].animFrames = 8;
-        state.enemies[i].movement = glm::vec3(-1, 0, 0);
-    }
-    //state.enemies[0].position = glm::vec3(6.0f, -6.0f, 0);
-    state.enemies[0].position = glm::vec3(14.0f, -5.0f, 0);
-    //state.enemies[2].position = glm::vec3(18.0f, -5.0f, 0);
+    state.enemy2 = new Enemy();
+    state.enemy2->DefineSlime(slimeTextureID);
+    state.enemy2->position = glm::vec3(6.0f, -6.0f, 0);
 }
 
 void Level1::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.map, state.enemies, ENEMY_COUNT);
+    state.player->Update(deltaTime, state.map, state.enemy1, state.enemy2, ENEMY_COUNT);
 
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Update(deltaTime, state.map, NULL, 0);
-    }
+    state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
+    state.enemy2->Update(deltaTime, state.map, NULL, NULL, 0);
 }
 
 void Level1::Render(ShaderProgram* program) {
     state.map->Render(program);
 
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        state.enemies[i].Render(program);
-    }
+    state.enemy1->Render(program);
+    state.enemy2->Render(program);
 
     state.player->Render(program);
 }

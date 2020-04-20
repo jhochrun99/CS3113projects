@@ -22,6 +22,8 @@ public:
     int senseRadius;
 
     Enemy();
+    void DefineSlime(GLuint slimeTextureID);
+    void DefineBat(GLuint batTextureID);
 
     void Health() override;
     void Action() override;

@@ -193,7 +193,7 @@ void Entity::CheckCollisionsX(Map* map) {
     }
 }
 
-void Entity::Update(float deltaTime, Map* map, Entity* objects, int objectCount) {
+void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, int objectCount) {
     if (!isActive || !canMove) { return; } //don't do anything if not active
 
     collidedTop = false;
@@ -226,10 +226,12 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, int objectCount)
     position.y += velocity.y * deltaTime; // Move on Y
     CheckCollisionsY(map);
     CheckCollisionY(objects, objectCount); // Fix if needed
+    CheckCollisionY(obj2, objectCount);
 
     position.x += velocity.x * deltaTime; // Move on X
     CheckCollisionsX(map);
     CheckCollisionX(objects, objectCount); // Fix if needed
+    CheckCollisionX(obj2, objectCount);
 
     if (jump) {
         jump = false;
@@ -310,7 +312,7 @@ void Entity::Render(ShaderProgram* program) {
 
 
 Player::Player() {
-    health = 1;
+    health = 3;
     isActive = true;
 
     position = glm::vec3(4.0f, 1.0f, 0);
