@@ -17,6 +17,6 @@ Level 3 has one bat enemy, and spikes across the bottom of the level. The player
 * ENEMY_COUNT is no longer needed and was going to be removed. 
 
 #### Music Credit
-Sneaky Adventure by Kevin MacLeod 
-Link: https://incompetech.filmmusic.io/song/4383-sneaky-adventure
+Sneaky Adventure by Kevin MacLeod  
+Link: https://incompetech.filmmusic.io/song/4383-sneaky-adventure  
 License: http://creativecommons.org/licenses/by/4.0/
