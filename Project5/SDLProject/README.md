@@ -1,6 +1,6 @@
-<h1>Project 5: Platformer</h1>
+#Project 5: Platformer#
 
-<h3>Requirements</h3>
+###Requirements###
 Project 5 was to create a platformer. The platformer needed to have a menu screen that displays the title. Upon pressing the `enter` key, the game would start. There also needed to be 3 levels, and the player needed to have 3 lives. If the player runs out of lives, "You lose..." pops up on the screen, and the game can be restarted by pressing `enter` to return to the menu screen. If the player gets to the end of the 3rd level successfully, "You win!" pops up on the screen, and the game can be restarted the same way. The game was required to have at least one type of moving AI that would kill the player upon collision, a looping background music, and one sound effect.
 
 <h3>Description</h3>
