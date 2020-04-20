@@ -20,18 +20,28 @@ void Level3::Initialize() {
     state.map = new Map(LEVEL3_WIDTH, LEVEL3_HEIGHT, level3_data, mapTextureID, 1.0f, 14, 7);
 
     state.player = new Player();
+
+    GLuint batTextureId = Util::LoadTexture("bat.png");
+    state.enemy1 = new Enemy();
+    state.enemy1->DefineBat(batTextureId);
+    state.enemy1->position = glm::vec3(15.0f, -0.35f, 0);
 }
 
 void Level3::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.map, state.enemy1, NULL, 0);
+    state.player->Update(deltaTime, state.map, state.enemy1, NULL, 1);
+
+    state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
 }
 
 void Level3::Render(ShaderProgram* program) {
     state.map->Render(program);
     state.player->Render(program);
+    state.enemy1->Render(program);
 }
 
 void Level3::PlayerPass(Player* prevPlayer) {
     state.player = prevPlayer;
     state.player->position = glm::vec3(5.0f, 1.0f, 0);
+
+    state.enemy1->senseFor = state.player;
 }

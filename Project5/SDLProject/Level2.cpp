@@ -59,5 +59,5 @@ void Level2::PlayerPass(Player* prevPlayer) {
     state.player = prevPlayer;
     state.player->position = glm::vec3(2.0f, 1.0f, 0);
 
-    state.enemy1[0].senseFor = state.player;
+    state.enemy1->senseFor = state.player;
 }
