@@ -12,6 +12,6 @@ Level 3 has one bat enemy, and spikes across the bottom of the level. The player
 
 #### Unimplemented
 * Interface that shows three gems in the top right, and three hearts in the top left. Gems would be outlines, and filled in upon completing the corresponding level. Hearts would be filled, and turn to an outline upon losing a life. 
-* Level 3 was going to have spinning circlular saws that would kill the player upon collision, and no bat enemy.  
+* Level 3 was going to have spinning circular saws that would kill the player upon collision, and no bat enemy.  
 * The size of the gems was going to be altered, so the player would be required to get closer to them before the level switches. 
 * ENEMY_COUNT is no longer needed and was going to be removed. 
