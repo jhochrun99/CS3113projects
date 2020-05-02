@@ -29,6 +29,8 @@ The game needed to have a menu screen displaying the title, and the game would s
 * If player dies 3 times, they get game over and must start from the beginning
 * Along the way will be 'check points'. If the player gets these check points, they'll be sent back to the check point upon death. Without the check point, they'll be sent back to the beginning
 
+Possible terrain pack: https://www.kenney.nl/assets/map-pack
+
 #### Unimplemented
 * TBD
 
