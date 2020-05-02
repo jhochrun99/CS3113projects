@@ -3,7 +3,7 @@
 ### Requirements
 Project 6 was up to us to choose, with the restriction that we could not make another 2D platformer. We also had to use new assets (art, music, sound) and could not use any of the textures from the lectures. 
 The game needed to have a menu screen displaying the title, and the game would start upon pressing `enter`. There needed to be ~two minutes of gameplay, some type of moving AI, and at least one looping background music and one sound effect. There also needed to be a way for the player to lose (touching an AI, falling off a ledge, running out of time) and a way for them to win (killing all the AI, collecting all the coins, whatever you want).
-**_Collaborated with Angie Beck._**
+<br>**_Collaborated with Angie Beck._**
 
 ### Goals / Description
 * Title: Dig Deeper
