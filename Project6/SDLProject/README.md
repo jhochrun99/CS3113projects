@@ -1,22 +1,36 @@
-# Project 5: Platformer
+# Project 6: Final
 
 ### Requirements
-Project 5 was to create a platformer. The platformer needed to have a menu screen that displays the title. Upon pressing the `enter` key, the game would start. There also needed to be 3 levels, and the player needed to have 3 lives. If the player runs out of lives, "You lose..." pops up on the screen, and the game can be restarted by pressing `enter` to return to the menu screen. If the player gets to the end of the 3rd level successfully, "You win!" pops up on the screen, and the game can be restarted the same way. The game was required to have at least one type of moving AI that would kill the player upon collision, a looping background music, and one sound effect.
+Project 6 was up to us to choose, with the restriction that we could not make another 2D platformer. We also had to use new assets (art, music, sound) and could not use any of the textures from the lectures. 
+The game needed to have a menu screen displaying the title, and the game would start upon pressing `enter`. There needed to be ~two minutes of gameplay, some type of moving AI, and at least one looping background music and one sound effect. There also needed to be a way for the player to lose (touching an AI, falling off a ledge, running out of time) and a way for them to win (killing all the AI, collecting all the coins, whatever you want).
 
-### Description
-This game is called "Gem Dash". The menu screen is a view of the beginning of level 1, which has two slime enemies in it. Upon pressing `enter`, the player character spawns and the `left` and `right` arrow keys can be used to move. The `spacebar` can be used to jump, and a jump sound effect plays each time the player jumps. To get to the next level, the player needs to get to a gem located towards the end of each level. If the player loses a life before reaching the gem, they respawn at the start of the current level. If the player gets to the 3rd gem without losing all 3 lives, they win. 
 
-Level 2 has a bat enemy that follows the player once they get within the bat's sensing range, and a slime enemy. The bottom of level 2 is all lava, and if the player falls in the lava they have a few seconds to try and jump out before losing a life. 
-
-Level 3 has one bat enemy, and spikes across the bottom of the level. The player loses a life immediately upon touching the spikes. The player respawns one space to the left of where they start the level, so they need to move back over the 'safe' block or they'll land in spikes again. 
+### Goals / Description
+* Title: Dig Deeper
+* Menu screen: flashes through examples of how different blocks work
+* Player can only move left, right, and down. Pressing the `left arrow key`, `right arrow key`, or `down arrow key` moves the player one block to the left/right/down. If there's a block in the way, that block will be destroyed and the player move into the destroyed block's space. 
+* Gravity exists - if the player destroys the block beneath them, they fall
+* Different blocks interact differenty:
+   - dirt is the standard block 
+   - metal can't be destroyed / removed
+   - sand falls if nothing is under it, and will kill the player if they go beneath it as it falls
+   - glass breaks if the player falls on top of it
+* There are also different terrain hazards: 
+   - Lava will kill the player 
+   - Spikes kill the player if they land on top of them
+   - If the player falls more than 2 blocks at a time, they die
+* Possible enemies:
+   - Slime: can be killed if the player lands on top of it. Touching it any other way will kill the player. Slime will stay on the level it starts on, so player can dig deeper to escape it
+   - ?
+* Sound effects:
+   - Destroying a block
+   - Dying
+* Player wins if they reach the bottom
+* If player dies 3 times, they get game over and must start from the beginning
+* Along the way will be 'check points'. If the player gets these check points, they'll be sent back to the check point upon death. Without the check point, they'll be sent back to the beginning
 
 #### Unimplemented
-* Interface that shows three gems in the top right, and three hearts in the top left. Gems would be outlines, and filled in upon completing the corresponding level. Hearts would be filled, and turn to an outline upon losing a life. 
-* Level 3 was going to have spinning circular saws that would kill the player upon collision, and no bat enemy.  
-* The size of the gems was going to be altered, so the player would be required to get closer to them before the level switches. 
-* ENEMY_COUNT is no longer needed and was going to be removed. 
+* TBD
 
 #### Music Credit
-Sneaky Adventure by Kevin MacLeod  
-Link: https://incompetech.filmmusic.io/song/4383-sneaky-adventure  
-License: http://creativecommons.org/licenses/by/4.0/
+TBD
