@@ -11,10 +11,10 @@ The game needed to have a menu screen displaying the title, and the game would s
 * Player can only move left, right, and down. Pressing the `left arrow key`, `right arrow key`, or `down arrow key` moves the player one block to the left/right/down. If there's a block in the way, that block will be destroyed and the player move into the destroyed block's space. 
 * Gravity exists - if the player destroys the block beneath them, they fall
 * Different blocks interact differenty:
-   - dirt is the standard block 
-   - metal can't be destroyed / removed
-   - sand falls if nothing is under it, and will kill the player if they go beneath it as it falls
-   - glass breaks if the player falls on top of it
+   - Dirt is the standard block 
+   - Metal can't be destroyed / removed
+   - Sand falls if nothing is under it, and will kill the player if they go beneath it as it falls
+   - Glass breaks if the player falls on top of it
 * There are also different terrain hazards: 
    - Lava will kill the player 
    - Spikes kill the player if they land on top of them
