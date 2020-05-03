@@ -4,11 +4,12 @@
 - [ ] Have Menu Screen go through examples of how different blocks work **O!**
 - [ ] Create level
   - [ ] Level should get more difficult as the player gets deeper
-  - [ ] Dirt area + spikes (first 'section')
-  - [ ] Dirt + metal (second 'section')
-  - [ ] Sand + slime start showig up (third 'section')
-  - [ ] Glass starts replacing metal, lava starts showing up (fourth 'section')
-  - [ ] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
+  - [ ] View window must move down with player
+    - [ ] Dirt area + spikes (first 'section')
+    - [ ] Dirt + metal (second 'section')
+    - [ ] Sand + slime start showig up (third 'section')
+    - [ ] Glass starts replacing metal, lava starts showing up (fourth 'section')
+    - [ ] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
 - [ ] Implement Player Movement
   - [ ] Player moves one block when left / right arrow keys are pressed
   - [ ] Player moving towards a block destroys that block (makes the block 'inactive')
