@@ -26,6 +26,11 @@
 - [ ] Implement AI
   - [ ] Slime (moves back and forth, can be killed if player lands on top of it, kills player if touched any other way)
     - [ ] Give Slime map detection, so it'll stay on the same level and not fall down if player destroyes a block in it's path
+- [ ] Use proper textures
+  - [ ] Player texture (can't be George)
+  - [ ] Map texture (needs various styles of blocks, to clearly show dirt, metal, sand, glass / ice)
+  - [ ] Hazard texture (can be part of map, need to have spikes and lava)
+  - [ ] AI texture (currently just Slime)
 - [ ] Add Sound
   - [ ] Looping backrgound music
   - [ ] Sound effect
