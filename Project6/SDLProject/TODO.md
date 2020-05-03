@@ -1,7 +1,14 @@
 ### To Do List
-(O! = OPTIONAL, the game can do without it and it should be focused on LAST)
+(**O!** = OPTIONAL, the game can do without it and it should be focused on LAST)
 - [ ] Implement Menu Screen
-- [ ] Have Menu Screen go through examples of how different blocks work {O!}
+- [ ] Have Menu Screen go through examples of how different blocks work **O!**
+- [ ] Create level
+  - [ ] Level should get more difficult as the player gets deeper
+  - [ ] Dirt area + spikes (first 'section')
+  - [ ] Dirt + metal (second 'section')
+  - [ ] Sand + slime start showig up (third 'section')
+  - [ ] Glass starts replacing metal, lava starts showing up (fourth 'section')
+  - [ ] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
 - [ ] Implement Player Movement
   - [ ] Player moves one block when left / right arrow keys are pressed
   - [ ] Player moving towards a block destroys that block (makes the block 'inactive')
@@ -12,9 +19,9 @@
   - [ ] Glass (breaks if the player falls on top of it)
 - [ ] Implement Hazards
   - [ ] Lava (kills the player if touched)
-    - [ ] Lava spreads out (if player destroys a block next to lava, lava will move to take up open space)
+    - [ ] Lava spreads out (if player destroys a block next to lava, lava will move to take up open space) **O!**
   - [ ] Spikes (kills player if they land on top of them. Can't be destroyed)
-  - [ ] Fall damage (if player falls more than 2 blocks at a time, they die)
+  - [ ] Fall damage (if player falls more than 2 blocks at a time, they die) **O!**
 - [ ] Implement AI
   - [ ] Slime (moves back and forth, can be killed if player lands on top of it, kills player if touched any other way)
     - [ ] Give Slime map detection, so it'll stay on the same level and not fall down if player destroyes a block in it's path
@@ -22,9 +29,9 @@
   - [ ] Looping backrgound music
   - [ ] Sound effect
     - [ ] Sound when player destroys a block
-    - [ ] Sound when player tries to destroy a metal block
+    - [ ] Sound when player tries to destroy a metal block **O!**
 - [ ] Implement Winning and Losing
   - [ ] Win: player reaches the bottom 
   - [ ] Lose: player dies 3 times
 - [ ] Implement Check-points
-  - [ ] If player reaches a certain level, the gamestate will be saved and the next time they lose a life, they'll return to the last check point
+  - [ ] If player reaches a certain level, the gamestate will be saved and the next time they lose a life, they'll return to the last check point **O!**
