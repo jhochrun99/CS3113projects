@@ -24,20 +24,27 @@ GLuint Util::LoadTexture(const char* filePath) {
     return textureID;
 }
 
-void Util::DrawText(ShaderProgram* program, GLuint fontTexture, std::string text, float size,
+void Util::DrawTextTitle(ShaderProgram* program, GLuint fontTexture, std::string text, float size,
     float spacing, glm::vec3 position) {
-    float width = 1.0f / 16.0f;
-    float height = 1.0 / 16.0f;
+    float width = 1.0f / 14.5f;
+    float height = 1.0f / 8.5f;
+    
 
     std::vector<float> vertices;
     std::vector<float> texCoords;
 
     for (int i = 0; i < text.size(); i++) {
+        
 
         int index = (int)text[i];
-
-        float u = (float)(index % 16) / 16.0f;
-        float v = (float)(index / 16) / 16.0f;
+        
+        float u = (float)(index % 12) / 13.0f;
+        float v = (float)(index / 12) / 8.5f;
+        if (text=="o" or text=="q"){
+            height-=0.035f;
+            v = (float)(index / 12) / 8.48f;
+            
+        }
 
         float offset = (size + spacing) * i;
 
@@ -75,6 +82,58 @@ void Util::DrawText(ShaderProgram* program, GLuint fontTexture, std::string text
     glBindTexture(GL_TEXTURE_2D, fontTexture);
     glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
 
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
+}
+void Util::DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size,
+                    float spacing, glm::vec3 position) {
+    float width = 1.0f / 16.0f;
+    float height = 1.0 / 16.0f;
+    
+    std::vector<float> vertices;
+    std::vector<float> texCoords;
+    
+    for(int i = 0; i < text.size(); i++) {
+        
+        int index = (int)text[i];
+        
+        float u = (float)(index % 16) / 16.0f;
+        float v = (float)(index / 16) / 16.0f;
+        
+        float offset = (size + spacing) * i;
+        
+        texCoords.insert(texCoords.end(), {
+            u, v,
+            u, v + height,
+            u + width, v,
+            u + width, v + height,
+            u + width, v,
+            u, v + height,
+        });
+        vertices.insert(vertices.end(), {
+            offset + (-0.5f * size), 0.5f * size,
+            offset + (-0.5f * size), -0.5f * size,
+            offset + (0.5f * size), 0.5f * size,
+            offset + (0.5f * size), -0.5f * size,
+            offset + (0.5f * size), 0.5f * size,
+            offset + (-0.5f * size), -0.5f * size,
+        });
+    }
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
+    program->SetModelMatrix(modelMatrix);
+    
+    glUseProgram(program->programID);
+    
+    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
+    glEnableVertexAttribArray(program->positionAttribute);
+    
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords.data());
+    glEnableVertexAttribArray(program->texCoordAttribute);
+    
+    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
+    
     glDisableVertexAttribArray(program->positionAttribute);
     glDisableVertexAttribArray(program->texCoordAttribute);
 }

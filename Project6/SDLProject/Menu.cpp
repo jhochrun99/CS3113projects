@@ -5,14 +5,14 @@
 #define ENEMY_COUNT 2
 
 unsigned int menu_data[] = {
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 51, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0,  0, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0, 85, 85, 85, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0,  0, 85, 85, 85, 85, 85, 85, 85, 85, 45,
-     0,  0,  0,  0,  0, 85, 85, 85,  0,  3,  3,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     3,  3,  3,  3,  3,  0,  0,  0,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+   18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6, 85, 85, 6, 85, 85, 6, 85, 6, 6,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+   18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
 };
 
 void Menu::Initialize() {
@@ -40,9 +40,29 @@ void Menu::Update(float deltaTime) {
 }
 
 void Menu::Render(ShaderProgram* program) {
-    GLuint fontTextureID = Util::LoadTexture("font1.png");
-    Util::DrawText(program, fontTextureID, "Gem Dash", 1.0f, -0.5f,
-        glm::vec3(3.5f, -2.5f, 0));
+    GLuint fontTextureID = Util::LoadTexture("font2.png");
+    Util::DrawTextTitle(program, fontTextureID, "c", 1.0f, -0.1f,
+        glm::vec3(1.8f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "h", 1.0f, -0.1f,
+                   glm::vec3(2.5f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "f", 1.0f, -0.1f,
+                   glm::vec3(3.0f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "c", 1.0f, -0.1f,
+                   glm::vec3(4.3f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "d", 1.0f, -0.1f,
+                   glm::vec3(5.0f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "d", 1.0f, -0.1f,
+                   glm::vec3(5.8f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "o", 0.85f, -0.1f,
+                   glm::vec3(6.6f, -2.68f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "d", 1.0f, -0.1f,
+                   glm::vec3(7.3f, -2.5f, 0));
+    Util::DrawTextTitle(program, fontTextureID, "q", 0.85f, -0.1f,
+                   glm::vec3(8.1f, -2.68f, 0));
+    
+    GLuint fontTextureID2 = Util::LoadTexture("font1.png");
+    Util::DrawText(program, fontTextureID2, "Press enter to see instructions", 0.65f, -0.4f,
+                        glm::vec3(1.3f, -4.5f, 0));
 
     state.map->Render(program);
 
