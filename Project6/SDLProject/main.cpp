@@ -119,6 +119,15 @@ void ProcessInputStart() {
             break;
         }
     }
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if (keys[SDL_SCANCODE_RETURN]) {
+        mode = PLAY;
+        
+        SwitchToScene(sceneList[currentScene->state.nextScene]);
+        currentScene->state.player->isActive = true;
+        
+    }
 }
 
 void ProcessInputPlay() {
@@ -136,6 +145,13 @@ void ProcessInputPlay() {
             switch (event.key.keysym.sym) {
                 case SDLK_SPACE:  // ======================================================================
                     currentScene->state.player->jump = true;
+                    break;
+                case SDL_SCANCODE_LEFT:
+                    //player moves one block to the left
+                    
+                    break;
+                case SDL_SCANCODE_RIGHT:
+                    //player moves one block to the right
                     
                     break;
                 }
@@ -169,16 +185,22 @@ void ProcessInputEnd() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_LSHIFT:
-                currentScene->state.player->isActive = false;
-
-                mode = START;
-                currentScene = sceneList[0];
-                break;
-            }
+                case SDLK_SPACE:  // ======================================================================
+                    currentScene->state.player->jump = true;
+                    
+                    break;
+                case SDL_SCANCODE_LEFT:
+                    //player moves one block to the left
+                    
+                    break;
+                case SDL_SCANCODE_RIGHT:
+                    //player moves one block to the right
+                    
+                    break;
             break; // SDL_KEYDOWN
         }
     }
+}
 }
 
 void ProcessInput() {
@@ -199,7 +221,7 @@ void ProcessInput() {
 float lastTicks = 0.0f;
 float accumulator = 0.0f;
 
-int endOfScene;
+int bottomOfScene = 3.75;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -212,20 +234,17 @@ void Update() {
         return;
     }
 
-    if (currentScene->state.nextScene == 2) { //level 1 =======================================================
-        endOfScene = 15;
-    }
-    else {
-        endOfScene = 18;
-    }
-
+    
     viewMatrix = glm::mat4(1.0f);
-    if (currentScene->state.player->position.x > endOfScene) {
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-endOfScene, 3.75, 0));
+
+    if(currentScene->state.nextScene==1){//since there is no player in the menuscreen, viewthe matrix
+        //neds to be position at center first
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
     }
-    else if (currentScene->state.player->position.x > 5) {
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-currentScene->state.player->position.x, 3.75, 0));
+    else if (currentScene->state.player->position.y < bottomOfScene) {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -currentScene->state.player->position.y, 0));
     }
+    
     else {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
     }

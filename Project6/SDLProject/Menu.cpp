@@ -37,6 +37,12 @@ void Menu::Initialize() {
 void Menu::Update(float deltaTime) {
     state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
     state.enemy2->Update(deltaTime, state.map, NULL, NULL, 0);
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if (keys[SDL_SCANCODE_RETURN]) {
+        state.nextScene=1;
+        
+    }
 }
 
 void Menu::Render(ShaderProgram* program) {
