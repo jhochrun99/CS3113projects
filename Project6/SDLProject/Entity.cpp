@@ -315,8 +315,8 @@ Player::Player() {
     health = 3;
     isActive = true;
 
-    position = glm::vec3(4.0f, 1.0f, 0);
-    acceleration = glm::vec3(0, -9.81f, 0);
+    position = glm::vec3(2.0f, 0, 0);
+    acceleration = glm::vec3(0, -5.8f, 0);
     speed = 2.0f;
     textureID = Util::LoadTexture("george_0.png");
     height = 0.8f;

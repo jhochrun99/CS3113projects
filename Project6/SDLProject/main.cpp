@@ -134,18 +134,21 @@ void ProcessInputPlay() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-                case SDLK_SPACE:  // ======================================================================
-                    currentScene->state.player->jump = true;
-                    
-                    break;
-                case SDL_SCANCODE_LEFT:
-                    //player moves one block to the left
+                //case SDLK_SPACE:  // ======================================================================
+                //    currentScene->state.player->jump = true;
+                //    break;
+                //case SDLK_LEFT: //player moves one block to the left
+                //    //do something like "while movement < endPosition, movement += 1
+                //    currentScene->state.player->movement.x -= 5.0f;
+                //    currentScene->state.player->animIndices = currentScene->state.player->animLeft;
+                //    break;
+                //case SDLK_RIGHT: //player moves one block to the right
+                //    currentScene->state.player->movement.x += 1.0f;
+                //    currentScene->state.player->animIndices = currentScene->state.player->animRight;
+                //    break;
+                //case SDLK_DOWN: //destroy block under player
 
-                    break;
-                case SDL_SCANCODE_RIGHT: 
-                    //player moves one block to the right
-
-                    break;
+                //    break;
                 }
         }
     }
@@ -207,7 +210,7 @@ void ProcessInput() {
 float lastTicks = 0.0f;
 float accumulator = 0.0f;
 
-int bottomOfScene = 3.75;
+float bottomOfScene = 3.25f;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -223,11 +226,11 @@ void Update() {
     viewMatrix = glm::mat4(1.0f);
 
     //player can only move down
-    if (currentScene->state.player->position.y < bottomOfScene) {
+    if (currentScene->state.player->position.y < -bottomOfScene) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -currentScene->state.player->position.y, 0));
     }
     else {
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.25f, 0));
     }
 
     deltaTime += accumulator;
@@ -241,6 +244,7 @@ void Update() {
         deltaTime -= FIXED_TIMESTEP;
     }
 
+    // TODO: implement checkpoint return upon taking damage
     if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile ==  SPIKE) {
         currentScene->state.player->Player::Health();
     }
@@ -309,13 +313,13 @@ int main(int argc, char* argv[]) {
         ProcessInput();
         Update();
         
-        if (currentScene->state.map->lastTile == GEM) {
-            toScene = sceneList[currentScene->state.nextScene];
-            SwitchToScene(toScene);
-        }
-        else if (currentScene->state.map->lastTile == GOAL && currentScene->state.player->position.x >= 21.5f) {
-            mode = END; //========================================================================================
-        }
+        //if (currentScene->state.map->lastTile == GEM) {
+        //    toScene = sceneList[currentScene->state.nextScene];
+        //    SwitchToScene(toScene);
+        //}
+        //else if (currentScene->state.map->lastTile == GOAL && currentScene->state.player->position.x >= 21.5f) {
+        //    mode = END; //========================================================================================
+        //}
 
         Render();
     }
