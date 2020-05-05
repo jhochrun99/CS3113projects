@@ -67,6 +67,9 @@ public:
     void CheckCollisionX(Entity* objects, int objectCount);
     void CheckCollisionsY(Map* map);
     void CheckCollisionsX(Map* map);
+    void CheckDown(Map* map);
+    void CheckRight(Map* map);
+    void CheckLeft(Map* map);
 
     virtual void Action() = 0;
     virtual void Health() = 0;

@@ -109,10 +109,10 @@ void ProcessInputStart() {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
             case SDLK_LSHIFT: //LSHIFT, RETURN
-                mode = PLAY;
+                //mode = PLAY;
                 
-                SwitchToScene(sceneList[currentScene->state.nextScene]);
-                currentScene->state.player->isActive = true;
+//                SwitchToScene(sceneList[currentScene->state.nextScene]);
+//                currentScene->state.player->isActive = true;
                 
                 break;
             }

@@ -166,12 +166,55 @@ void Entity::CheckCollisionsY(Map* map) {
         velocity.y = 0;
         collidedBottom = true;
     }
-
+    
+    if (map->IsSolid(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
+        position.y += penetration_y;
+        velocity.y = 0;
+        collidedBottom = true;
+    }
+    else if (map->IsSolid(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
+        position.y += penetration_y;
+        velocity.y = 0;
+        collidedBottom = true;
+    }
+    else if (map->IsSolid(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
+        position.y += penetration_y;
+        velocity.y = 0;
+        collidedBottom = true;
+    }
+    
+    
     if (map->lastTile == LAVA || map->lastTile == SPIKE) {
         //life--;
         map->lastTile = SAFE;
     }
 }
+void Entity::CheckDown(Map *map){
+    glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
+    
+    if(map->currentTile==DIRT){
+        map->destroy_tile(bottom);
+    }
+
+    
+    
+}
+void Entity::CheckRight(Map *map){
+    glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
+    if(map->rightTile==DIRT){
+        map->destroy_tile(right);
+    }
+
+    
+    
+}
+void Entity::CheckLeft(Map *map){
+    glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
+    if(map->leftTile==DIRT){
+        map->destroy_tile(left);
+    }
+}
+
 
 void Entity::CheckCollisionsX(Map* map) {
     // Probes for tiles

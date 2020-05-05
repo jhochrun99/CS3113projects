@@ -5,33 +5,40 @@
 #define ENEMY_COUNT 2
 
 unsigned int menu_data[] = {
-   18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6, 85, 85, 6, 85, 85, 6, 85, 6, 6,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
-    6, 85, 85, 85, 85, 85, 85, 85, 85, 85, 6, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
-   18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+   215, 215, 215, 215, 215, 215, 215, 215, 215, 215, 215, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 6, 85, 85, 6, 85, 85, 6, 85, 6, 6,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+    197, 85, 85, 85, 85, 85, 85, 85, 85, 85, 197, 85, 85, 85, 85, 85, 85, 85, 85, 6, 6,
+   215, 215, 215, 215, 215, 215, 215, 215, 215, 215, 215, 18, 18, 18, 18, 18, 18, 18, 18, 18
 };
 
 void Menu::Initialize() {
     state.nextScene = 1;
 
     state.player = new Player();
-    state.player->canMove = false;
+    //state.player->canMove = false;
 
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
-    state.map = new Map(MENU_WIDTH, MENU_HEIGHT, menu_data, mapTextureID, 1.0f, 14, 7);
+    state.map = new Map(MENU_WIDTH, MENU_HEIGHT, menu_data, mapTextureID, 1.0f, 18,12);
 
     GLuint slimeTextureID = Util::LoadTexture("slime.png");
     state.enemy1 = new Enemy();
     state.enemy1->DefineSlime(slimeTextureID);
-    state.enemy1->position = glm::vec3(14.0f, -5.0f, 0);
+    state.enemy1->position = glm::vec3(12.0f, -4.0f, 0);
+  
 
     state.enemy2 = new Enemy();
     state.enemy2->DefineSlime(slimeTextureID);
     state.enemy2->position = glm::vec3(6.0f, -6.0f, 0);
+    state.enemy2->isActive = false;
+    
+
+    
+    
+    
 }
 
 void Menu::Update(float deltaTime) {
@@ -41,7 +48,7 @@ void Menu::Update(float deltaTime) {
     
     if (keys[SDL_SCANCODE_RETURN]) {
         state.nextScene=1;
-        
+
     }
 }
 

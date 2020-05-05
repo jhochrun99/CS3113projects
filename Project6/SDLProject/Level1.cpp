@@ -5,23 +5,27 @@
 #define ENEMY_COUNT 1
 
 unsigned int level1_data[] = {
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
+    3, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 45,
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 51, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0,  0, 85, 45,
+    45, 85, 85, 1, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0,  0, 85, 45,
     45, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0, 85, 85, 85, 85, 85, 45,
-    45, 85, 85, 85, 85, 85, 85, 85, 85,  0,  0,  0, 85, 85, 85, 85, 85, 85, 85, 85, 45,
-     0,  0,  0,  0,  0, 85, 85, 85,  0,  3,  3,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     3,  3,  3,  3,  3,  0,  0,  0,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+    45, 91, 91, 91, 91, 85, 85, 85, 85,  91,  0,  0, 85, 85, 85, 85, 85, 85, 85, 85, 45,
+     0,  0,  0,  0,  91, 85, 85, 85,  0,  3,  3,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+     3,  3,  3,  3,  3,  9,  9,  9,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
 };
 
 void Level1::Initialize() {
     state.nextScene = 2;
 
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
-    state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 14, 7);
+    state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 17, 12);
+    
 
     state.player = new Player();
+    
+    state.player->height= 0.6f;
+    state.player->width= 0.6f;
 
     GLuint slimeTextureID = Util::LoadTexture("slime.png");
     state.enemy1 = new Enemy();
@@ -38,6 +42,18 @@ void Level1::Update(float deltaTime) {
 
     state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
     state.enemy2->Update(deltaTime, state.map, NULL, NULL, 0);
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if (keys[SDL_SCANCODE_DOWN] ) {
+        state.player->CheckDown(state.map);
+    }
+    if (keys[SDL_SCANCODE_RIGHT] ) {
+        state.player->CheckRight(state.map);
+    }
+    if (keys[SDL_SCANCODE_LEFT] ) {
+        state.player->CheckLeft(state.map);
+    }
+
 }
 
 void Level1::Render(ShaderProgram* program) {
@@ -47,6 +63,7 @@ void Level1::Render(ShaderProgram* program) {
     state.enemy2->Render(program);
 
     state.player->Render(program);
+    
 }
 
 void Level1::PlayerPass(Player* prevPlayer) {

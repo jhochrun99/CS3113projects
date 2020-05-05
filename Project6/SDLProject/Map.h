@@ -15,16 +15,17 @@
 #include "ShaderProgram.h"
 
 enum LastTileType { SAFE, GEM, SPIKE, LAVA, GOAL };
-
+enum CurrentTileType { DIRT, METAL, SAND, GLASS, OTHER};
 class Map {
     int width;
     int height;
     unsigned int* levelData;
-
+    
     GLuint textureID;
     float tile_size;
     int tile_count_x;
     int tile_count_y;
+    
 
     std::vector<float> vertices;
     std::vector<float> texCoords;
@@ -32,10 +33,15 @@ class Map {
 
 public:
     LastTileType lastTile;
+    CurrentTileType currentTile;
+    CurrentTileType leftTile;
+    CurrentTileType rightTile;
+    
 
     Map(int width, int height, unsigned int* levelData, GLuint textureID, float tile_size, int
         tile_count_x, int tile_count_y);
     void Build();
     void Render(ShaderProgram* program);
     bool IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y);
+    void destroy_tile(glm::vec3 position);
 };
