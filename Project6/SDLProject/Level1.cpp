@@ -1,6 +1,6 @@
 #include "Level1.h"
 #define LEVEL1_WIDTH 11
-#define LEVEL1_HEIGHT 81
+#define LEVEL1_HEIGHT 82
 
 #define ENEMY_COUNT 1
 
@@ -89,7 +89,8 @@ unsigned int level1_data[] = {
     28,  28,  91,  91, 202,  91, 202,  91,  91,  91,  28,
     28, 202, 202,  85,  18,  84,  91,  91, 202, 202,  28, // SLIME IN THIS ROW
     28,  83,  83,  18,  18,  85,  91,  91,  83,  83,  28, // 80
-    28, 100, 100,  28,  28, 111,  91,  91, 100, 100,  28
+    28, 100, 100,  28,  28, 111,  91,  91, 100, 100,  28,
+    28,  28,  28,  28,  28,  28,  28,  28,  28,  28,  28
 };
 
 /* blank set, for adding length to game
