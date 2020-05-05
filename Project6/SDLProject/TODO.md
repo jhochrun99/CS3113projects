@@ -4,10 +4,10 @@
 - [ ] Have Menu Screen go through examples of how different blocks work **O!**
 - [ ] Create level  -- Jess
   - [x] Level should get more difficult as the player gets deeper  -- Jess
-  - [ ] View window must move down with player  -- Jess
+  - [x] View window must move down with player  -- Jess
     - [x] Dirt area + spikes (first 'section')
     - [x] Dirt + metal (second 'section')
-    - [ ] Sand + slime start showig up (third 'section')
+    - [ ] Sand + **slime** start showig up (third 'section')
     - [x] Glass starts replacing metal, lava starts showing up (fourth 'section')
     - [x] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
 - [ ] Implement Player Movement
