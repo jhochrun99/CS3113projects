@@ -36,6 +36,6 @@ Possible terrain pack: https://www.kenney.nl/assets/map-pack
 
 #### Music Credit
 Call to Adventure by Kevin MacLeod
-    Link: https://incompetech.filmmusic.io/song/3470-call-to-adventure
-    License: http://creativecommons.org/licenses/by/4.0/
+  Link: https://incompetech.filmmusic.io/song/3470-call-to-adventure
+  License: http://creativecommons.org/licenses/by/4.0/
 "Digging, Ice, Hammer, C.wav" by InspectorJ (www.jshaw.co.uk) of Freesound.org
