@@ -14,9 +14,9 @@
   - [ ] Player moves one block when left / right arrow keys are pressed **O!**
   - [ ] Player moving towards a block destroys that block (makes the block 'inactive')
 - [ ] Implement Blocks -- Angie
-  - [ ] Dirt (standard block, can be destroyed) -- Angie
-  - [ ] Metal (can't be destroyed) -- Angie
-  - [ ] Sand (falls if nothing is beneath it) -- Angie
+  - [x] Dirt (standard block, can be destroyed) -- Angie
+  - [x] Metal (can't be destroyed) -- Angie
+  - [x] Sand (falls if nothing is beneath it) -- Angie
   - [ ] Glass/Ice (breaks if the player falls on top of it) -- Angie
 - [ ] Implement Hazards
   - [x] Lava (kills the player if touched)
