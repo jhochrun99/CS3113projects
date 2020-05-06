@@ -149,7 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="font1.png" />
+    <Image Include="font2.png" />
     <Image Include="george_0.png" />
+    <Image Include="mapPack_tilesheet.png" />
     <Image Include="slime.png" />
     <Image Include="tilesheet.png" />
   </ItemGroup>

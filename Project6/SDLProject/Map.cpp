@@ -92,15 +92,14 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     if (tile_y < 0 || tile_y >= height) return false;
 
     int tile = levelData[tile_y * width + tile_x];
-    //tiles that can't be hit: 85 (empty), 39, 67 (heart)
+
     if (tile == 85) return false;
-    //tiles that kill the player: 4, 18 (ice), 5, 19 (lava), 70 (spikes), 71 (saw blade)
-    //tiles that advance the game: 49, 51, 52 (gemstones)
-    else if (tile == 51 || tile == 52) {
-        lastTile = GEM;
+
+    else if (tile == 110) {
+        lastTile = CHECKPOINT;
         return false;
     }
-    else if (tile == 49) {
+    else if (tile == 111) {
         lastTile = GOAL;
         return false;
     }
@@ -108,17 +107,17 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     float tile_center_x = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);
 
-    if (tile == 70) {
+    if (tile == 84) { 
         lastTile = SPIKE;
         return false;
     }
-    else if (tile == 4 || tile == 18 || tile == 5 || tile == 19) {
-        lastTile = LAVA; //lava and ice have functionally the same outcome
+    else if (tile == 83 || tile == 100) {
+        lastTile = LAVA;
     }
     else {
         *penetration_y = (tile_size / 2) - fabs(position.y - tile_center_y);
         *penetration_x = (tile_size / 2) - fabs(position.x - tile_center_x);
     }
 
-    return true;
+    return true; //    turn back to true when not testing level appearance!!!!
 }

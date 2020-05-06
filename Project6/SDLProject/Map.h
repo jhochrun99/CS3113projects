@@ -14,7 +14,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
-enum LastTileType { SAFE, GEM, SPIKE, LAVA, GOAL };
+enum LastTileType { SAFE, CHECKPOINT, SPIKE, LAVA, GOAL };
 
 class Map {
     int width;
