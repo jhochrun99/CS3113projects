@@ -31,11 +31,10 @@
   - [x] Map texture (needs various styles of blocks, to clearly show dirt, metal, sand, glass / ice)
   - [ ] Hazard texture (can be part of map, need to have spikes and lava)
   - [ ] AI texture (currently just Slime)
-- [ ] Add Sound  -- Jess
-  - [ ] Looping backrgound music  -- Jess
+- [x] Add Sound  -- Jess
+  - [x] Looping backrgound music  -- Jess
   - [ ] Sound effect  -- Jess
     - [ ] Sound when player destroys a block  -- Jess
-      - https://freesound.org/people/InspectorJ/sounds/420876/ or https://freesound.org/people/doorajar/sounds/427074/
     - [ ] Sound when player tries to destroy a metal block **O!**
       - https://freesound.org/people/ScarKord/sounds/86107/ or https://freesound.org/people/Taira%20Komori/sounds/213692/
 - [ ] Implement Winning and Losing
