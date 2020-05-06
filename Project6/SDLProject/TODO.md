@@ -1,6 +1,6 @@
 ### To Do List
 (**O!** = OPTIONAL, the game can do without it and it should be focused on LAST)
-- [ ] Implement Menu Screen  -- Angie
+- [x] Implement Menu Screen  -- Angie
 - [ ] Have Menu Screen go through examples of how different blocks work **O!**
 - [ ] Create level  -- Jess
   - [x] Level should get more difficult as the player gets deeper  -- Jess
