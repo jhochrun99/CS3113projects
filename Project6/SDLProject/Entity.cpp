@@ -14,7 +14,7 @@ Entity::Entity() {
     movement = glm::vec3(0);
     speed = 1.0f;
 
-    health = 1;
+    health = 3;
 
     jump = false;
     maxVal = 0;
@@ -63,14 +63,19 @@ bool Entity::CheckCollision(Entity* other) {
 }
 
 void Entity::CheckCollisionY(Entity* objects, int objectCount) {
+    
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
-
+       
+        
         if (CheckCollision(object)) {
+            
             float yOverlap = fabs(fabs(position.y - object->position.y)
                 - (height / 2.0f) - (object->height / 2.0f));
             
             if (velocity.y > 0) {
+                std::cout <<"is this happening1"<<std::endl;
+               
                 position.y -= yOverlap;
                 velocity.y = 0;
                 collidedTop = true;
@@ -79,6 +84,14 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 Health();
             }
             else if (velocity.y < 0) {
+                std::cout <<"is this happening2"<<std::endl;
+                if(entityType==SANDD){
+                    return;
+                    std::cout <<"is this happening"<<std::endl;
+//                    std::cout << "player lives is "<< object->health<<std::endl;
+                    
+                }
+      
                 position.y += yOverlap;
                 velocity.y = 0;
                 collidedBottom = true;
@@ -88,7 +101,15 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                     object->isActive = false;
                 }
                 else {
-                    object->health--;
+                    if(entityType==SANDD){
+                        object->Health();
+                        
+                    }
+                    else{
+                        object->health--;
+                    }
+                    
+                    
                 }
             }
         }
@@ -135,6 +156,60 @@ void Entity::CheckCollisionsY(Map* map) {
 
     float penetration_x = 0;
     float penetration_y = 0;
+    
+    
+    if (entityType==SANDD){
+        if (map->IsSolidSand(top, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        else if (map->IsSolidSand(top_left, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        else if (map->IsSolidSand(top_right, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        
+        if (map->IsSolidSand(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSand(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSand(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        
+        if (map->IsSolidSand(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSand(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSand(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        return;
+        
+    }
+    
     if (map->IsSolid(top, &penetration_x, &penetration_y) && velocity.y > 0) {
         position.y -= penetration_y;
         velocity.y = 0;
@@ -201,8 +276,6 @@ void Entity::CheckDown(Map *map){
     
 }
 void Entity::CheckRight(Map *map){
-
-    std::cout << "in right right tile is "<< map->rightTile << std::endl;
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
     if(map->rightTile==DIRT){
         map->destroy_tile(right);
@@ -227,17 +300,23 @@ void Entity::CheckCollisionsX(Map* map) {
 
     float penetration_x = 0;
     float penetration_y = 0;
-    if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
-        position.x += penetration_x;
-        velocity.x = 0;
-        collidedLeft = true;
-    }
-
-    if (map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
-        position.x -= penetration_x;
-        velocity.x = 0;
-        collidedRight = true;
-    }
+    
+    
+  
+        if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
+            position.x += penetration_x;
+            velocity.x = 0;
+            collidedLeft = true;
+        }
+        
+        if (map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
+            position.x -= penetration_x;
+            velocity.x = 0;
+            collidedRight = true;
+        }
+    
+    
+    
 }
 
 
@@ -271,6 +350,17 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
     
+    if(entityType==SANDD){
+        position.y += velocity.y * deltaTime;
+        CheckCollisionY(objects,objectCount);
+        position.x += velocity.x * deltaTime;
+        CheckCollisionsY(map);
+        
+        modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, position);
+        return;
+        
+    }
     
 
     position.y += velocity.y * deltaTime; // Move on Y
@@ -303,7 +393,10 @@ void Entity::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID
     if (!isActive) { return; } //don't do anything if not active
 
     float u = (float)(index % textureCols) / (float)textureCols;
+    
+    
     float v = (float)(index / textureCols) / (float)textureRows;
+   
 
     float width = 1.0f / (float)textureCols;
     float height = 1.0f / (float)textureRows;
