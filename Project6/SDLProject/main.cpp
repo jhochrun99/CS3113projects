@@ -25,7 +25,7 @@
 GLuint fontTextureID;
 
 Mix_Music* music;
-Mix_Chunk* bounce;
+Mix_Chunk* dig;
 
 Scene* previousScene;
 Scene* currentScene;
@@ -89,10 +89,10 @@ void Initialize() {
     SwitchToScene(sceneList[0]);
 
     if (mode == START) {
-        music = Mix_LoadMUS("sneaky-adventure-background.mp3");
+        music = Mix_LoadMUS("call-to-adventure.mp3");
         Mix_PlayMusic(music, -1);
 
-        //bounce = Mix_LoadWAV("jump.wav"); =============================================================
+        dig = Mix_LoadWAV("digging-c.wav");
     }
 }
 
@@ -304,7 +304,7 @@ void Render() {
 
 //shutdown and main
 void Shutdown() {
-    Mix_FreeChunk(bounce);
+    Mix_FreeChunk(dig);
     Mix_FreeMusic(music);
 
     SDL_Quit();

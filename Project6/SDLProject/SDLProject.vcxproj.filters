@@ -90,7 +90,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sneaky-adventure-background.mp3">
+    <Media Include="call-to-adventure.mp3">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
