@@ -13,7 +13,7 @@
 #include "ShaderProgram.h"
 #include "Map.h"
 
-enum EntityType { PLAYER, ENEMY };
+enum EntityType { PLAYER, ENEMY, SANDD };
 
 class Entity {
 public:

@@ -16,12 +16,13 @@
 #include "Entity.h"
 #include "Map.h"
 #include "Enemy.h"
-
+#include "Sand.hpp"
 struct GameState {
     Map* map;
     Player* player;
     Enemy* enemy1;
     Enemy* enemy2;
+    Sand* sand;
 
     int nextScene;
 };

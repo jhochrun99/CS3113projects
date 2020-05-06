@@ -190,6 +190,7 @@ void Entity::CheckCollisionsY(Map* map) {
     }
 }
 void Entity::CheckDown(Map *map){
+
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
     
     if(map->currentTile==DIRT){
@@ -200,6 +201,8 @@ void Entity::CheckDown(Map *map){
     
 }
 void Entity::CheckRight(Map *map){
+
+    std::cout << "in right right tile is "<< map->rightTile << std::endl;
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
     if(map->rightTile==DIRT){
         map->destroy_tile(right);
@@ -209,6 +212,7 @@ void Entity::CheckRight(Map *map){
     
 }
 void Entity::CheckLeft(Map *map){
+
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
     if(map->leftTile==DIRT){
         map->destroy_tile(left);
@@ -235,6 +239,7 @@ void Entity::CheckCollisionsX(Map* map) {
         collidedRight = true;
     }
 }
+
 
 void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, int objectCount) {
     if (!isActive || !canMove) { return; } //don't do anything if not active
@@ -266,7 +271,11 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
     velocity.x = movement.x * speed;
     velocity += acceleration * deltaTime;
     
+    
+
     position.y += velocity.y * deltaTime; // Move on Y
+
+    
     CheckCollisionsY(map);
     CheckCollisionY(objects, objectCount); // Fix if needed
     CheckCollisionY(obj2, objectCount);

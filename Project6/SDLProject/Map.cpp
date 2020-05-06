@@ -87,8 +87,8 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
 
     int tile_x = floor((position.x + (tile_size / 2)) / tile_size);
     int tile_y = -(ceil(position.y - (tile_size / 2))) / tile_size; // Our array counts up as Y goes down.
-    glm::vec3 position_left = glm::vec3(position.x -(0.6f), position.y + 0.6f, position.z);
-    glm::vec3 position_right = glm::vec3(position.x +(0.6f), position.y + 0.6f, position.z);
+    glm::vec3 position_left = glm::vec3(position.x -(0.3f), position.y + 0.6f, position.z);
+    glm::vec3 position_right = glm::vec3(position.x +(0.3f), position.y + 0.6f, position.z);
     
     int tile_x_left = floor((position_left.x + (tile_size / 2)) / tile_size);
     int tile_y_left = -(ceil(position_left.y - (tile_size / 2))) / tile_size;
@@ -132,8 +132,6 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
         leftTile = METAL;
     }
     else if (tileLeft == 91){
-        //std::cout <<"when this happens tile is "<< tile<< std::endl;
-        
         leftTile = DIRT;
     }
     else if (tileLeft == 86){
@@ -190,6 +188,7 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
 
     return true;
 }
+
 
 void Map::destroy_tile(glm::vec3 position){
     int tile_x = floor((position.x + (tile_size / 2)) / tile_size);
