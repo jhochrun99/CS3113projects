@@ -11,7 +11,7 @@
     - [x] Glass starts replacing metal, lava starts showing up (fourth 'section')
     - [x] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
 - [ ] Implement Player Movement
-  - [ ] Player moves one block when left / right arrow keys are pressed  -- Jess
+  - [ ] Player moves one block when left / right arrow keys are pressed **O!**
   - [ ] Player moving towards a block destroys that block (makes the block 'inactive')
 - [ ] Implement Blocks -- Angie
   - [ ] Dirt (standard block, can be destroyed) -- Angie
