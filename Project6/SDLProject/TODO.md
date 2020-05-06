@@ -17,7 +17,7 @@
   - [x] Dirt (standard block, can be destroyed) -- Angie
   - [x] Metal (can't be destroyed) -- Angie
   - [x] Sand (falls if nothing is beneath it) -- Angie
-  - [ ] Glass/Ice (breaks if the player falls on top of it) -- Angie
+  - [x] Glass/Ice (breaks if the player falls on top of it) -- Angie
 - [ ] Implement Hazards
   - [x] Lava (kills the player if touched)
     - [ ] Lava spreads out (if player destroys a block next to lava, lava will move to take up open space) **O!**
