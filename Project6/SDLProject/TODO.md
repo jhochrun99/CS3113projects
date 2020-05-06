@@ -35,7 +35,9 @@
   - [ ] Looping backrgound music  -- Jess
   - [ ] Sound effect  -- Jess
     - [ ] Sound when player destroys a block  -- Jess
+      - https://freesound.org/people/InspectorJ/sounds/420876/ or https://freesound.org/people/doorajar/sounds/427074/
     - [ ] Sound when player tries to destroy a metal block **O!**
+      - https://freesound.org/people/ScarKord/sounds/86107/ or https://freesound.org/people/Taira%20Komori/sounds/213692/
 - [ ] Implement Winning and Losing
   - [ ] Win: player reaches the bottom 
   - [ ] Lose: player dies 3 times
