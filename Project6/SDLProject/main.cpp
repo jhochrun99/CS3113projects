@@ -29,7 +29,7 @@ Mix_Chunk* bounce;
 
 Scene* previousScene;
 Scene* currentScene;
-Scene* sceneList[4];
+Scene* sceneList[2];
 
 enum GameMode { START, PLAY, END };
 
@@ -318,13 +318,9 @@ int main(int argc, char* argv[]) {
         ProcessInput();
         Update();
         
-        //if (currentScene->state.map->lastTile == GEM) {
-        //    toScene = sceneList[currentScene->state.nextScene];
-        //    SwitchToScene(toScene);
-        //}
-        //else if (currentScene->state.map->lastTile == GOAL && currentScene->state.player->position.x >= 21.5f) {
-        //    mode = END; //========================================================================================
-        //}
+        if (currentScene->state.map->lastTile == GOAL) { //&& currentScene->state.player->position.y >= 21.5f //<-- would allow player to get closer to castle
+            mode = END; 
+        }
 
         Render();
     }
