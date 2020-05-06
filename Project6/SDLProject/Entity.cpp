@@ -70,9 +70,6 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
         
         if (CheckCollision(object)) {
             if(entityType==SANDD){
-                std::cout <<"position of Sand is "<<position.y<<std::endl;
-                std::cout <<"position of Player is "<<object->position.y<<std::endl;
-                
                 if(position.y > object->position.y+0.5){
                     object->Health();
                     if (object->health == 1) {
@@ -169,7 +166,7 @@ void Entity::CheckCollisionsY(Map* map) {
     float penetration_x = 0;
     float penetration_y = 0;
     
-    
+    float ticks = (float)SDL_GetTicks() / 1000.0f;
     if (entityType==SANDD){
         if (map->IsSolidSand(top, &penetration_x, &penetration_y) && velocity.y > 0) {
             position.y -= penetration_y;
@@ -242,22 +239,10 @@ void Entity::CheckCollisionsY(Map* map) {
         position.y += penetration_y;
         velocity.y = 0;
         collidedBottom = true;
-    }
-    else if (map->IsSolid(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
-        position.y += penetration_y;
-        velocity.y = 0;
-        collidedBottom = true;
-    }
-    else if (map->IsSolid(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
-        position.y += penetration_y;
-        velocity.y = 0;
-        collidedBottom = true;
-    }
-    
-    if (map->IsSolid(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
-        position.y += penetration_y;
-        velocity.y = 0;
-        collidedBottom = true;
+        glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
+        if(map->currentTile==GLASS && int(ticks)%2==0){
+            map->destroy_tile(bottom);
+        }
     }
     else if (map->IsSolid(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
         position.y += penetration_y;
