@@ -185,6 +185,8 @@ void Level1::Render(ShaderProgram* program) {
 //        sand_blocks[i]->DrawSpriteFromTextureAtlas(program, sand_blocks[i]->textureID, 17);
 //    }
 //    state.sand->DrawSpriteFromTextureAtlas(program, state.sand->textureID, 17);
+    GLuint fontTexture = Util::LoadTexture("font1.png");
+    Util::DrawText(program, fontTexture, "Lives: "+ std::to_string(state.player->health), 0.7f, -0.45f, glm::vec3(8.0f, state.player->position.y+3.0f, 0));
     state.player->Render(program);
     
 }

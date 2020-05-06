@@ -66,15 +66,33 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
     
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
-       
+        
         
         if (CheckCollision(object)) {
-            
+            if(entityType==SANDD){
+                std::cout <<"position of Sand is "<<position.y<<std::endl;
+                std::cout <<"position of Player is "<<object->position.y<<std::endl;
+                
+                if(position.y > object->position.y+0.5){
+                    object->Health();
+                    if (object->health == 1) {
+                        object->isActive = false;
+                    }
+                }
+                else{
+                    return;
+                }
+                
+                
+                return;
+            }
+            //if player falls on top of the sand  player.position>sand.position
+            //if sand falls on top of player sand.position> player.position
             float yOverlap = fabs(fabs(position.y - object->position.y)
                 - (height / 2.0f) - (object->height / 2.0f));
             
             if (velocity.y > 0) {
-                std::cout <<"is this happening1"<<std::endl;
+                //std::cout <<"is this happening1"<<std::endl;
                
                 position.y -= yOverlap;
                 velocity.y = 0;
@@ -84,10 +102,10 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 Health();
             }
             else if (velocity.y < 0) {
-                std::cout <<"is this happening2"<<std::endl;
+                //std::cout <<"is this happening2"<<std::endl;
                 if(entityType==SANDD){
                     return;
-                    std::cout <<"is this happening"<<std::endl;
+
 //                    std::cout << "player lives is "<< object->health<<std::endl;
                     
                 }
@@ -101,13 +119,7 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                     object->isActive = false;
                 }
                 else {
-                    if(entityType==SANDD){
-                        object->Health();
-                        
-                    }
-                    else{
-                        object->health--;
-                    }
+                    object->health--;
                     
                     
                 }
