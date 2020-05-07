@@ -82,9 +82,15 @@
     <Image Include="slime.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="mapPack_tilesheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="font2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sneaky-adventure-background.mp3">
+    <Media Include="call-to-adventure.mp3">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

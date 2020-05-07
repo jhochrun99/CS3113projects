@@ -1,41 +1,42 @@
 ### To Do List
 (**O!** = OPTIONAL, the game can do without it and it should be focused on LAST)
-- [ ] Implement Menu Screen  -- Angie
+- [x] Implement Menu Screen  -- Angie
 - [ ] Have Menu Screen go through examples of how different blocks work **O!**
 - [ ] Create level  -- Jess
-  - [ ] Level should get more difficult as the player gets deeper  -- Jess
-  - [ ] View window must move down with player  -- Jess
-    - [ ] Dirt area + spikes (first 'section')
-    - [ ] Dirt + metal (second 'section')
-    - [ ] Sand + slime start showig up (third 'section')
-    - [ ] Glass starts replacing metal, lava starts showing up (fourth 'section')
-    - [ ] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
+  - [x] Level should get more difficult as the player gets deeper  -- Jess
+  - [x] View window must move down with player  -- Jess
+    - [x] Dirt area + spikes (first 'section')
+    - [x] Dirt + metal (second 'section')
+    - [ ] Sand + **slime** start showig up (third 'section')
+    - [x] Glass starts replacing metal, lava starts showing up (fourth 'section')
+    - [x] Almost all blocks are metal, sand, or glass, has spikes and lava (fifth 'section')
 - [ ] Implement Player Movement
-  - [ ] Player moves one block when left / right arrow keys are pressed  -- Jess
+  - [ ] Player moves one block when left / right arrow keys are pressed **O!**
   - [ ] Player moving towards a block destroys that block (makes the block 'inactive')
 - [ ] Implement Blocks -- Angie
-  - [ ] Dirt (standard block, can be destroyed) -- Angie
-  - [ ] Metal (can't be destroyed) -- Angie
-  - [ ] Sand (falls if nothing is beneath it) -- Angie
-  - [ ] Glass/Ice (breaks if the player falls on top of it) -- Angie
+  - [x] Dirt (standard block, can be destroyed) -- Angie
+  - [x] Metal (can't be destroyed) -- Angie
+  - [x] Sand (falls if nothing is beneath it) -- Angie
+  - [x] Glass/Ice (breaks if the player falls on top of it) -- Angie
 - [ ] Implement Hazards
-  - [ ] Lava (kills the player if touched)
+  - [x] Lava (kills the player if touched)
     - [ ] Lava spreads out (if player destroys a block next to lava, lava will move to take up open space) **O!**
-  - [ ] Spikes (kills player if they land on top of them. Can't be destroyed)  -- Jess
+  - [ ] Spikes (kills player if they **land on top** of them. Can't be destroyed)  -- Jess
   - [ ] Fall damage (if player falls more than 2 blocks at a time, they die) **O!**
 - [ ] Implement AI
   - [ ] Slime (moves back and forth, can be killed if player lands on top of it, kills player if touched any other way)
     - [ ] Give Slime map detection, so it'll stay on the same level and not fall down if player destroyes a block in it's path
 - [ ] Use proper textures
   - [ ] Player texture (can't be George)
-  - [ ] Map texture (needs various styles of blocks, to clearly show dirt, metal, sand, glass / ice)
+  - [x] Map texture (needs various styles of blocks, to clearly show dirt, metal, sand, glass / ice)
   - [ ] Hazard texture (can be part of map, need to have spikes and lava)
   - [ ] AI texture (currently just Slime)
-- [ ] Add Sound  -- Jess
-  - [ ] Looping backrgound music  -- Jess
+- [x] Add Sound  -- Jess
+  - [x] Looping backrgound music  -- Jess
   - [ ] Sound effect  -- Jess
     - [ ] Sound when player destroys a block  -- Jess
     - [ ] Sound when player tries to destroy a metal block **O!**
+      - https://freesound.org/people/ScarKord/sounds/86107/ or https://freesound.org/people/Taira%20Komori/sounds/213692/
 - [ ] Implement Winning and Losing
   - [ ] Win: player reaches the bottom 
   - [ ] Lose: player dies 3 times

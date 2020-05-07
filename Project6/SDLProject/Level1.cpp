@@ -10,7 +10,7 @@
 #include <tuple>
 
 //for one screen: 8 tall, 11 across
-//blocks key: [dirt, 91], [sand, 85], [rock, 28], [ice, 202],  [nonrendered, 85]
+//blocks key: [dirt, 91], [sand, 18], [rock, 28], [ice, 202],  [nonrendered, 85]
 //            ["blank", 16], [tower, 110], [castle, 111]
 //            [spikes, 84], [lava, 83, 100]
 unsigned int level1_data[] = {
@@ -18,8 +18,8 @@ unsigned int level1_data[] = {
     28,  91,  91,  91,  91,  91,  91,  91,  91,  91,  28,
     28,  91,  91,  91,  91,  91,  91,  91,  91,  91,  28,
     28,  85,  85,  85,  91,  91,  91,  85,  91,  91,  28,
-    28,  84,  84,  85,  91,  91,  91,  84,  91,  91,  28,
-    28,  91,  91,  202,  202,  91,  91,  91,  91,  91,  28,
+    28,  84,  84,  84,  91,  91,  91,  84,  91,  91,  28,
+    28,  91,  91,  91,  91,  91,  91,  91,  91,  91,  28,
     28,  91,  91,  91,  84,  91,  91,  91,  91,  91,  28,
     28,  91,  91,  91,  91,  91,  91,  91,  91,  91,  28, // 8
     28,  91,  91,  91,  85,  85,  91,  85,  85,  85,  28,
@@ -103,8 +103,6 @@ void Level1::Initialize() {
     
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
     state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 17, 12);
-    
-    
     state.player = new Player();
     
     state.player->height= 0.6f;
@@ -141,10 +139,7 @@ void Level1::Initialize() {
         new_sand->entityType= SANDD;
         new_sand->height = 1.0f;
         sand_blocks.push_back(new_sand);
-//        std::cout << std::get<0>(sand_coordinates[i])<<" "<< std::get<1>(sand_coordinates[i])<< std::endl;
     }
-    
-   
 }
 
 void Level1::Update(float deltaTime) {
@@ -187,6 +182,7 @@ void Level1::Render(ShaderProgram* program) {
 //    state.sand->DrawSpriteFromTextureAtlas(program, state.sand->textureID, 17);
     GLuint fontTexture = Util::LoadTexture("font1.png");
     Util::DrawText(program, fontTexture, "Lives: "+ std::to_string(state.player->health), 0.7f, -0.45f, glm::vec3(8.0f, state.player->position.y+3.0f, 0));
+
     state.player->Render(program);
     
 }

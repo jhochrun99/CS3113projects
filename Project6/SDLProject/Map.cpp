@@ -163,9 +163,15 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     //tiles that advance the game: 49, 51, 52 (gemstones)
     if (tile == 51 || tile == 52) {
         lastTile = GEM;
+
+
+    if (tile == 85) return false;
+
+    else if (tile == 110) {
+        lastTile = CHECKPOINT;
         return false;
     }
-    else if (tile == 49) {
+    else if (tile == 111) {
         lastTile = GOAL;
         return false;
     }
@@ -174,17 +180,18 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     float tile_center_x = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);
 
-    if (tile == 70) {
+    if (tile == 84) { 
         lastTile = SPIKE;
         return false;
     }
-    else if (tile == 4 || tile == 18 || tile == 5 || tile == 19) {
-        lastTile = LAVA; //lava and ice have functionally the same outcome
+    else if (tile == 83 || tile == 100) {
+        lastTile = LAVA;
     }
     else {
         *penetration_y = (tile_size / 2) - fabs(position.y - tile_center_y);
         *penetration_x = (tile_size / 2) - fabs(position.x - tile_center_x);
     }
+
 
     return true;
 }
@@ -224,3 +231,4 @@ void Map::destroy_tile(glm::vec3 position){
     this->Build();
    
 }
+
