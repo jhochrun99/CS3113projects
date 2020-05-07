@@ -37,8 +37,8 @@
     - [ ] Sound when player destroys a block  -- Jess
     - [ ] Sound when player tries to destroy a metal block **O!**
       - https://freesound.org/people/ScarKord/sounds/86107/ or https://freesound.org/people/Taira%20Komori/sounds/213692/
-- [ ] Implement Winning and Losing -- Angie
-  - [ ] Win: player reaches the bottom 
-  - [ ] Lose: player dies 3 times
+- [x] Implement Winning and Losing -- Angie
+  - [x] Win: player reaches the bottom 
+  - [x] Lose: player dies 3 times
 - [ ] Implement Check-points
   - [ ] If player reaches a certain level, the gamestate will be saved and the next time they lose a life, they'll return to the last check point **O!**
