@@ -334,7 +334,12 @@ int main(int argc, char* argv[]) {
         }
 
         //running this if statement more than once per checkpoint 
-        //if (currentScene->state.map->lastTile == CHECKPOINT && currentScene->state.player->position.y < lastChecky - 10) {
+
+        /* added the second condition to the if statement to try and stop it from incrementing multiple times for one checkpoint
+           now, it just waits until you're far enough away from the checkpoint and increments it again, regardless of whether player is
+           touching a checkpoint at the time or not. */
+
+        //if (currentScene->state.map->lastTile == CHECKPOINT && currentScene->state.player->position.y < lastChecky - 10) { 
         //    lastChecky = currentScene->state.player->position.y;
         //    currentScene->state.player->lastCheckpoint++;
         //    currentScene->state.map->lastTile = SAFE;
