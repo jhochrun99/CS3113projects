@@ -12,6 +12,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Map.h"
+#include <tuple>
+#include <vector>
 
 enum EntityType { PLAYER, ENEMY, SANDD };
 
@@ -26,6 +28,8 @@ public:
     float speed;
 
     int health;
+    std::vector< std::tuple<int, int> > checkPLocations;
+    int lastCheckpoint;
 
     float width;
     float height;

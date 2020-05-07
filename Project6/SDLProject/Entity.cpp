@@ -420,6 +420,12 @@ void Entity::Render(ShaderProgram* program) {
 
 Player::Player() {
     health = 3;
+    lastCheckpoint = 0;
+    checkPLocations.push_back(std::make_tuple(2, 0));
+    checkPLocations.push_back(std::make_tuple(2, -22));
+    checkPLocations.push_back(std::make_tuple(2, -39));
+    checkPLocations.push_back(std::make_tuple(2, -56));
+
     isActive = true;
 
     position = glm::vec3(2.0f, 0, 0);
@@ -452,6 +458,7 @@ void Player::Health() {
     }
     else {
         movement = glm::vec3(0);
-        position = glm::vec3(4.0f, 1.0f, 0);
+        position = glm::vec3(std::get<0>(checkPLocations[lastCheckpoint]), std::get<1>(checkPLocations[lastCheckpoint]), 0);
+        //getting entry in vector according to lastCheckPoint, 0 in tuple = x, 1 = y coordinate
     }
 }
