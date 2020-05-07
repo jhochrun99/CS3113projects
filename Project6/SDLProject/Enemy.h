@@ -11,25 +11,19 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 
-enum EnemyType { SLIME, BAT, BLADE };
+enum EnemyType { SLIME };
 enum EnemyState { IDLE, ATTACKING };
 
 class Enemy : public Entity {
 public:
     EnemyType enemy;
     EnemyState enemyState;
-    Entity* senseFor;
-    int senseRadius;
 
     Enemy();
     void DefineSlime(GLuint slimeTextureID);
-    void DefineBat(GLuint batTextureID);
 
     void Health() override;
     void Action() override;
 
-    void CheckSense(Entity* senseFor);
-
     void Slime();
-    void Bat();
 };
