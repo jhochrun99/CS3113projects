@@ -31,23 +31,23 @@ void Map::Build() {
             float yoffset = (tile_size / 2); // From center of tile
 
             vertices.insert(vertices.end(), {
-            xoffset + (tile_size * x), yoffset + -tile_size * y,
-            xoffset + (tile_size * x), yoffset + (-tile_size * y) - tile_size,
-            xoffset + (tile_size * x) + tile_size, yoffset + (-tile_size * y) - tile_size,
+                xoffset + (tile_size * x), yoffset + -tile_size * y,
+                xoffset + (tile_size * x), yoffset + (-tile_size * y) - tile_size,
+                xoffset + (tile_size * x) + tile_size, yoffset + (-tile_size * y) - tile_size,
 
-            xoffset + (tile_size * x), yoffset + -tile_size * y,
-            xoffset + (tile_size * x) + tile_size, yoffset + (-tile_size * y) - tile_size,
-            xoffset + (tile_size * x) + tile_size, yoffset + -tile_size * y
+                xoffset + (tile_size * x), yoffset + -tile_size * y,
+                xoffset + (tile_size * x) + tile_size, yoffset + (-tile_size * y) - tile_size,
+                xoffset + (tile_size * x) + tile_size, yoffset + -tile_size * y
             });
 
             texCoords.insert(texCoords.end(), {
-            u, v,
-            u, v + (tileHeight),
-            u + tileWidth, v + (tileHeight),
+                u, v,
+                u, v + (tileHeight),
+                u + tileWidth, v + (tileHeight),
 
-            u, v,
-            u + tileWidth, v + (tileHeight),
-            u + tileWidth, v
+                u, v,
+                u + tileWidth, v + (tileHeight),
+                u + tileWidth, v
             });
         }
     }
@@ -57,8 +57,8 @@ void Map::Build() {
 
     top_bound = 0 + (tile_size / 2);
     bottom_bound = -(tile_size * height) + (tile_size / 2);
-}
-;
+};
+
 void Map::Render(ShaderProgram* program) {
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     program->SetModelMatrix(modelMatrix);
@@ -108,63 +108,24 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     
     if (tile == 15) return false;
     
-    if (tile == 18){
-        currentTile = SAND;
-    }
-    else if (tile == 28){
-        currentTile = METAL;
-    }
-    else if (tile == 91){
-        //std::cout <<"when this happens tile is "<< tile<< std::endl;
-        
-        currentTile = DIRT;
-    }
-    else if (tile == 202){
-        currentTile = GLASS;
-    }
-    else{
-        currentTile = OTHER;
-    }
-    if (tileLeft == 18){
-        leftTile = SAND;
-    }
-    else if (tileLeft == 28){
-        leftTile = METAL;
-    }
-    else if (tileLeft == 91){
-        leftTile = DIRT;
-    }
-    else if (tileLeft == 86){
-        leftTile= GLASS;
-    }
-    else{
-        leftTile = OTHER;
-    }
-    
-    if (tileRight == 18){
-        rightTile = SAND;
-    }
-    else if (tileRight == 28){
-        rightTile = METAL;
-    }
-    else if (tileRight == 91){
-        //std::cout <<"when this happens tile is "<< tile<< std::endl;
-        
-        rightTile = DIRT;
-    }
-    else if (tileRight == 86){
-        rightTile= GLASS;
-    }
-    else{
-        rightTile = OTHER;
-    }
-    
-    //tiles that kill the player: 4, 18 (ice), 5, 19 (lava), 70 (spikes), 71 (saw blade)
-    //tiles that advance the game: 49, 51, 52 (gemstones)
-    if (tile == 51 || tile == 52) {
-        lastTile = GEM;
-    }
+    if (tile == 18) { currentTile = SAND; }
+    else if (tile == 28) { currentTile = METAL; }
+    else if (tile == 91) { currentTile = DIRT; }
+    else if (tile == 202) { currentTile = GLASS; }
+    else { currentTile = OTHER; }
 
+    if (tileLeft == 18) { leftTile = SAND; }
+    else if (tileLeft == 28) { leftTile = METAL; }
+    else if (tileLeft == 91) { leftTile = DIRT; }
+    else if (tileLeft == 86) { leftTile= GLASS; }
+    else { leftTile = OTHER; }
+    
+    if (tileRight == 18) { rightTile = SAND; }
+    else if (tileRight == 28) { rightTile = METAL; }
+    else if (tileRight == 91) { rightTile = DIRT; }
+    else if (tileRight == 86) { rightTile= GLASS; }
+    else { rightTile = OTHER; }
+    
     if (tile == 85) return false;
 
     else if (tile == 110) {
@@ -176,7 +137,6 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
         return false;
     }
     
-
     float tile_center_x = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);
 
@@ -192,9 +152,9 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
         *penetration_x = (tile_size / 2) - fabs(position.x - tile_center_x);
     }
 
-
     return true;
 }
+
 bool Map::IsSolidSand(glm::vec3 position, float* penetration_x, float* penetration_y) {
     *penetration_x = 0;
     *penetration_y = 0;
@@ -221,14 +181,11 @@ bool Map::IsSolidSand(glm::vec3 position, float* penetration_x, float* penetrati
     return true;
 }
 
-
-void Map::destroy_tile(glm::vec3 position){
+void Map::destroy_tile(glm::vec3 position) {
     int tile_x = floor((position.x + (tile_size / 2)) / tile_size);
     int tile_y = -(ceil(position.y - (tile_size / 2))) / tile_size; // Our array counts up as Y goes down.
     
     //so basically here i change that tile to nothing
     levelData[tile_y * width + tile_x]= 15;
     this->Build();
-   
 }
-
