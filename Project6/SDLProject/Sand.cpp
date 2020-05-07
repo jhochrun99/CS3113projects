@@ -13,10 +13,11 @@ Sand::Sand(){
     
     position = glm::vec3(1.0f, -5.0f, 0);
     acceleration = glm::vec3(0, -9.81f, 0);
-    //speed = 2.0f;
+
     textureID = Util::LoadTexture("tilesheet.png");
     textureCols = 14;
     textureRows = 12;
+
     height = 1.0f;
     width = 0.9f;
 }

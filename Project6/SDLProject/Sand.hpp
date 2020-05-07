@@ -24,9 +24,6 @@ class Sand : public Entity {
 public:
     Sand();
 
-    
     void Health() override;
     void Action() override;
-    
-
 };
