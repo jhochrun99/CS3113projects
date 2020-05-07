@@ -85,6 +85,7 @@ void Util::DrawTextTitle(ShaderProgram* program, GLuint fontTexture, std::string
     glDisableVertexAttribArray(program->positionAttribute);
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
+
 void Util::DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size,
                     float spacing, glm::vec3 position) {
     float width = 1.0f / 16.0f;
@@ -119,6 +120,7 @@ void Util::DrawText(ShaderProgram *program, GLuint fontTexture, std::string text
             offset + (-0.5f * size), -0.5f * size,
         });
     }
+
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
     program->SetModelMatrix(modelMatrix);
