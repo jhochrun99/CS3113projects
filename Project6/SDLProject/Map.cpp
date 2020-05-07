@@ -163,7 +163,7 @@ bool Map::IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y
     //tiles that advance the game: 49, 51, 52 (gemstones)
     if (tile == 51 || tile == 52) {
         lastTile = GEM;
-
+    }
 
     if (tile == 85) return false;
 

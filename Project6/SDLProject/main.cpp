@@ -118,6 +118,15 @@ void ProcessInputStart() {
             }
             break;
         }
+        const Uint8 *keys = SDL_GetKeyboardState(NULL);
+        
+        if (keys[SDL_SCANCODE_RETURN]) {
+            mode = PLAY;
+            
+            SwitchToScene(sceneList[currentScene->state.nextScene]);
+            currentScene->state.player->isActive = true;
+            
+        }
     }
 }
 
@@ -134,21 +143,21 @@ void ProcessInputPlay() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-                //case SDLK_SPACE:  // ======================================================================
-                //    currentScene->state.player->jump = true;
-                //    break;
-                //case SDLK_LEFT: //player moves one block to the left
-                //    //do something like "while movement < endPosition, movement += 1
-                //    currentScene->state.player->movement.x -= 5.0f;
-                //    currentScene->state.player->animIndices = currentScene->state.player->animLeft;
-                //    break;
-                //case SDLK_RIGHT: //player moves one block to the right
-                //    currentScene->state.player->movement.x += 1.0f;
-                //    currentScene->state.player->animIndices = currentScene->state.player->animRight;
-                //    break;
-                //case SDLK_DOWN: //destroy block under player
-
-                //    break;
+//                case SDLK_SPACE:  // ======================================================================
+//                    currentScene->state.player->jump = true;
+//                    break;
+//                case SDLK_LEFT: //player moves one block to the left
+//                    //do something like "while movement < endPosition, movement += 1
+//                    currentScene->state.player->movement.x -= 5.0f;
+//                    currentScene->state.player->animIndices = currentScene->state.player->animLeft;
+//                    break;
+//                case SDLK_RIGHT: //player moves one block to the right
+//                    currentScene->state.player->movement.x += 1.0f;
+//                    currentScene->state.player->animIndices = currentScene->state.player->animRight;
+//                    break;
+//                case SDLK_DOWN: //destroy block under player
+//
+//                    break;
                 }
         }
     }
@@ -156,6 +165,7 @@ void ProcessInputPlay() {
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
     if (keys[SDL_SCANCODE_LEFT]) {
+        
         currentScene->state.player->movement.x = -1.0f;
         currentScene->state.player->animIndices = currentScene->state.player->animLeft;
     }
