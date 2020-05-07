@@ -27,9 +27,6 @@ public:
 
     int health;
 
-    //bool jump;
-    //float maxVal; //used for jump height
-
     float width;
     float height;
     float scale;
