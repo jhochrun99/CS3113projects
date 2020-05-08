@@ -16,9 +16,6 @@ Entity::Entity() {
 
     health = 3;
 
-    jump = false;
-    maxVal = 0;
-
     width = 1.0f;
     height = 1.0f;
     scale = 1.0f;
@@ -62,26 +59,23 @@ bool Entity::CheckCollision(Entity* other) {
     return false;
 }
 
-void Entity::CheckCollisionY(Entity* objects, int objectCount) {
-    
+void Entity::CheckCollisionY(Entity* objects, int objectCount) { 
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
-        
         
         if (CheckCollision(object)) {
             
             if(entityType==SANDD){
                 if(position.y > object->position.y+0.5){
+
                     object->Health();
                     if (object->health == 1) {
                         object->isActive = false;
                     }
                 }
-                else{
+                else {
                     return;
                 }
-                
-                
                 return;
             }
             //if player falls on top of the sand  player.position>sand.position
@@ -106,7 +100,6 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
             }
             if (velocity.y > 0) {
                 //std::cout <<"is this happening1"<<std::endl;
-               
                 position.y -= yOverlap;
                 velocity.y = 0;
                 collidedTop = true;
@@ -118,9 +111,7 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 //std::cout <<"is this happening2"<<std::endl;
                 if(entityType==SANDD){
                     return;
-
-//                    std::cout << "player lives is "<< object->health<<std::endl;
-                    
+                    // std::cout << "player lives is "<< object->health<<std::endl;
                 }
       
                 position.y += yOverlap;
@@ -190,7 +181,7 @@ void Entity::CheckCollisionsY(Map* map) {
     float penetration_y = 0;
     
     float ticks = (float)SDL_GetTicks() / 1000.0f;
-    if (entityType==SANDD){
+    if (entityType==SANDD) {
         if (map->IsSolidSand(top, &penetration_x, &penetration_y) && velocity.y > 0) {
             position.y -= penetration_y;
             velocity.y = 0;
@@ -239,7 +230,6 @@ void Entity::CheckCollisionsY(Map* map) {
             collidedBottom = true;
         }
         return;
-        
     }
     if (entityType==ENEMY){
         
@@ -337,34 +327,30 @@ void Entity::CheckCollisionsY(Map* map) {
         map->lastTile = SAFE;
     }
 }
-void Entity::CheckDown(Map *map){
 
+void Entity::CheckDown(Map *map) {
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
     
-    if(map->currentTile==DIRT){
+    if (map->currentTile==DIRT) {
         map->destroy_tile(bottom);
     }
-
-    
-    
 }
-void Entity::CheckRight(Map *map){
+
+void Entity::CheckRight(Map *map) {
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
-    if(map->rightTile==DIRT){
+    
+    if (map->rightTile==DIRT) {
         map->destroy_tile(right);
     }
-
-    
-    
 }
-void Entity::CheckLeft(Map *map){
 
+void Entity::CheckLeft(Map *map) {
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
-    if(map->leftTile==DIRT){
+    
+    if (map->leftTile==DIRT) {
         map->destroy_tile(left);
     }
 }
-
 
 void Entity::CheckCollisionsX(Map* map) {
     // Probes for tiles
@@ -373,6 +359,7 @@ void Entity::CheckCollisionsX(Map* map) {
 
     float penetration_x = 0;
     float penetration_y = 0;
+
     
     if(entityType==ENEMY){
         if (map->IsSolidSand(left, &penetration_x, &penetration_y) && velocity.x < 0) {
@@ -394,17 +381,14 @@ void Entity::CheckCollisionsX(Map* map) {
             velocity.x = 0;
             collidedLeft = true;
         }
-        
-        if (map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
-            position.x -= penetration_x;
-            velocity.x = 0;
-            collidedRight = true;
-        }
-    
-    
-    
-}
 
+        
+    if (map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
+        position.x -= penetration_x;
+        velocity.x = 0;
+        collidedRight = true;
+    }
+}
 
 void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, int objectCount) {
     if (!isActive || !canMove) { return; } //don't do anything if not active
@@ -419,12 +403,10 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
         if (glm::length(movement) != 0 || entityType != PLAYER) {
             animTime += deltaTime;
 
-            if (animTime >= 0.25f)
-            {
+            if (animTime >= 0.25f) {
                 animTime = 0.0f;
                 animIndex++;
-                if (animIndex >= animFrames)
-                {
+                if (animIndex >= animFrames) {
                     animIndex = 0;
                 }
             }
@@ -440,7 +422,7 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
     }
     
     
-    if(entityType==SANDD){
+    if (entityType==SANDD) {
         position.y += velocity.y * deltaTime;
         CheckCollisionY(objects,objectCount);
         position.x += velocity.x * deltaTime;
@@ -448,17 +430,18 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
         
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, position);
+
         return;
-        
     }
     
+
     if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
         position.y += velocity.y * deltaTime; // Move on Y
     }
 
     
 
-    
+
     CheckCollisionsY(map);
     
     CheckCollisionY(objects, objectCount); // Fix if needed
@@ -472,13 +455,6 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
     CheckCollisionX(objects, objectCount); // Fix if needed
     //CheckCollisionX(obj2, objectCount);
 
-    if (jump) {
-        jump = false;
-        if (collidedBottom) {
-            velocity.y += maxVal;
-        }
-    }
-
     if (entityType == ENEMY) { Action(); }
 
     modelMatrix = glm::mat4(1.0f);
@@ -490,11 +466,8 @@ void Entity::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID
     if (!isActive) { return; } //don't do anything if not active
 
     float u = (float)(index % textureCols) / (float)textureCols;
-    
-    
     float v = (float)(index / textureCols) / (float)textureRows;
    
-
     float width = 1.0f / (float)textureCols;
     float height = 1.0f / (float)textureRows;
 
@@ -555,6 +528,12 @@ void Entity::Render(ShaderProgram* program) {
 
 Player::Player() {
     health = 3;
+    lastCheckpoint = 0;
+    checkPLocations.push_back(std::make_tuple(2, 0));
+    checkPLocations.push_back(std::make_tuple(2, -19));
+    checkPLocations.push_back(std::make_tuple(2, -39));
+    checkPLocations.push_back(std::make_tuple(2, -59));
+
     isActive = true;
 
     position = glm::vec3(2.0f, 0, 0);
@@ -563,7 +542,6 @@ Player::Player() {
     textureID = Util::LoadTexture("george_0.png");
     height = 0.8f;
     width = 0.75f;
-    maxVal = 5.5f;
 
     animRight = new int[4]{ 3, 7, 11, 15 };
     animLeft = new int[4]{ 1, 5, 9, 13 };
@@ -578,7 +556,7 @@ Player::Player() {
     textureRows = 4;
 }
 
-void Player::Action() {}
+void Player::Action() { }
 
 void Player::Health() {
     health -= 1;
@@ -588,6 +566,7 @@ void Player::Health() {
     }
     else {
         movement = glm::vec3(0);
-        position = glm::vec3(4.0f, 1.0f, 0);
+        position = glm::vec3(std::get<0>(checkPLocations[lastCheckpoint]), std::get<1>(checkPLocations[lastCheckpoint]), 0);
+        //getting entry in vector according to lastCheckPoint, 0 in tuple = x, 1 = y coordinate
     }
 }

@@ -1,6 +1,3 @@
-
-
-
 #include "Level1.h"
 #define LEVEL1_WIDTH 11
 #define LEVEL1_HEIGHT 82
@@ -33,10 +30,10 @@ unsigned int level1_data[] = {
     28,  91,  91,  84,  91,  84,  91,  91,  91,  91,  28,
     28,  91,  28,  28,  84,  91,  91,  91,  91,  91,  28,
     28,  28,  91,  28,  91,  91,  91,  91,  91,  91,  28,
-    28,  91,  91,  91,  91,  91,  91,  28,  28,  91,  28,
+    28, 110,  91,  91,  91,  91,  91,  28,  28,  91,  28, // checkpoint
     28,  91,  91,  91,  91,  91,  91,  91,  91,  28,  28,
     28,  91,  91,  91,  91,  91,  91,  91,  91,  91,  28,
-    28, 110,  85,  91,  91,  91,  91,  91,  91,  91,  28,
+    28,  91,  85,  91,  91,  91,  91,  91,  91,  91,  28,
     28,  91,  91,  91,  91,  28,  28,  91,  91,  91,  28, // 24
     28,  91,  91,  28,  28,  91,  28,  84,  28,  85,  28,
     28,  91,  91,  91,  28,  91,  91,  91,  91,  91,  28,
@@ -53,7 +50,7 @@ unsigned int level1_data[] = {
     28,  85,  84,  91,  91,  91,  84,  84,  91,  91,  28,
     28,  91,  28,  85,  85,  85,  28,  28,  85,  85,  28,
     28,  91,  85,  85,  91,  91,  91,  91,  91,  28,  28,
-    28, 110,  85,  28,  28,  85,  85,  85,  85,  28,  28, // 40 SLIME IN THIS ROW
+    28, 110,  85,  91,  28,  85,  85,  85,  85,  28,  28, // 40 checkpoint, SLIME IN THIS ROW
     28,  28,  91,  91,  91,  91,  85,  85,  85,  91,  28,
     28,  91,  28,  91,  28,  91,  28,  28,  28,  91,  28,
     28,  91,  91,  85,  85,  91,  91,  91,  91,  91,  28,
@@ -70,11 +67,11 @@ unsigned int level1_data[] = {
     28,  91,  85,  91,  85,  91,  91,  91,  91,  91,  28,
     28,  85,  91,  91,  91,  91,  91,  91,  91,  84,  28,
     28, 202, 202, 202, 202, 202, 202, 202, 202, 202,  28, // 56
-    28, 110,  91,  91,  91,  85,  91,  91,  28,  28,  28,
+    28,  91,  91,  91,  91,  85,  91,  91,  28,  28,  28,
     28,  85, 202, 202,  91,  91,  91,  85,  85,  91,  28,
     28,  84,  84,  85,  91, 202,  91,  91,  91,  91,  28,
-    28,  91,  91,  91,  91,  91,  91, 202,  91,  91,  28,
-    28,  91,  91,  91,  85,  85,  85,  91, 202,  91,  28,
+    28, 110,  91,  91,  91,  91,  91, 202,  91,  91,  28, // checkpoint
+    28,  91,  91,  91,  85,  85,  85,  91, 202,  91,  28, 
     28,  91,  84,  85,  91,  91,  91,  85,  85,  91,  28,
     28,  91,  91,  91,  91,  83,  83,  83,  91,  91,  28,
     28,  91,  91,  91,  91, 100, 100, 100,  91,  91,  28, // 64
@@ -97,14 +94,15 @@ unsigned int level1_data[] = {
     28, 100, 100,  28,  28, 111,  91,  91, 100, 100,  28,
     28,  28,  28,  28,  28,  28,  28,  28,  28,  28,  28
 };
+
 std::vector<Sand*> sand_blocks;
+
 void Level1::Initialize() {
-    state.nextScene = 2;
+    state.nextScene = 0; // possibly make checkpoint the next "scene", update that way?
     
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
     state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 17, 12);
     state.player = new Player();
-    
     state.player->height= 0.6f;
     state.player->width= 0.2f;
 //
@@ -140,12 +138,12 @@ void Level1::Initialize() {
 //    state.enemy1->DefineSlime(slimeTextureID);
 //    state.enemy1->position = glm::vec3(4.0f, -2.0f, 0);
 //    state.enemy1->acceleration= glm::vec3(0, -9.81f, 0);
+
     
-    
-    std::tuple<int, int> sand_coordinates[]={
+    std::tuple<int, int> sand_coordinates[] = {
         {9,-33},{3,-34},{4,-34},{4,-34},
         {1, -36},{8, -37},{9,-37},{2, -38},
-        {3, -38}, {2, -39},{5, -39}, {6, -40},
+        {3, -38}, {5, -39}, {6, -40}, //{2, -39},
         {7, -40}, {8, -40}, {3, -42}, {4, -42},
         {9,-45}, {3, -47}, {4, -47}, {5, -47},
         {2, -48}, {1, -50}, {2, -50}, {7, -51},
@@ -160,15 +158,14 @@ void Level1::Initialize() {
         {2, -75}, {5, -75}, {6, -75}, {7, -75},
         {8, -75}, {9, -75}, {4,-78}, {3, -79},
         {4, -79}
-        
     };
 
     for (int i=0; i < 65; i++){
-        Sand* new_sand =new Sand();
+        Sand* new_sand = new Sand();
         new_sand->position.x = std::get<0>(sand_coordinates[i]);
         new_sand->position.y = std::get<1>(sand_coordinates[i]);
-        new_sand->acceleration= glm::vec3(0, -2.81f, 0);
-        new_sand->entityType= SANDD;
+        new_sand->acceleration = glm::vec3(0, -2.81f, 0);
+        new_sand->entityType = SANDD;
         new_sand->height = 1.0f;
         sand_blocks.push_back(new_sand);
     }
@@ -179,10 +176,10 @@ void Level1::Update(float deltaTime) {
     
     
     state.player->Update(deltaTime, state.map, NULL, NULL, 0);
+
     
     for(int i=0; i < sand_blocks.size();i++){
         sand_blocks[i]->Update(deltaTime, state.map, state.player, state.player, 1);
-        
     }
     for(int i=0; i < ENEMY_COUNT;i++){
         state.enemies[i].Update(deltaTime, state.map, NULL, NULL, 0);
@@ -193,16 +190,15 @@ void Level1::Update(float deltaTime) {
 
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
-    if (keys[SDL_SCANCODE_DOWN] ) {
+    if (keys[SDL_SCANCODE_DOWN]) {
         state.player->CheckDown(state.map);
     }
-    if (keys[SDL_SCANCODE_RIGHT] ) {
+    if (keys[SDL_SCANCODE_RIGHT]) {
         state.player->CheckRight(state.map);
     }
-    if (keys[SDL_SCANCODE_LEFT] ) {
+    if (keys[SDL_SCANCODE_LEFT]) {
         state.player->CheckLeft(state.map);
     }
-    
 }
 
 void Level1::Render(ShaderProgram* program) {
@@ -222,7 +218,6 @@ void Level1::Render(ShaderProgram* program) {
     Util::DrawText(program, fontTexture, "Lives: "+ std::to_string(state.player->health), 0.7f, -0.45f, glm::vec3(7, state.player->position.y+1, 0));
 
     state.player->Render(program);
-
 }
 
 void Level1::PlayerPass(Player* prevPlayer) {

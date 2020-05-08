@@ -133,6 +133,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Sand.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Level1.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Sand.hpp" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Util.h" />
@@ -151,12 +153,12 @@
     <Image Include="font1.png" />
     <Image Include="font2.png" />
     <Image Include="george_0.png" />
-    <Image Include="mapPack_tilesheet.png" />
     <Image Include="slime.png" />
     <Image Include="tilesheet.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="call-to-adventure.mp3" />
+    <Media Include="digging-c.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

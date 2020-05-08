@@ -17,20 +17,21 @@ unsigned int menu_data[] = {
 
 void Menu::Initialize() {
     state.nextScene = 1;
-    
     state.player = new Player();
-    //state.player->canMove = false;
     
     GLuint mapTextureID = Util::LoadTexture("tilesheet.png");
     state.map = new Map(MENU_WIDTH, MENU_HEIGHT, menu_data, mapTextureID, 1.0f, 18,12);
+    
     GLuint slimeTextureID = Util::LoadTexture("slime.png");
     state.enemy1 = new Enemy();
     state.enemy1->DefineSlime(slimeTextureID);
     state.enemy1->position = glm::vec3(14.0f, -5.0f, 0);
+
     state.enemy2 = new Enemy();
     state.enemy2->DefineSlime(slimeTextureID);
     state.enemy2->position = glm::vec3(6.0f, -6.0f, 0);
 }
+
 void Menu::Update(float deltaTime) {
     state.enemy1->Update(deltaTime, state.map, NULL, NULL, 0);
     state.enemy2->Update(deltaTime, state.map, NULL, NULL, 0);
@@ -38,7 +39,6 @@ void Menu::Update(float deltaTime) {
     
     if (keys[SDL_SCANCODE_RETURN]) {
         state.nextScene=2;
-        
     }
 }
 

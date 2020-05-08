@@ -17,6 +17,7 @@
 #include "Map.h"
 #include "Enemy.h"
 #include "Sand.hpp"
+
 struct GameState {
     Map* map;
     Player* player;

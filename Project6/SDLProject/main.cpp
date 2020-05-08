@@ -12,6 +12,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include <vector>
+#include <tuple>
 
 #include "Scene.h"
 #include "Menu.h"
@@ -319,8 +320,8 @@ void Shutdown() {
 
     SDL_Quit();
 }
-
-Scene* toScene; 
+ 
+float lastChecky = 0;
 int main(int argc, char* argv[]) {
     Initialize();
 
@@ -332,6 +333,29 @@ int main(int argc, char* argv[]) {
             mode = END; 
         }
 
+        if (currentScene->state.map->lastTile == CHECKPOINT && currentScene->state.player->position.y < lastChecky-19) { 
+            lastChecky -= 20; //next checkpoint's location
+            currentScene->state.map->lastTile = SAFE;
+
+            //couldnt just increment lastCheckpoint, since it doesn't work if a previous checkpoint is missed
+            if (-currentScene->state.player->position.y >= 15 && -currentScene->state.player->position.y <= 25) {
+                currentScene->state.player->lastCheckpoint = 1;
+            }
+            else if (-currentScene->state.player->position.y >= 39 && -currentScene->state.player->position.y <= 41) {
+                currentScene->state.player->lastCheckpoint = 2;
+            }
+            else if (-currentScene->state.player->position.y >= 59 && -currentScene->state.player->position.y <= 61) {
+                currentScene->state.player->lastCheckpoint = 3;
+            }
+            else {
+                currentScene->state.player->lastCheckpoint = 0;
+            }
+        }
+
+        if (currentScene->state.player->health == 0) {
+            mode = END;
+        }
+        
         Render();
     }
 
