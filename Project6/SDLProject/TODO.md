@@ -2,7 +2,7 @@
 (**O!** = OPTIONAL, the game can do without it and it should be focused on LAST)
 - [x] Implement Menu Screen  -- Angie
 - [ ] Have Menu Screen go through examples of how different blocks work **O!**
-- [ ] Create level  -- Jess
+- [x] Create level  -- Jess
   - [x] Level should get more difficult as the player gets deeper  -- Jess
   - [x] View window must move down with player  -- Jess
     - [x] Dirt area + spikes (first 'section')
@@ -33,9 +33,9 @@
   - [ ] AI texture (currently just Slime)
 - [x] Add Sound  -- Jess
   - [x] Looping backrgound music  -- Jess
-  - [ ] Sound effect  -- Jess
-    - [ ] Sound when player destroys a block  -- Jess
-    - [ ] Sound when player tries to destroy a metal block **O!**
+  - [x] Sound effect  -- Jess
+    - [x] Sound when player destroys a block  -- Jess
+    - [x] Sound when player tries to destroy a metal block **O!**
       - https://freesound.org/people/ScarKord/sounds/86107/ or https://freesound.org/people/Taira%20Komori/sounds/213692/
 - [x] Implement Winning and Losing -- Angie
   - [x] Win: player reaches the bottom 
