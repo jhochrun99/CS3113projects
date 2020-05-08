@@ -320,7 +320,7 @@ void Entity::CheckDown(Map *map) {
 
     if (map->currentTile==DIRT) {
         Mix_FadeInChannel(-1, soundEffect, 0, 1000);
-        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(bottom);
     }
 }
@@ -330,7 +330,7 @@ void Entity::CheckRight(Map *map) {
 
     if (map->rightTile==DIRT) {
         Mix_FadeInChannel(-1, soundEffect, 0, 1000);
-        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(right);
     }
 }
@@ -340,7 +340,7 @@ void Entity::CheckLeft(Map *map) {
 
     if (map->leftTile==DIRT) {
         Mix_FadeInChannel(-1, soundEffect, 0, 1000);
-        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(left);
     }
 }
