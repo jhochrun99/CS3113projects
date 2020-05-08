@@ -4,7 +4,6 @@
 #include <time.h>
 #include "Util.h"
 #include "Enemy.h"
-#include <SDL_mixer.h>
 
 Entity::Entity() {
     srand(time(NULL));
@@ -30,6 +29,7 @@ Entity::Entity() {
     collidedLeft = false;
     collidedRight = false;
     collidedWith = NULL;
+    soundEffect = Mix_LoadWAV("dig16-c.wav");
 
     modelMatrix = glm::mat4(1.0f);
 
@@ -315,37 +315,32 @@ void Entity::CheckCollisionsY(Map* map) {
     }
 }
 
-Mix_Chunk *destroy;
-
 void Entity::CheckDown(Map *map) {
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
-    destroy = Mix_LoadWAV("dig16-c.wav");
 
     if (map->currentTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
         map->destroy_tile(bottom);
     }
 }
 
 void Entity::CheckRight(Map *map) {
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
-    destroy= Mix_LoadWAV("dig16-c.wav");
 
     if (map->rightTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
         map->destroy_tile(right);
     }
 }
 
 void Entity::CheckLeft(Map *map) {
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
-    destroy= Mix_LoadWAV("dig16-c.wav");
 
     if (map->leftTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_VolumeChunk(soundEffect, MIX_MAX_VOLUME);
         map->destroy_tile(left);
     }
 }

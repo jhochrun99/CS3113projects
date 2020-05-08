@@ -14,6 +14,7 @@
 #include "Map.h"
 #include <tuple>
 #include <vector>
+#include <SDL_mixer.h>
 
 enum EntityType { PLAYER, ENEMY, SANDD };
 
@@ -44,6 +45,7 @@ public:
     bool collidedLeft;
     bool collidedRight;
     Entity* collidedWith;
+    Mix_Chunk* soundEffect;
 
     GLuint textureID;
 
