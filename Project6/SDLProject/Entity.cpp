@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Util.h"
 #include "Enemy.h"
+#include <SDL_mixer.h>
 
 Entity::Entity() {
     srand(time(NULL));
@@ -327,27 +328,36 @@ void Entity::CheckCollisionsY(Map* map) {
         map->lastTile = SAFE;
     }
 }
+Mix_Chunk *destroy;
 
 void Entity::CheckDown(Map *map) {
+    destroy= Mix_LoadWAV("digging-c.wav");
+    
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
     
     if (map->currentTile==DIRT) {
+        Mix_FadeInChannel(-1, destroy, 0, 1000);
+        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
         map->destroy_tile(bottom);
     }
 }
 
 void Entity::CheckRight(Map *map) {
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
-    
+    destroy= Mix_LoadWAV("digging-c.wav");
     if (map->rightTile==DIRT) {
+        Mix_FadeInChannel(-1, destroy, 0, 1000);
+        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
         map->destroy_tile(right);
     }
 }
 
 void Entity::CheckLeft(Map *map) {
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
-    
+    destroy= Mix_LoadWAV("digging-c.wav");
     if (map->leftTile==DIRT) {
+        Mix_FadeInChannel(-1, destroy, 0, 1000);
+        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
         map->destroy_tile(left);
     }
 }
