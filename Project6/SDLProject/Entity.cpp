@@ -331,7 +331,7 @@ void Entity::CheckCollisionsY(Map* map) {
 Mix_Chunk *destroy;
 
 void Entity::CheckDown(Map *map) {
-    destroy= Mix_LoadWAV("digging-c.wav");
+    destroy= Mix_LoadWAV("dig16-c.wav");
     
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
     
@@ -344,7 +344,7 @@ void Entity::CheckDown(Map *map) {
 
 void Entity::CheckRight(Map *map) {
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
-    destroy= Mix_LoadWAV("digging-c.wav");
+    destroy= Mix_LoadWAV("dig16-c.wav");
     if (map->rightTile==DIRT) {
         Mix_FadeInChannel(-1, destroy, 0, 1000);
         Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
@@ -354,7 +354,7 @@ void Entity::CheckRight(Map *map) {
 
 void Entity::CheckLeft(Map *map) {
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
-    destroy= Mix_LoadWAV("digging-c.wav");
+    destroy= Mix_LoadWAV("dig16-c.wav");
     if (map->leftTile==DIRT) {
         Mix_FadeInChannel(-1, destroy, 0, 1000);
         Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);

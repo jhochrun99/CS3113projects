@@ -158,7 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="call-to-adventure.mp3" />
-    <Media Include="digging-c.wav" />
+    <Media Include="dig16-c.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

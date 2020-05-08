@@ -93,7 +93,7 @@ void Initialize() {
         music = Mix_LoadMUS("call-to-adventure.mp3");
         Mix_PlayMusic(music, -1);
 
-        dig = Mix_LoadWAV("digging-c.wav");
+        dig = Mix_LoadWAV("dig16-c.wav");
     }
 }
 
