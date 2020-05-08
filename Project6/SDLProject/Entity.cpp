@@ -422,9 +422,9 @@ Player::Player() {
     health = 3;
     lastCheckpoint = 0;
     checkPLocations.push_back(std::make_tuple(2, 0));
-    checkPLocations.push_back(std::make_tuple(2, -22));
+    checkPLocations.push_back(std::make_tuple(2, -19));
     checkPLocations.push_back(std::make_tuple(2, -39));
-    checkPLocations.push_back(std::make_tuple(2, -56));
+    checkPLocations.push_back(std::make_tuple(2, -59));
 
     isActive = true;
 
