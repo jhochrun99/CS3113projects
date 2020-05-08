@@ -26,7 +26,6 @@
 GLuint fontTextureID;
 
 Mix_Music* music;
-Mix_Chunk* dig;
 
 Scene* previousScene;
 Scene* currentScene;
@@ -92,8 +91,6 @@ void Initialize() {
     if (mode == START) {
         music = Mix_LoadMUS("call-to-adventure.mp3");
         Mix_PlayMusic(music, -1);
-
-        dig = Mix_LoadWAV("dig16-c.wav");
     }
 }
 
@@ -293,7 +290,7 @@ void Render() {
 
 //shutdown and main
 void Shutdown() {
-    Mix_FreeChunk(dig);
+    Mix_FreeChunk(currentScene->state.player->soundEffect);
     Mix_FreeMusic(music);
 
     SDL_Quit();
