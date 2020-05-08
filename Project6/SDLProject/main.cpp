@@ -199,7 +199,7 @@ float accumulator = 0.0f;
 
 float scrollAt = -1.0f;
 float matchScroll = 2.25;
-float stopScroll = -77.5f;
+float stopScroll = -75.5f;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -215,8 +215,8 @@ void Update() {
     viewMatrix = glm::mat4(1.0f);
 
     //player can only move down
-    if (currentScene->state.player->position.y < stopScroll) {
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -stopScroll, 0));
+    if (currentScene->state.player->position.y <= stopScroll) {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 77.5, 0));
     }
     else if (currentScene->state.player->position.y < scrollAt) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -currentScene->state.player->position.y + matchScroll, 0));
