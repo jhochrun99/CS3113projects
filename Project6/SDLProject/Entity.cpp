@@ -549,21 +549,21 @@ Player::Player() {
     position = glm::vec3(2.0f, 0, 0);
     acceleration = glm::vec3(0, -5.8f, 0);
     speed = 2.0f;
-    textureID = Util::LoadTexture("george_0.png");
+    textureID = Util::LoadTexture("golemTRP.png");
     height = 0.8f;
     width = 0.75f;
 
-    animRight = new int[4]{ 3, 7, 11, 15 };
-    animLeft = new int[4]{ 1, 5, 9, 13 };
-    animUp = new int[4]{ 2, 6, 10, 14 };
-    animDown = new int[4]{ 0, 4, 8, 12 };
+    animRight = new int[5]{ 1, 4, 7, 10, 13 };
+    animLeft = new int[5]{ 2, 5, 8, 11, 14 };
+    animUp = new int[5]{ 0, 3, 6, 9, 6 };
+    animDown = new int[5]{ 0, 3, 6, 9, 6 };
 
     animIndices = animRight;
-    animFrames = 4;
+    animFrames = 5;
     animIndex = 0;
     animTime = 0;
-    textureCols = 4;
-    textureRows = 4;
+    textureCols = 3;
+    textureRows = 6;
 }
 
 void Player::Action() { }

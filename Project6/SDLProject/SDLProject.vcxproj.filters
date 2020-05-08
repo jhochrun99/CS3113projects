@@ -91,6 +91,9 @@
     <Image Include="font2.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="golemTRP.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="call-to-adventure.mp3">
