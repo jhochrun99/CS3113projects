@@ -69,6 +69,7 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
         
         
         if (CheckCollision(object)) {
+            
             if(entityType==SANDD){
                 if(position.y > object->position.y+0.5){
                     object->Health();
@@ -88,6 +89,21 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
             float yOverlap = fabs(fabs(position.y - object->position.y)
                 - (height / 2.0f) - (object->height / 2.0f));
             
+            if(object->entityType==ENEMY){
+                if(position.y > object->position.y+0.2){
+                    
+                    object->isActive = false;
+                    
+                }
+                else{
+                    std::cout << "this happens!!"<<std::endl;
+                    Health();
+                    return;
+                }
+                
+                
+                return;
+            }
             if (velocity.y > 0) {
                 //std::cout <<"is this happening1"<<std::endl;
                
@@ -126,22 +142,29 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
 }
 
 void Entity::CheckCollisionX(Entity* objects, int objectCount) {
+    
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
-
+        //std::cout<< "i is "<< i<< std::endl;
+        if (object->entityType==ENEMY){
+            //std::cout<< "Enemy #"<< i<< std::endl;
+        }
         if (CheckCollision(object)) {
             float xOverlap = fabs(fabs(position.x - object->position.x)
                 - (width / 2.0f) - (object->width / 2.0f));
 
             if (velocity.x > 0) {
+                std::cout << "this happens"<<std::endl;
                 position.x -= xOverlap;
                 velocity.x = 0;
                 collidedRight = true;
                 collidedWith = object;
 
                 Health();
+                
             }
-            else { 
+            else {
+                std::cout << "this happens too"<<std::endl;
                 position.x += xOverlap;
                 velocity.x = 0;
                 collidedLeft = true;
@@ -211,6 +234,59 @@ void Entity::CheckCollisionsY(Map* map) {
             collidedBottom = true;
         }
         else if (map->IsSolidSand(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        return;
+        
+    }
+    if (entityType==ENEMY){
+        
+        if (map->IsSolidSlime(top, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        else if (map->IsSolidSlime(top_left, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        else if (map->IsSolidSlime(top_right, &penetration_x, &penetration_y) && velocity.y > 0) {
+            position.y -= penetration_y;
+            velocity.y = 0;
+            collidedTop = true;
+        }
+        
+        if (map->IsSolidSlime(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
+            
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSlime(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSlime(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        
+        if (map->IsSolidSlime(bottom, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSlime(bottom_left, &penetration_x, &penetration_y) && velocity.y < 0) {
+            position.y += penetration_y;
+            velocity.y = 0;
+            collidedBottom = true;
+        }
+        else if (map->IsSolidSlime(bottom_right, &penetration_x, &penetration_y) && velocity.y < 0) {
             position.y += penetration_y;
             velocity.y = 0;
             collidedBottom = true;
@@ -298,6 +374,19 @@ void Entity::CheckCollisionsX(Map* map) {
     float penetration_x = 0;
     float penetration_y = 0;
     
+    if(entityType==ENEMY){
+        if (map->IsSolidSand(left, &penetration_x, &penetration_y) && velocity.x < 0) {
+            position.x += penetration_x;
+            velocity.x = 0;
+            collidedLeft = true;
+        }
+        
+        if (map->IsSolidSand(right, &penetration_x, &penetration_y) && velocity.x > 0) {
+            position.x -= penetration_x;
+            velocity.x = 0;
+            collidedRight = true;
+        }
+    }
     
   
         if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
@@ -319,13 +408,14 @@ void Entity::CheckCollisionsX(Map* map) {
 
 void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, int objectCount) {
     if (!isActive || !canMove) { return; } //don't do anything if not active
-
+    
     collidedTop = false;
     collidedBottom = false;
     collidedLeft = false;
     collidedRight = false;
 
-    if (animIndices != NULL) {
+   
+    if (animIndices != NULL && objects==NULL) {
         if (glm::length(movement) != 0 || entityType != PLAYER) {
             animTime += deltaTime;
 
@@ -343,9 +433,12 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
             animIndex = 0;
         }
     }
-
-    velocity.x = movement.x * speed;
-    velocity += acceleration * deltaTime;
+    
+    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+        velocity.x = movement.x * speed;
+        velocity += acceleration * deltaTime;
+    }
+    
     
     if(entityType==SANDD){
         position.y += velocity.y * deltaTime;
@@ -359,18 +452,25 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
         
     }
     
+    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+        position.y += velocity.y * deltaTime; // Move on Y
+    }
 
-    position.y += velocity.y * deltaTime; // Move on Y
+    
 
     
     CheckCollisionsY(map);
+    
     CheckCollisionY(objects, objectCount); // Fix if needed
-    CheckCollisionY(obj2, objectCount);
+    //CheckCollisionY(obj2, objectCount);
 
-    position.x += velocity.x * deltaTime; // Move on X
+    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+        position.x += velocity.x * deltaTime;
+    }
+     // Move on X
     CheckCollisionsX(map);
     CheckCollisionX(objects, objectCount); // Fix if needed
-    CheckCollisionX(obj2, objectCount);
+    //CheckCollisionX(obj2, objectCount);
 
     if (jump) {
         jump = false;

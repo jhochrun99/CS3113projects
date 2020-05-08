@@ -12,7 +12,7 @@ void Enemy::DefineSlime(GLuint slimeTextureID) {
     textureID = slimeTextureID;
     textureCols = 8;
     textureRows = 3;
-    height = 0.5f;
+    height = 0.8f;
     width = 0.9f;
     animLeft = new int[8]{ 0, 1, 2, 3, 4, 5, 6, 7 };
     animRight = new int[8]{ 8, 9, 10, 11, 12, 13, 14, 15 };

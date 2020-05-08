@@ -47,5 +47,6 @@ public:
     void Render(ShaderProgram* program);
     bool IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y);
     bool IsSolidSand(glm::vec3 position, float* penetration_x, float* penetration_y);
+    bool IsSolidSlime(glm::vec3 position, float* penetration_x, float* penetration_y);
     void destroy_tile(glm::vec3 position);
 };

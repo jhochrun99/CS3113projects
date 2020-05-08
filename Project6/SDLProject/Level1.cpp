@@ -5,7 +5,7 @@
 #define LEVEL1_WIDTH 11
 #define LEVEL1_HEIGHT 82
 
-#define ENEMY_COUNT 1
+#define ENEMY_COUNT 6
 #include <vector>
 #include <tuple>
 
@@ -107,7 +107,39 @@ void Level1::Initialize() {
     
     state.player->height= 0.6f;
     state.player->width= 0.2f;
+//
+//    std::tuple<int, int> enemies_coordinates[]={
+//        {5,-40},{2,-46},{7,-47},{1,51},
+//        {1, -72},{3, -79}
+//
+//    };
     
+    GLuint slimeTextureID = Util::LoadTexture("slime.png");
+ 
+    state.enemies = new Enemy[ENEMY_COUNT];
+    state.enemies[0].DefineSlime(slimeTextureID);
+    state.enemies[0].position = glm::vec3(5.0f, -40.0f, 0);
+    state.enemies[0].acceleration= glm::vec3(0, -12.81f, 0);
+    state.enemies[1].DefineSlime(slimeTextureID);
+    state.enemies[1].position = glm::vec3(2.0f, -46.0f, 0);
+    state.enemies[1].acceleration= glm::vec3(0, -12.81f, 0);
+    state.enemies[2].DefineSlime(slimeTextureID);
+    state.enemies[2].position = glm::vec3(7.0f, -47.0f, 0);
+    state.enemies[2].acceleration= glm::vec3(0, -9.81f, 0);
+    state.enemies[3].DefineSlime(slimeTextureID);
+    state.enemies[3].position = glm::vec3(1.0f, -51.0f, 0);
+    state.enemies[3].acceleration= glm::vec3(0, -9.81f, 0);
+    state.enemies[4].DefineSlime(slimeTextureID);
+    state.enemies[4].position = glm::vec3(1.0f, -72.0f, 0);
+    state.enemies[4].acceleration= glm::vec3(0, -9.81f, 0);
+    state.enemies[5].DefineSlime(slimeTextureID);
+    state.enemies[5].position = glm::vec3(3.0f, -79.0f, 0);
+    state.enemies[5].acceleration= glm::vec3(0, -9.81f, 0);
+    
+//    state.enemy1 = new Enemy();
+//    state.enemy1->DefineSlime(slimeTextureID);
+//    state.enemy1->position = glm::vec3(4.0f, -2.0f, 0);
+//    state.enemy1->acceleration= glm::vec3(0, -9.81f, 0);
     
     
     std::tuple<int, int> sand_coordinates[]={
@@ -144,13 +176,20 @@ void Level1::Initialize() {
 
 void Level1::Update(float deltaTime) {
     
-    state.player->Update(deltaTime, state.map, state.enemy2, state.enemy2, ENEMY_COUNT);
+    
+    
+    state.player->Update(deltaTime, state.map, NULL, NULL, 0);
     
     for(int i=0; i < sand_blocks.size();i++){
         sand_blocks[i]->Update(deltaTime, state.map, state.player, state.player, 1);
         
     }
-    //state.sand->Update(deltaTime, state.map, NULL, NULL, 0);
+    for(int i=0; i < ENEMY_COUNT;i++){
+        state.enemies[i].Update(deltaTime, state.map, NULL, NULL, 0);
+        state.player->Update(deltaTime, state.map, &state.enemies[i], NULL, 1);
+    }
+
+    
 
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
@@ -168,23 +207,22 @@ void Level1::Update(float deltaTime) {
 
 void Level1::Render(ShaderProgram* program) {
     state.map->Render(program);
-    
-//    state.enemy1->Render(program);
-//    state.enemy2->Render(program);
+
     for(int i=0; i < sand_blocks.size();i++){
         sand_blocks[i]->Render(program);
         sand_blocks[i]->DrawSpriteFromTextureAtlas(program, sand_blocks[i]->textureID, 17);
     }
-   // state.sand->Render(program);
-//    for(int i=0; i < sand_blocks.size();i++){
-//        sand_blocks[i]->DrawSpriteFromTextureAtlas(program, sand_blocks[i]->textureID, 17);
-//    }
-//    state.sand->DrawSpriteFromTextureAtlas(program, state.sand->textureID, 17);
+    for(int i=0; i < ENEMY_COUNT;i++){
+        state.enemies[i].Render(program);
+        
+    }
+    
+
     GLuint fontTexture = Util::LoadTexture("font1.png");
     Util::DrawText(program, fontTexture, "Lives: "+ std::to_string(state.player->health), 0.7f, -0.45f, glm::vec3(7, state.player->position.y+1, 0));
 
     state.player->Render(program);
-    
+
 }
 
 void Level1::PlayerPass(Player* prevPlayer) {

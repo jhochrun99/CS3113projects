@@ -261,7 +261,7 @@ void Update() {
 
     // TODO: implement checkpoint return upon taking damage
     if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile ==  SPIKE) {
-        currentScene->state.player->Player::Health();
+        currentScene->state.player->Health();
     }
 
     accumulator = deltaTime;

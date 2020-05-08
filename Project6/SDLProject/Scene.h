@@ -22,6 +22,7 @@ struct GameState {
     Player* player;
     Enemy* enemy1;
     Enemy* enemy2;
+    Enemy* enemies;
     Sand* sand;
 
     int nextScene;
