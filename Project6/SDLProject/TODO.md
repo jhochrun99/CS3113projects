@@ -18,19 +18,17 @@
   - [x] Metal (can't be destroyed) -- Angie
   - [x] Sand (falls if nothing is beneath it) -- Angie
   - [x] Glass/Ice (breaks if the player falls on top of it) -- Angie
-- [ ] Implement Hazards
+- [x] Implement Hazards
   - [x] Lava (kills the player if touched)
-    - [ ] Lava spreads out (if player destroys a block next to lava, lava will move to take up open space) **O!**
   - [x] Spikes (kills player if they **land on top** of them. Can't be destroyed)  -- Jess
-  - [ ] Fall damage (if player falls more than 2 blocks at a time, they die) **O!**
 - [x] Implement AI -- Angie
   - [x] Slime (moves back and forth, can be killed if player lands on top of it, kills player if touched any other way)
     - [x] Give Slime map detection, so it'll stay on the same level and not fall down if player destroyes a block in it's path
-- [ ] Use proper textures
-  - [ ] Player texture (can't be George)
+- [x] Use proper textures
+  - [x] Player texture (can't be George)
   - [x] Map texture (needs various styles of blocks, to clearly show dirt, metal, sand, glass / ice)
   - [x] Hazard texture (can be part of map, need to have spikes and lava)
-  - [ ] AI texture (currently just Slime)
+  - [x] AI texture (currently just Slime)
 - [x] Add Sound  -- Jess
   - [x] Looping backrgound music  -- Jess
   - [x] Sound effect  -- Jess
