@@ -91,12 +91,15 @@
     <Image Include="font2.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="golemTRP.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="call-to-adventure.mp3">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="digging-c.wav">
+    <Media Include="dig16-c.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

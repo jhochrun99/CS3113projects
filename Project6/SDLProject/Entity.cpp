@@ -4,7 +4,6 @@
 #include <time.h>
 #include "Util.h"
 #include "Enemy.h"
-#include <SDL_mixer.h>
 
 Entity::Entity() {
     srand(time(NULL));
@@ -30,6 +29,7 @@ Entity::Entity() {
     collidedLeft = false;
     collidedRight = false;
     collidedWith = NULL;
+    soundEffect = Mix_LoadWAV("dig16-c.wav");
 
     modelMatrix = glm::mat4(1.0f);
 
@@ -65,11 +65,10 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
         Entity* object = &objects[i];
         
         if (CheckCollision(object)) {
-            
-            if(entityType==SANDD){
-                if(position.y > object->position.y+0.5){
-
+            if (entityType==SANDD) {
+                if (position.y > object->position.y + 0.5) {
                     object->Health();
+
                     if (object->health == 1) {
                         object->isActive = false;
                     }
@@ -77,6 +76,7 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 else {
                     return;
                 }
+
                 return;
             }
             //if player falls on top of the sand  player.position>sand.position
@@ -84,23 +84,21 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
             float yOverlap = fabs(fabs(position.y - object->position.y)
                 - (height / 2.0f) - (object->height / 2.0f));
             
-            if(object->entityType==ENEMY){
-                if(position.y > object->position.y+0.2){
+            if (object->entityType == ENEMY) {
+                if (position.y > object->position.y + 0.2) {
                     
                     object->isActive = false;
                     
                 }
-                else{
+                else {
                     std::cout << "this happens!!"<<std::endl;
                     Health();
                     return;
                 }
-                
-                
+
                 return;
             }
             if (velocity.y > 0) {
-                //std::cout <<"is this happening1"<<std::endl;
                 position.y -= yOverlap;
                 velocity.y = 0;
                 collidedTop = true;
@@ -109,10 +107,8 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 Health();
             }
             else if (velocity.y < 0) {
-                //std::cout <<"is this happening2"<<std::endl;
-                if(entityType==SANDD){
+                if(entityType == SANDD) {
                     return;
-                    // std::cout << "player lives is "<< object->health<<std::endl;
                 }
       
                 position.y += yOverlap;
@@ -125,8 +121,6 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
                 }
                 else {
                     object->health--;
-                    
-                    
                 }
             }
         }
@@ -134,29 +128,22 @@ void Entity::CheckCollisionY(Entity* objects, int objectCount) {
 }
 
 void Entity::CheckCollisionX(Entity* objects, int objectCount) {
-    
     for (int i = 0; i < objectCount; i++) {
         Entity* object = &objects[i];
-        //std::cout<< "i is "<< i<< std::endl;
-        if (object->entityType==ENEMY){
-            //std::cout<< "Enemy #"<< i<< std::endl;
-        }
+
         if (CheckCollision(object)) {
             float xOverlap = fabs(fabs(position.x - object->position.x)
                 - (width / 2.0f) - (object->width / 2.0f));
 
             if (velocity.x > 0) {
-                std::cout << "this happens"<<std::endl;
                 position.x -= xOverlap;
                 velocity.x = 0;
                 collidedRight = true;
                 collidedWith = object;
 
                 Health();
-                
             }
             else {
-                std::cout << "this happens too"<<std::endl;
                 position.x += xOverlap;
                 velocity.x = 0;
                 collidedLeft = true;
@@ -230,10 +217,11 @@ void Entity::CheckCollisionsY(Map* map) {
             velocity.y = 0;
             collidedBottom = true;
         }
+
         return;
     }
-    if (entityType==ENEMY){
-        
+
+    if (entityType == ENEMY) {
         if (map->IsSolidSlime(top, &penetration_x, &penetration_y) && velocity.y > 0) {
             position.y -= penetration_y;
             velocity.y = 0;
@@ -282,8 +270,8 @@ void Entity::CheckCollisionsY(Map* map) {
             velocity.y = 0;
             collidedBottom = true;
         }
+
         return;
-        
     }
     
     if (map->IsSolid(top, &penetration_x, &penetration_y) && velocity.y > 0) {
@@ -322,42 +310,37 @@ void Entity::CheckCollisionsY(Map* map) {
         collidedBottom = true;
     }
     
-    
     if (map->lastTile == LAVA || map->lastTile == SPIKE) {
-        //life--;
         map->lastTile = SAFE;
     }
 }
-Mix_Chunk *destroy;
 
 void Entity::CheckDown(Map *map) {
-    destroy= Mix_LoadWAV("digging-c.wav");
-    
     glm::vec3 bottom = glm::vec3(position.x, position.y - (height / 2), position.z);
-    
+
     if (map->currentTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(bottom);
     }
 }
 
 void Entity::CheckRight(Map *map) {
     glm::vec3 right = glm::vec3(position.x + (width), position.y, position.z);
-    destroy= Mix_LoadWAV("digging-c.wav");
+
     if (map->rightTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(right);
     }
 }
 
 void Entity::CheckLeft(Map *map) {
     glm::vec3 left = glm::vec3(position.x - (width), position.y, position.z);
-    destroy= Mix_LoadWAV("digging-c.wav");
+
     if (map->leftTile==DIRT) {
-        Mix_FadeInChannel(-1, destroy, 0, 1000);
-        Mix_VolumeChunk(destroy, MIX_MAX_VOLUME);
+        Mix_FadeInChannel(-1, soundEffect, 0, 1000);
+        Mix_PlayChannel(-1, soundEffect, 0);
         map->destroy_tile(left);
     }
 }
@@ -370,8 +353,7 @@ void Entity::CheckCollisionsX(Map* map) {
     float penetration_x = 0;
     float penetration_y = 0;
 
-    
-    if(entityType==ENEMY){
+    if (entityType == ENEMY) {
         if (map->IsSolidSand(left, &penetration_x, &penetration_y) && velocity.x < 0) {
             position.x += penetration_x;
             velocity.x = 0;
@@ -385,13 +367,11 @@ void Entity::CheckCollisionsX(Map* map) {
         }
     }
     
-  
-        if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
-            position.x += penetration_x;
-            velocity.x = 0;
-            collidedLeft = true;
-        }
-
+    if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
+        position.x += penetration_x;
+        velocity.x = 0;
+        collidedLeft = true;
+    }
         
     if (map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
         position.x -= penetration_x;
@@ -407,9 +387,8 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
     collidedBottom = false;
     collidedLeft = false;
     collidedRight = false;
-
    
-    if (animIndices != NULL && objects==NULL) {
+    if (animIndices != NULL && objects == NULL) {
         if (glm::length(movement) != 0 || entityType != PLAYER) {
             animTime += deltaTime;
 
@@ -426,13 +405,12 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
         }
     }
     
-    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+    if ((entityType == PLAYER && objects == NULL) || entityType != PLAYER) {
         velocity.x = movement.x * speed;
         velocity += acceleration * deltaTime;
     }
     
-    
-    if (entityType==SANDD) {
+    if (entityType == SANDD) {
         position.y += velocity.y * deltaTime;
         CheckCollisionY(objects,objectCount);
         position.x += velocity.x * deltaTime;
@@ -443,27 +421,21 @@ void Entity::Update(float deltaTime, Map* map, Entity* objects, Entity* obj2, in
 
         return;
     }
-    
 
-    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+    if ((entityType == PLAYER && objects == NULL) || entityType != PLAYER) {
         position.y += velocity.y * deltaTime; // Move on Y
     }
 
-    
-
-
     CheckCollisionsY(map);
-    
-    CheckCollisionY(objects, objectCount); // Fix if needed
-    //CheckCollisionY(obj2, objectCount);
+    CheckCollisionY(objects, objectCount);
 
-    if((entityType==PLAYER && objects==NULL) || entityType!=PLAYER){
+    if ((entityType == PLAYER && objects == NULL) || entityType != PLAYER) {
         position.x += velocity.x * deltaTime;
     }
-     // Move on X
+
+    // Move on X
     CheckCollisionsX(map);
-    CheckCollisionX(objects, objectCount); // Fix if needed
-    //CheckCollisionX(obj2, objectCount);
+    CheckCollisionX(objects, objectCount); 
 
     if (entityType == ENEMY) { Action(); }
 
@@ -549,21 +521,21 @@ Player::Player() {
     position = glm::vec3(2.0f, 0, 0);
     acceleration = glm::vec3(0, -5.8f, 0);
     speed = 2.0f;
-    textureID = Util::LoadTexture("george_0.png");
+    textureID = Util::LoadTexture("golemTRP.png");
     height = 0.8f;
     width = 0.75f;
 
-    animRight = new int[4]{ 3, 7, 11, 15 };
-    animLeft = new int[4]{ 1, 5, 9, 13 };
-    animUp = new int[4]{ 2, 6, 10, 14 };
-    animDown = new int[4]{ 0, 4, 8, 12 };
+    animRight = new int[5]{ 1, 4, 7, 10, 13 };
+    animLeft = new int[5]{ 2, 5, 8, 11, 14 };
+    animUp = new int[5]{ 0, 3, 6, 9, 6 };
+    animDown = new int[5]{ 0, 3, 6, 9, 6 };
 
     animIndices = animRight;
-    animFrames = 4;
+    animFrames = 5;
     animIndex = 0;
     animTime = 0;
-    textureCols = 4;
-    textureRows = 4;
+    textureCols = 3;
+    textureRows = 6;
 }
 
 void Player::Action() { }

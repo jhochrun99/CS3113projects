@@ -26,7 +26,6 @@
 GLuint fontTextureID;
 
 Mix_Music* music;
-Mix_Chunk* dig;
 
 Scene* previousScene;
 Scene* currentScene;
@@ -92,8 +91,6 @@ void Initialize() {
     if (mode == START) {
         music = Mix_LoadMUS("call-to-adventure.mp3");
         Mix_PlayMusic(music, -1);
-
-        dig = Mix_LoadWAV("digging-c.wav");
     }
 }
 
@@ -109,7 +106,7 @@ void ProcessInputStart() {
 
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-            case SDLK_LSHIFT: //LSHIFT, RETURN
+            case SDLK_LSHIFT: //LSHIFT, RETURN(enter)
                 mode = PLAY;
                 
                 SwitchToScene(sceneList[currentScene->state.nextScene]);
@@ -126,7 +123,6 @@ void ProcessInputStart() {
             
             SwitchToScene(sceneList[currentScene->state.nextScene]);
             currentScene->state.player->isActive = true;
-            
         }
     }
 }
@@ -141,32 +137,12 @@ void ProcessInputPlay() {
         case SDL_WINDOWEVENT_CLOSE:
             gameIsRunning = false;
             break;
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
-//                case SDLK_SPACE:  // ======================================================================
-//                    currentScene->state.player->jump = true;
-//                    break;
-//                case SDLK_LEFT: //player moves one block to the left
-//                    //do something like "while movement < endPosition, movement += 1
-//                    currentScene->state.player->movement.x -= 5.0f;
-//                    currentScene->state.player->animIndices = currentScene->state.player->animLeft;
-//                    break;
-//                case SDLK_RIGHT: //player moves one block to the right
-//                    currentScene->state.player->movement.x += 1.0f;
-//                    currentScene->state.player->animIndices = currentScene->state.player->animRight;
-//                    break;
-//                case SDLK_DOWN: //destroy block under player
-//
-//                    break;
-                }
         }
     }
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
     if (keys[SDL_SCANCODE_LEFT]) {
-        
         currentScene->state.player->movement.x = -1.0f;
         currentScene->state.player->animIndices = currentScene->state.player->animLeft;
     }
@@ -198,7 +174,7 @@ void ProcessInputEnd() {
                 currentScene = sceneList[0];
                 break;
             }
-            break; // SDL_KEYDOWN
+            break;
         }
     }
 }
@@ -223,7 +199,7 @@ float accumulator = 0.0f;
 
 float scrollAt = -1.0f;
 float matchScroll = 2.25;
-float stopScroll = -77.5f;
+float stopScroll = -75.5f;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -239,8 +215,8 @@ void Update() {
     viewMatrix = glm::mat4(1.0f);
 
     //player can only move down
-    if (currentScene->state.player->position.y < stopScroll) {
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -stopScroll, 0));
+    if (currentScene->state.player->position.y <= stopScroll) {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 77.5, 0));
     }
     else if (currentScene->state.player->position.y < scrollAt) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, -currentScene->state.player->position.y + matchScroll, 0));
@@ -260,7 +236,6 @@ void Update() {
         deltaTime -= FIXED_TIMESTEP;
     }
 
-    // TODO: implement checkpoint return upon taking damage
     if (currentScene->state.map->lastTile == LAVA || currentScene->state.map->lastTile ==  SPIKE) {
         currentScene->state.player->Health();
     }
@@ -315,7 +290,7 @@ void Render() {
 
 //shutdown and main
 void Shutdown() {
-    Mix_FreeChunk(dig);
+    Mix_FreeChunk(currentScene->state.player->soundEffect);
     Mix_FreeMusic(music);
 
     SDL_Quit();
@@ -329,7 +304,7 @@ int main(int argc, char* argv[]) {
         ProcessInput();
         Update();
         
-        if (currentScene->state.map->lastTile == GOAL) { //&& currentScene->state.player->position.y >= 21.5f //<-- would allow player to get closer to castle
+        if (currentScene->state.map->lastTile == GOAL) { //&& currentScene->state.player->position.y >= 21.5f
             mode = END; 
         }
 
@@ -337,8 +312,7 @@ int main(int argc, char* argv[]) {
             lastChecky -= 20; //next checkpoint's location
             currentScene->state.map->lastTile = SAFE;
 
-            //couldnt just increment lastCheckpoint, since it doesn't work if a previous checkpoint is missed
-            if (-currentScene->state.player->position.y >= 15 && -currentScene->state.player->position.y <= 25) {
+            if (-currentScene->state.player->position.y >= 19 && -currentScene->state.player->position.y <= 25) {
                 currentScene->state.player->lastCheckpoint = 1;
             }
             else if (-currentScene->state.player->position.y >= 39 && -currentScene->state.player->position.y <= 41) {
