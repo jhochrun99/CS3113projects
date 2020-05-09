@@ -25,6 +25,10 @@ The game needed to have a menu screen displaying the title, and the game would s
 * If player dies 3 times, they get game over and must start from the beginning
 * Along the way will be tower 'check points'. If the player touches these towers, they'll be sent back to the it upon death. Without a check point, they'll be sent back to the beginning
 
+### Unimplemented
+* Press `left shift` to start, instead of `enter`
+* Using `left shift` to restart the game after dying doesn't reset the map. Game must be exited and re-run to fully reset. 
+
 #### Music Credit
 * Call to Adventure by Kevin MacLeod <br>
 Link: https://incompetech.filmmusic.io/song/3470-call-to-adventure <br>
