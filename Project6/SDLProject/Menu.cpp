@@ -64,8 +64,8 @@ void Menu::Render(ShaderProgram* program) {
                         glm::vec3(8.1f, -2.68f, 0));
     
     GLuint fontTextureID2 = Util::LoadTexture("font1.png");
-    Util::DrawText(program, fontTextureID2, "Press enter to see instructions", 0.65f, -0.4f,
-                   glm::vec3(1.3f, -4.5f, 0));
+    Util::DrawText(program, fontTextureID2, "Press enter to start!", 0.65f, -0.4f,
+                   glm::vec3(2.5f, -4.5f, 0));
     state.map->Render(program);
     state.enemy1->Render(program);
     state.enemy2->Render(program);
