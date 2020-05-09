@@ -7,32 +7,23 @@ The game needed to have a menu screen displaying the title, and the game would s
 
 ### Goals / Description
 * Title: Dig Deeper
-* Menu screen: flashes through examples of how different blocks work
-* Player can only move left, right, and down. Pressing the `left arrow key`, `right arrow key`, or `down arrow key` moves the player one block to the left/right/down. If there's a block in the way, that block will be destroyed and the player move into the destroyed block's space. 
+* Player can only move left, right, and down, using the `left arrow key`, `right arrow key`, or `down arrow key`. If there's a block in the way, that block will be destroyed.
 * Gravity exists - if the player destroys the block beneath them, they fall
 * Different blocks interact differenty:
-   - Dirt is the standard block 
+   - Dirt is the standard block, and can be destroyed 
    - Metal can't be destroyed / removed
    - Sand falls if nothing is under it, and will kill the player if they go beneath it as it falls
-   - Glass breaks if the player falls on top of it
+   - Glass breaks if the player falls or stands on top of it too long
 * There are also different terrain hazards: 
-   - Lava will kill the player 
-   - Spikes kill the player if they land on top of them
-   - If the player falls more than 2 blocks at a time, they die
+   - Lava kills the player 
+   - Spikes kill the player
 * Possible enemies:
-   - Slime: can be killed if the player lands on top of it. Touching it any other way will kill the player. Slime will stay on the level it starts on, so player can dig deeper to escape it
-   - ?
+   - Slime: moves back and forth, can be killed if the player lands on top of it. Touching it any other way will kill the player. Slime will stay on the level it starts on, so player can dig deeper to escape it. 
 * Sound effects:
    - Destroying a block
-   - Dying
-* Player wins if they reach the bottom
+* Player wins if they reach the castle at the bottom
 * If player dies 3 times, they get game over and must start from the beginning
-* Along the way will be 'check points'. If the player gets these check points, they'll be sent back to the check point upon death. Without the check point, they'll be sent back to the beginning
-
-Possible terrain pack: https://www.kenney.nl/assets/map-pack
-
-#### Unimplemented
-* TBD
+* Along the way will be tower 'check points'. If the player touches these towers, they'll be sent back to the it upon death. Without a check point, they'll be sent back to the beginning
 
 #### Music Credit
 * Call to Adventure by Kevin MacLeod <br>
